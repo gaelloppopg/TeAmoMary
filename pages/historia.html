@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuestra Historia 📖</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#f28ca6" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>" />
+
+  <script>
+    (function() {
+      const ok = localStorage.getItem("auth_novia_ok");
+      const t = parseInt(localStorage.getItem("auth_novia_time") || "0", 10);
+      const valido = ok === "true" && (Date.now() - t) < 60 * 60 * 1000;
+      if (!valido) location.replace("../login.html");
+    })();
+  </script>
+</head>
+<body class="page-inner"
+      data-cancion-titulo="Nuestra Canción"
+      data-cancion-artista="Para ti 💕">
+
+  <nav class="nav-back"><a href="../index.html">← Volver</a></nav>
+
+  <header class="page-header">
+    <h1>Nuestra Historia</h1>
+    <p>Todo comenzó así...</p>
+  </header>
+
+  <main class="timeline">
+    <article class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-date">El día que te vi</span>
+        <h2>Un encuentro sin planearlo</h2>
+        <p>
+          Recuerdo perfectamente ese momento. No sabía que en unos segundos mi vida iba a cambiar por completo.
+          <em>[Aquí escribiré cómo la conocí, qué llevaba puesto, qué dijo, qué sentí...]</em>
+        </p>
+      </div>
+    </article>
+
+    <article class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-date">La primera conversación</span>
+        <h2>Hablamos hasta que se hizo de noche</h2>
+        <p>
+          <em>[Aquí describiré la primera charla, la primera vez que reímos juntos...]</em>
+        </p>
+      </div>
+    </article>
+
+    <article class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-date">La primera cita</span>
+        <h2>Cuando supe que eras tú</h2>
+        <p>
+          <em>[Aquí el lugar, el nerviosismo, la primera mirada...]</em>
+        </p>
+      </div>
+    </article>
+
+    <article class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-date">El primer "te amo"</span>
+        <h2>Y ya no hubo vuelta atrás</h2>
+        <p>
+          <em>[Aquí ese momento exacto, cómo lo dijiste o te lo dije...]</em>
+        </p>
+      </div>
+    </article>
+
+    <article class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-date">Hoy</span>
+        <h2>Seguimos escribiendo la historia</h2>
+        <p>
+          <em>[Aquí un mensaje presente para ella, lo que sientes ahora...]</em>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer"><p>Continúa en <a href="recuerdos.html">Recuerdos →</a></p></footer>
+
+  <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
+  <script src="../js/script.js"></script>
+  <script src="../js/musica-global.js"></script>
+  <script src="../js/confeti.js"></script>
+  <script src="../js/pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recuerdos 📸</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#f28ca6" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>" />
+
+  <script>
+    (function() {
+      const ok = localStorage.getItem("auth_novia_ok");
+      const t = parseInt(localStorage.getItem("auth_novia_time") || "0", 10);
+      const valido = ok === "true" && (Date.now() - t) < 60 * 60 * 1000;
+      if (!valido) location.replace("../login.html");
+    })();
+  </script>
+</head>
+<body class="page-inner"
+      data-cancion-titulo="Nuestra Canción"
+      data-cancion-artista="Para ti 💕">
+
+  <nav class="nav-back"><a href="../index.html">← Volver</a></nav>
+
+  <header class="page-header">
+    <h1>Cosas que me recuerdan a ti</h1>
+    <p>Pequeños detalles que son tuyos sin serlo</p>
+  </header>
+
+  <section class="galeria" id="galeria">
+    <figure class="galeria-item reveal">
+      <img src="../assets/images/recuerdos/recuerdo1.jpg" alt="Recuerdo 1" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>📸</text></svg>'">
+      <figcaption>
+        <h3>Tu canción favorita</h3>
+        <p>Cada vez que suena, apareces tú en mi cabeza.</p>
+      </figcaption>
+    </figure>
+
+    <figure class="galeria-item reveal">
+      <img src="../assets/images/recuerdos/recuerdo2.jpg" alt="Recuerdo 2" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌷</text></svg>'">
+      <figcaption>
+        <h3>El olor a café</h3>
+        <p>Porque siempre pides el mismo y te hace sonreír.</p>
+      </figcaption>
+    </figure>
+
+    <figure class="galeria-item reveal">
+      <img src="../assets/images/recuerdos/recuerdo3.jpg" alt="Recuerdo 3" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌙</text></svg>'">
+      <figcaption>
+        <h3>Las noches de luna</h3>
+        <p>Me recuerdan a esas llamadas largas hasta dormirnos.</p>
+      </figcaption>
+    </figure>
+
+    <figure class="galeria-item reveal">
+      <img src="../assets/images/recuerdos/recuerdo4.jpg" alt="Recuerdo 4" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🍫</text></svg>'">
+      <figcaption>
+        <h3>El chocolate</h3>
+        <p>Porque cada vez que lo veo pienso "esto le gustaría".</p>
+      </figcaption>
+    </figure>
+
+    <figure class="galeria-item reveal">
+      <img src="../assets/images/recuerdos/recuerdo5.jpg" alt="Recuerdo 5" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌧️</text></svg>'">
+      <figcaption>
+        <h3>Los días de lluvia</h3>
+        <p>Me recuerdan esa tarde abrazados sin querer irnos.</p>
+      </figcaption>
+    </figure>
+
+    <figure class="galeria-item reveal">
+      <img src="../assets/images/recuerdos/recuerdo6.jpg" alt="Recuerdo 6" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>✨</text></svg>'">
+      <figcaption>
+        <h3>Tu risa</h3>
+        <p>Es mi sonido favorito del mundo, y no exagero.</p>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="video-section">
+    <h2 class="section-title">Un video para ti</h2>
+    <p class="section-sub">Aún sin editar, pero hecho con amor 🎬</p>
+    <div class="video-wrapper">
+      <video controls poster="../assets/images/recuerdos/portada-video.jpg">
+        <source src="../assets/videos/recuerdo.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+  </section>
+
+  <footer class="footer"><p>Sigue con <a href="cartas.html">Cartas →</a></p></footer>
+
+  <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
+  <script src="../js/script.js"></script>
+  <script src="../js/galeria.js"></script>
+  <script src="../js/musica-global.js"></script>
+  <script src="../js/confeti.js"></script>
+  <script src="../js/pwa.js"></script>
+</body>
+</html>

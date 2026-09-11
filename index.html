@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para Ti, Mi Amor 💕</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f28ca6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>" />
+
+  <script>
+    (function() {
+      const ok = localStorage.getItem("auth_novia_ok");
+      const t = parseInt(localStorage.getItem("auth_novia_time") || "0", 10);
+      const valido = ok === "true" && (Date.now() - t) < 60 * 60 * 1000;
+      if (!valido) {
+        const ruta = location.pathname.includes("/pages/") ? "../login.html" : "login.html";
+        location.replace(ruta);
+      }
+    })();
+  </script>
+</head>
+<body data-cancion-titulo="Nuestra Canción" data-cancion-artista="Para ti 💕">
+
+  <div class="hearts-bg" aria-hidden="true"></div>
+
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <img src="assets/images/portada.jpg" alt="Portada" class="hero-img" onerror="this.style.display='none'">
+
+    <div class="hero-content">
+      <p class="hero-tag">Un pequeño universo hecho para ti</p>
+      <h1 class="hero-title">Hola, Mi Amor</h1>
+      <p class="hero-subtitle">
+        Cada rincón de esta página guarda algo nuestro.<br>
+        Tómate tu tiempo... esto es <em>todo</em> para ti.
+      </p>
+
+      <div class="contador-hero" id="contador">
+        <div class="contador-item"><span id="dias">0</span><small>Días</small></div>
+        <div class="contador-item"><span id="horas">0</span><small>Horas</small></div>
+        <div class="contador-item"><span id="minutos">0</span><small>Min</small></div>
+        <div class="contador-item"><span id="segundos">0</span><small>Seg</small></div>
+      </div>
+
+      <p class="contador-label">Juntos desde el <strong id="fecha-inicio">01 de Enero, 2024</strong></p>
+
+      <div class="hero-buttons">
+        <a href="#menu" class="btn btn-primary">Explorar 💌</a>
+        <a href="pages/historia.html" class="btn btn-outline">Nuestra Historia</a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">↓</div>
+  </section>
+
+  <section class="menu" id="menu">
+    <h2 class="section-title">Explora Nuestro Mundo</h2>
+    <p class="section-sub">Cada sección es un pedacito de nosotros</p>
+
+    <div class="cards-grid">
+      <a href="pages/historia.html" class="card">
+        <div class="card-emoji">📖</div>
+        <h3>Nuestra Historia</h3>
+        <p>Cómo nos conocimos y todo lo que vino después.</p>
+      </a>
+      <a href="pages/recuerdos.html" class="card">
+        <div class="card-emoji">📸</div>
+        <h3>Recuerdos</h3>
+        <p>Momentos, fotos y cosas que me recuerdan a ti.</p>
+      </a>
+      <a href="pages/cartas.html" class="card">
+        <div class="card-emoji">💌</div>
+        <h3>Cartas</h3>
+        <p>Se desbloquea una nueva cada 48 horas.</p>
+      </a>
+      <a href="pages/razones.html" class="card">
+        <div class="card-emoji">🌸</div>
+        <h3>1000 Razones</h3>
+        <p>Todas las razones por las que me enamoré de ti.</p>
+      </a>
+      <a href="pages/juego.html" class="card">
+        <div class="card-emoji">🎮</div>
+        <h3>El Juego</h3>
+        <p>Cuánto me conoces? Gana puntos amorosos.</p>
+      </a>
+      <a href="pages/cuponera.html" class="card">
+        <div class="card-emoji">🎟️</div>
+        <h3>Cuponera</h3>
+        <p>Canjea tus puntos por cupones especiales.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="music-section">
+    <div class="music-card">
+      <div class="vinyl" id="vinyl"></div>
+      <div class="music-info">
+        <h3 id="nombreCancion">🎵 Nuestra Canción</h3>
+        <p id="artistaCancion">Presiona play y piensa en mí</p>
+        <button class="btn btn-primary" id="playBtn">▶ Reproducir</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Hecho con 💖 solo para ti</p>
+  </footer>
+
+  <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
+
+  <script src="js/script.js"></script>
+  <script src="js/contador.js"></script>
+  <script src="js/musica-global.js"></script>
+  <script src="js/confeti.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>

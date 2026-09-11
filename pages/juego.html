@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Juego 🎮</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#f28ca6" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>" />
+
+  <script>
+    (function() {
+      const ok = localStorage.getItem("auth_novia_ok");
+      const t = parseInt(localStorage.getItem("auth_novia_time") || "0", 10);
+      const valido = ok === "true" && (Date.now() - t) < 60 * 60 * 1000;
+      if (!valido) location.replace("../login.html");
+    })();
+  </script>
+</head>
+<body class="page-inner"
+      data-cancion-titulo="Nuestra Canción"
+      data-cancion-artista="Para ti 💕">
+
+  <nav class="nav-back"><a href="../index.html">← Volver</a></nav>
+
+  <header class="page-header">
+    <h1>¿Cuánto me conoces?</h1>
+    <p>Responde bien y gana puntos amorosos 💗</p>
+  </header>
+
+  <div class="juego-hud">
+    <div class="hud-item">❤️ Puntos: <span id="puntosJuego">0</span></div>
+    <div class="hud-item">🎯 Pregunta: <span id="numPregunta">1</span>/<span id="totalPreguntas">0</span></div>
+    <div class="hud-item">🔥 Racha: <span id="racha">0</span></div>
+  </div>
+
+  <section class="juego-card" id="juegoCard">
+    <div id="preguntaContenido"></div>
+  </section>
+
+  <div class="juego-acciones">
+    <a href="cuponera.html" class="btn btn-outline">🎟️ Ir a la Cuponera</a>
+    <button class="btn btn-primary" id="reiniciarJuego">🔄 Reiniciar</button>
+  </div>
+
+  <footer class="footer"><p>Canjea tus puntos en la <a href="cuponera.html">Cuponera →</a></p></footer>
+
+  <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
+  <script src="../js/script.js"></script>
+  <script src="../js/juego.js"></script>
+  <script src="../js/musica-global.js"></script>
+  <script src="../js/confeti.js"></script>
+  <script src="../js/pwa.js"></script>
+</body>
+</html>

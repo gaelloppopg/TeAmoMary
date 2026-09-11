@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceso Privado 🔐</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f28ca6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>" />
+</head>
+<body class="login-body">
+
+  <div class="hearts-bg" aria-hidden="true"></div>
+
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-lock">🔐</div>
+      <h1>Solo para ti</h1>
+      <p class="login-sub">Responde esta preguntita para entrar...</p>
+
+      <div class="login-pregunta">
+        <p class="pregunta-label">💬 ¿Qué fecha empezamos a hablar?</p>
+        <p class="pregunta-hint">Formato: <strong>dd/mm/aaaa</strong></p>
+      </div>
+
+      <form id="loginForm" autocomplete="off">
+        <input
+          type="text"
+          id="respuestaLogin"
+          placeholder="dd/mm/aaaa"
+          inputmode="numeric"
+          maxlength="10"
+          aria-label="Respuesta"
+        />
+        <button type="submit" class="btn btn-primary">Entrar 💕</button>
+      </form>
+
+      <p class="login-error" id="loginError"></p>
+    </div>
+  </div>
+
+  <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
+
+  <script src="js/confeti.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
