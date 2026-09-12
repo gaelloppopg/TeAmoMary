@@ -814,13 +814,12 @@
       notifyButton: { enable: false }
     });
 
-    // Pedir permiso automáticamente después de 5 segundos
-    const permiso = await OneSignal.Notifications.permission;
-    if (!permiso) {
-      setTimeout(() => {
-        OneSignal.Notifications.requestPermission();
-      }, 5000);
-    }
+    // 🆕 Pedir permiso después de 5 segundos
+    setTimeout(() => {
+      OneSignal.Notifications.requestPermission().then((aceptado) => {
+        console.log("Permiso aceptado:", aceptado);
+      });
+    }, 5000);
   });
 </script>
   </header>
