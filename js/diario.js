@@ -5,11 +5,12 @@
 (function () {
   "use strict";
 
-// ========== CONFIGURACIÓN JSONBIN ==========
-const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
-const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
-const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
-
+  // ========== CONFIGURACIÓN JSONBIN ==========
+  // ⚠️ IMPORTANTE: La Master Key y el Bin ID se escriben SIN espacios
+  // y SIN saltos de línea para que la URL se arme bien.
+  const JSONBIN_MASTER_KEY = "$2a$10$nSNoABZwoHOkZHHujNKHW.aigQvGa.u22m2BIzXbIqGtKP2cDKzs.";
+  const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
+  const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
   // Intervalo de auto-sync (30 segundos)
   const SYNC_INTERVAL = 30 * 1000;
@@ -90,19 +91,17 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
   async function cargarEntradas() {
     setSyncEstado("sincronizando");
     try {
-      const response = await fetch(`${JSONBIN_URL}/latest`, {
+      const response = await fetch(JSONBIN_URL + "/latest", {
         headers: {
           "X-Master-Key": JSONBIN_MASTER_KEY,
           "X-Bin-Meta": "false"
         }
       });
 
-      if (!response.ok) throw new Error("Error al cargar");
+      if (!response.ok) throw new Error("Error al cargar: " + response.status);
 
       const data = await response.json();
-      // data contiene directamente { entradas: [...] }
       entradas = Array.isArray(data.entradas) ? data.entradas : [];
-      // Ordenar por fecha descendente (más nuevas primero)
       entradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
       setSyncEstado("ok");
       renderizarMural();
@@ -125,7 +124,7 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
         body: JSON.stringify({ entradas })
       });
 
-      if (!response.ok) throw new Error("Error al guardar");
+      if (!response.ok) throw new Error("Error al guardar: " + response.status);
       setSyncEstado("ok");
       return true;
     } catch (err) {
@@ -139,7 +138,6 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
   function renderizarMural() {
     if (!muralGrid) return;
 
-    // Filtrar
     const filtro = filtroTexto.trim().toLowerCase();
     const filtradas = filtro
       ? entradas.filter(e =>
@@ -163,11 +161,8 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
     }
 
     muralGrid.innerHTML = filtradas.map((entrada, i) => {
-      // Rotación aleatoria determinística (según id)
       const rot = ((hashCode(entrada.id) % 5) - 2) * 0.7;
-      // Color según hash del id
       const color = COLORES[Math.abs(hashCode(entrada.id)) % COLORES.length];
-      // Clase de autor
       const autorClase = entrada.autor === "Mica" ? "mica" : "yo";
       const autorIcono = entrada.autor === "Mica" ? "✿" : "✎";
 
@@ -190,7 +185,6 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
       `;
     }).join("");
 
-    // Reveal escalonado
     const postIts = muralGrid.querySelectorAll(".post-it");
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry, idx) => {
@@ -204,7 +198,6 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
     }, { threshold: 0.1 });
     postIts.forEach(p => io.observe(p));
 
-    // Click en cada post-it
     postIts.forEach(p => {
       p.addEventListener("click", () => {
         const id = p.dataset.id;
@@ -312,7 +305,6 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => modal.classList.add("activo"));
 
-    // Selector de autor
     modal.querySelectorAll(".diario-autor-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         modal.querySelectorAll(".diario-autor-btn").forEach(b => b.classList.remove("activo"));
@@ -399,7 +391,6 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
   function iniciarAutoSync() {
     if (syncIntervalId) clearInterval(syncIntervalId);
     syncIntervalId = setInterval(() => {
-      // Solo sincroniza si no está escribiendo y no hay modal abierto
       if (!escribiendo && !document.querySelector(".diario-modal")) {
         cargarEntradas();
       }
@@ -420,4 +411,3 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
   });
 
 })();
-// v2 - actualizado
