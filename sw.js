@@ -3,7 +3,7 @@
    ============================================ */
 
 // ⚠️ IMPORTANTE: Cada vez que edites este archivo, subí el número de versión
-const CACHE = "novia-v7";
+const CACHE = "novia-v8";
 
 const ASSETS = [
   "./",
