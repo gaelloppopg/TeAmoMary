@@ -2,16 +2,11 @@
    CUPONERA - Canjea puntos por cupones + confeti
    ========================================= */
 
-const CUPONES = [
-  { id: "c1", titulo: "no se", costo: 10, emoji: "🤗" },
-  { id: "c2", titulo: "no se", costo: 20, emoji: "🎬" },
-  { id: "c3", titulo: "no se", costo: 30, emoji: "🥐" },
-  { id: "c4", titulo: "no se", costo: 50, emoji: "🌹" },
-  { id: "c5", titulo: "no se", costo: 40, emoji: "😇" },
-  { id: "c6", titulo: "no se", costo: 25, emoji: "💆" },
-  { id: "c7", titulo: "no se", costo: 45, emoji: "🍝" },
-  { id: "c8", titulo: "no se", costo: 100, emoji: "🎁" }
-];
+// 👇 ACÁ VAN TUS CUPONES
+// Dejalo vacío [] para que no aparezca ninguno
+// o agregá los que quieras con este formato:
+// { id: "c1", titulo: "Nombre", costo: 10, emoji: "🎁" }
+const CUPONES = [];
 
 const STORAGE_PUNTOS = "puntos_amor";
 const STORAGE_CANJEADOS = "cupones_canjeados";
@@ -42,6 +37,13 @@ function actualizarSaldo() {
 function renderCupones() {
   const grid = document.getElementById("cuponesGrid");
   if (!grid) return;
+
+  // Si no hay cupones, no muestra nada
+  if (CUPONES.length === 0) {
+    grid.innerHTML = "";
+    return;
+  }
+
   const puntos = getPuntos();
   const canjeados = getCanjeados();
 
@@ -50,7 +52,7 @@ function renderCupones() {
     const alcanza = puntos >= c.costo;
     const disabled = yaCanjeado || !alcanza;
     return `
-      <div class="cupon ${yaCanjeado ? "canjeado" : ""} reveal">
+      <div class="cupon visible ${yaCanjeado ? "canjeado" : ""}">
         <div class="cupon-emoji">${c.emoji}</div>
         <h3>${c.titulo}</h3>
         <p class="cupon-costo">${c.costo} puntos</p>
