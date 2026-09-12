@@ -7,7 +7,7 @@
 
   // ========== CONFIGURACIÓN JSONBIN ==========
   // ✅ Access Key limitada (más segura que la Master Key)
-  const JSONBIN_MASTER_KEY = "$2a$10$nSNoABZwoHOkZHHujNKHW.aigQvGa.u22m2BIzXbIqGtKP2cDKzs.";
+const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
   const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
   const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
