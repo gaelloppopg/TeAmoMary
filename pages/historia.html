@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nuestra Historia 📖</title>
+  <title>Nuestra Historia — Un film</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/animations.css" />
   <link rel="stylesheet" href="../css/responsive.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="manifest" href="../manifest.json" />
   <meta name="theme-color" content="#f28ca6" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>" />
@@ -20,82 +20,773 @@
       if (!valido) location.replace("../login.html");
     })();
   </script>
+
+  <style>
+    /* ==========================================
+       HISTORIA — EXPERIENCIA CINEMATOGRÁFICA
+       ========================================== */
+
+    body.historia-page {
+      background: #0e0a0d;
+      color: #f5e6ea;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ===== INTRO CINEMATOGRÁFICA ===== */
+    .cine-intro {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cine-intro::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(242, 140, 166, 0.12), transparent 55%),
+        radial-gradient(ellipse at 50% 80%, rgba(212, 163, 115, 0.06), transparent 60%);
+      pointer-events: none;
+    }
+    .cine-intro-cinta {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: rgba(242, 140, 166, 0.55);
+      font-weight: 400;
+    }
+    .cine-intro h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: cineEntrada 2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+    .cine-intro h1 em {
+      font-style: italic;
+      color: #f28ca6;
+    }
+    .cine-intro-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 2vw, 1.4rem);
+      font-weight: 300;
+      color: rgba(245, 230, 234, 0.7);
+      max-width: 580px;
+      line-height: 1.6;
+      opacity: 0;
+      animation: cineEntrada 2s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards;
+      font-style: italic;
+    }
+    @keyframes cineEntrada {
+      0% { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    /* Indicador "scroll" minimalista */
+    .cine-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(245, 230, 234, 0.4);
+      opacity: 0;
+      animation: cineEntrada 1.5s ease 2s forwards;
+    }
+    .cine-scroll::after {
+      content: "";
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(242, 140, 166, 0.6), transparent);
+      margin: 12px auto 0;
+      animation: lineaScroll 2.4s ease-in-out infinite;
+    }
+    @keyframes lineaScroll {
+      0%, 100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.3; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    /* ===== CAPÍTULOS ===== */
+    .capitulo {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 30px;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      min-height: 85vh;
+    }
+    .capitulo.reverso {
+      direction: rtl;
+    }
+    .capitulo.reverso > * {
+      direction: ltr;
+    }
+
+    /* Número de capítulo */
+    .capitulo-num {
+      position: absolute;
+      top: 60px;
+      left: 30px;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(5rem, 12vw, 10rem);
+      font-weight: 400;
+      line-height: 0.9;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(242, 140, 166, 0.35);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    .capitulo.reverso .capitulo-num {
+      left: auto;
+      right: 30px;
+    }
+    .capitulo.visible .capitulo-num {
+      opacity: 1;
+    }
+
+    /* ===== IMAGEN ===== */
+    .capitulo-imagen-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 2px;
+      opacity: 0;
+      transform: translateY(60px) scale(0.96);
+      transition: opacity 1.2s ease, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .capitulo.visible .capitulo-imagen-wrap {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .capitulo-imagen {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(0.3) contrast(1.05) brightness(0.9);
+      transform: scale(1.1);
+      transition: filter 1.2s ease, transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .capitulo.visible .capitulo-imagen {
+      filter: grayscale(0) contrast(1) brightness(1);
+      transform: scale(1);
+    }
+    .capitulo-imagen-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14, 10, 13, 0.5), transparent 50%);
+      pointer-events: none;
+    }
+
+    /* ===== TEXTO ===== */
+    .capitulo-texto {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.2s ease 0.3s, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+    }
+    .capitulo.visible .capitulo-texto {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .capitulo-etiqueta {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #d4a373;
+      margin-bottom: 20px;
+      font-weight: 500;
+      position: relative;
+      padding-left: 40px;
+    }
+    .capitulo-etiqueta::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 28px;
+      height: 1px;
+      background: #d4a373;
+    }
+
+    .capitulo-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+      color: #f5e6ea;
+    }
+    .capitulo-titulo em {
+      font-style: italic;
+      color: #f28ca6;
+    }
+
+    .capitulo-cuerpo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(245, 230, 234, 0.75);
+      margin-bottom: 24px;
+      max-height: 6.5em;
+      overflow: hidden;
+      position: relative;
+      transition: max-height 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .capitulo-cuerpo::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3em;
+      background: linear-gradient(to bottom, transparent, #0e0a0d);
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .capitulo-cuerpo.expandido {
+      max-height: 800px;
+    }
+    .capitulo-cuerpo.expandido::after {
+      opacity: 0;
+    }
+    .capitulo-cuerpo em {
+      font-style: italic;
+      color: rgba(242, 140, 166, 0.75);
+    }
+
+    /* Botón leer más */
+    .capitulo-btn {
+      background: transparent;
+      border: none;
+      color: #f28ca6;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: gap 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+    .capitulo-btn::after {
+      content: "";
+      width: 30px;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.4s ease;
+    }
+    .capitulo-btn:hover {
+      gap: 18px;
+      color: #d4a373;
+    }
+    .capitulo-btn:hover::after {
+      width: 50px;
+    }
+    .capitulo-btn.abierto::after {
+      width: 12px;
+    }
+
+    /* ===== CITA DESTACADA ===== */
+    .cita-destacada {
+      max-width: 900px;
+      margin: 100px auto;
+      padding: 80px 40px;
+      text-align: center;
+      position: relative;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.2s ease, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cita-destacada.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .cita-destacada::before,
+    .cita-destacada::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 1px;
+      background: rgba(212, 163, 115, 0.5);
+    }
+    .cita-destacada::before { top: 0; }
+    .cita-destacada::after { bottom: 0; }
+    .cita-texto {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 400;
+      line-height: 1.4;
+      color: rgba(245, 230, 234, 0.92);
+      letter-spacing: -0.01em;
+    }
+    .cita-texto em {
+      color: #f28ca6;
+      font-style: italic;
+    }
+    .cita-autor {
+      margin-top: 30px;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(212, 163, 115, 0.7);
+      font-weight: 500;
+    }
+
+    /* ===== EPÍLOGO ===== */
+    .epilogo {
+      max-width: 900px;
+      margin: 80px auto 120px;
+      padding: 60px 30px;
+      text-align: center;
+    }
+    .epilogo h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 400;
+      color: #f5e6ea;
+      margin-bottom: 30px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+    .epilogo h2 em {
+      color: #f28ca6;
+    }
+    .epilogo p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      color: rgba(245, 230, 234, 0.7);
+      line-height: 1.8;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      font-weight: 300;
+    }
+    .epilogo-btn {
+      display: inline-block;
+      padding: 16px 40px;
+      border: 1px solid rgba(242, 140, 166, 0.5);
+      color: #f28ca6;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.4s ease;
+      background: transparent;
+      border-radius: 0;
+    }
+    .epilogo-btn:hover {
+      background: #f28ca6;
+      color: #0e0a0d;
+      border-color: #f28ca6;
+      transform: translateY(-2px);
+    }
+
+    /* Barra de progreso del scroll */
+    .historia-progreso {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #f28ca6, #d4a373);
+      width: 0%;
+      z-index: 999;
+      transition: width 0.1s linear;
+    }
+
+    /* Nav back adaptada al modo oscuro */
+    body.historia-page .nav-back {
+      background: rgba(14, 10, 13, 0.7);
+      border-bottom: 1px solid rgba(242, 140, 166, 0.1);
+      backdrop-filter: blur(12px);
+    }
+    body.historia-page .nav-back a {
+      color: rgba(245, 230, 234, 0.7);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    body.historia-page .nav-back a:hover {
+      color: #f28ca6;
+    }
+
+    body.historia-page .footer {
+      border-top: 1px solid rgba(242, 140, 166, 0.1);
+      color: rgba(245, 230, 234, 0.4);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    body.historia-page .footer a {
+      color: #f28ca6;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .capitulo {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 80px 24px;
+        min-height: auto;
+      }
+      .capitulo.reverso {
+        direction: ltr;
+      }
+      .capitulo-num {
+        top: 40px;
+        left: 24px !important;
+        right: auto !important;
+        font-size: 5rem;
+      }
+      .capitulo-imagen-wrap {
+        aspect-ratio: 3 / 4;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .cita-destacada {
+        margin: 60px auto;
+        padding: 60px 24px;
+      }
+      .epilogo {
+        padding: 40px 24px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .cine-intro h1 { font-size: 2.6rem; }
+      .capitulo { padding: 60px 20px; }
+      .capitulo-num { font-size: 4rem; }
+      .capitulo-titulo { font-size: 1.6rem; }
+      .cita-texto { font-size: 1.3rem; }
+    }
+  </style>
 </head>
-<body class="page-inner"
+<body class="page-inner historia-page"
       data-cancion-titulo="Nuestra Canción"
       data-cancion-artista="Para ti 💕">
 
-  <nav class="nav-back"><a href="../index.html">← Volver</a></nav>
+  <div class="historia-progreso" id="historiaProgreso"></div>
 
-  <header class="page-header">
-    <h1>Nuestra Historia</h1>
-    <p>Todo comenzó así...</p>
-  </header>
+  <nav class="nav-back"><a href="../index.html">← Volver al inicio</a></nav>
 
-  <main class="timeline">
-    <article class="timeline-item reveal">
-      <div class="timeline-dot"></div>
-      <div class="timeline-card">
-        <span class="timeline-date">El día que te vi</span>
-        <h2>Un encuentro sin planearlo</h2>
-        <p>
-          Recuerdo perfectamente ese momento. No sabía que en unos segundos mi vida iba a cambiar por completo.
-          <em>[Aquí escribiré cómo la conocí, qué llevaba puesto, qué dijo, qué sentí...]</em>
-        </p>
-      </div>
-    </article>
+  <!-- ============ INTRO ============ -->
+  <section class="cine-intro">
+    <span class="cine-intro-cinta">Capítulo cero</span>
+    <h1>Nuestra<br><em>historia</em></h1>
+    <p class="cine-intro-sub">
+      Un recorrido por los momentos que nos trajeron hasta aquí.<br>
+      Siete capítulos. Una sola historia. La nuestra.
+    </p>
+    <span class="cine-scroll">Desliza</span>
+  </section>
 
-    <article class="timeline-item reveal">
-      <div class="timeline-dot"></div>
-      <div class="timeline-card">
-        <span class="timeline-date">La primera conversación</span>
-        <h2>Hablamos hasta que se hizo de noche</h2>
-        <p>
-          <em>[Aquí describiré la primera charla, la primera vez que reímos juntos...]</em>
-        </p>
-      </div>
-    </article>
+  <!-- ============ CAPÍTULO 01 ============ -->
+  <section class="capitulo" data-cap="1">
+    <span class="capitulo-num">01</span>
 
-    <article class="timeline-item reveal">
-      <div class="timeline-dot"></div>
-      <div class="timeline-card">
-        <span class="timeline-date">La primera cita</span>
-        <h2>Cuando supe que eras tú</h2>
-        <p>
-          <em>[Aquí el lugar, el nerviosismo, la primera mirada...]</em>
-        </p>
-      </div>
-    </article>
+    <div class="capitulo-imagen-wrap">
+      <img src="../assets/images/nosotros/cap1.jpg"
+           alt="El día que te vi"
+           class="capitulo-imagen"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%221000%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%22 stop-color=%22%232a1a20%22/><stop offset=%221%22 stop-color=%22%235a3a44%22/></linearGradient></defs><rect width=%22800%22 height=%221000%22 fill=%22url(%23g)%22/><text x=%22400%22 y=%22500%22 font-family=%22serif%22 font-size=%22120%22 fill=%22rgba(242,140,166,0.3)%22 text-anchor=%22middle%22 font-style=%22italic%22>Capítulo 01</text></svg>'">
+    </div>
 
-    <article class="timeline-item reveal">
-      <div class="timeline-dot"></div>
-      <div class="timeline-card">
-        <span class="timeline-date">El primer "te amo"</span>
-        <h2>Y ya no hubo vuelta atrás</h2>
-        <p>
-          <em>[Aquí ese momento exacto, cómo lo dijiste o te lo dije...]</em>
-        </p>
-      </div>
-    </article>
+    <div class="capitulo-texto">
+      <span class="capitulo-etiqueta">El comienzo</span>
+      <h2 class="capitulo-titulo">El día que te vi, <em>algo cambió</em></h2>
+      <p class="capitulo-cuerpo">
+        No fue un rayo ni un trueno. Fue más silencioso que eso. Fue un instante que no entendí en su momento,
+        pero que ahora miro hacia atrás y reconozco: ahí empezó todo.
+        <em>[Aquí escribes cómo la conociste. El lugar. La hora. Qué llevaba puesto. Qué dijo. Qué pensaste cuando la viste por primera vez. Los detalles que solo tú recuerdas.]</em>
+      </p>
+      <button class="capitulo-btn">Leer completo</button>
+    </div>
+  </section>
 
-    <article class="timeline-item reveal">
-      <div class="timeline-dot"></div>
-      <div class="timeline-card">
-        <span class="timeline-date">Hoy</span>
-        <h2>Seguimos escribiendo la historia</h2>
-        <p>
-          <em>[Aquí un mensaje presente para ella, lo que sientes ahora...]</em>
-        </p>
-      </div>
-    </article>
-  </main>
+  <!-- ============ CITA 1 ============ -->
+  <section class="cita-destacada">
+    <p class="cita-texto">
+      "Hay personas que llegan a tu vida <em>sin hacer ruido</em>,<br>
+      y de pronto ya no puedes imaginarla sin ellas."
+    </p>
+    <p class="cita-autor">Para ti</p>
+  </section>
 
-  <footer class="footer"><p>Continúa en <a href="recuerdos.html">Recuerdos →</a></p></footer>
+  <!-- ============ CAPÍTULO 02 ============ -->
+  <section class="capitulo reverso" data-cap="2">
+    <span class="capitulo-num">02</span>
+
+    <div class="capitulo-imagen-wrap">
+      <img src="../assets/images/nosotros/cap2.jpg"
+           alt="Nuestra primera conversación"
+           class="capitulo-imagen"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%221000%22><defs><linearGradient id=%22g2%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%22 stop-color=%22%232a1a20%22/><stop offset=%221%22 stop-color=%22%235a3a44%22/></linearGradient></defs><rect width=%22800%22 height=%221000%22 fill=%22url(%23g2)%22/><text x=%22400%22 y=%22500%22 font-family=%22serif%22 font-size=%22120%22 fill=%22rgba(242,140,166,0.3)%22 text-anchor=%22middle%22 font-style=%22italic%22>Capítulo 02</text></svg>'">
+    </div>
+
+    <div class="capitulo-texto">
+      <span class="capitulo-etiqueta">La primera charla</span>
+      <h2 class="capitulo-titulo">Hablamos hasta que <em>se hizo de noche</em></h2>
+      <p class="capitulo-cuerpo">
+        No sé en qué momento dejamos de hablar de tonterías y empezamos a hablar de verdad.
+        Solo sé que en algún punto de esa conversación ya no quería que se acabara.
+        <em>[Aquí describes la primera conversación larga. Qué temas tocaron. Cuándo te diste cuenta de que algo especial estaba pasando. Esas horas que se sintieron como minutos.]</em>
+      </p>
+      <button class="capitulo-btn">Leer completo</button>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 03 ============ -->
+  <section class="capitulo" data-cap="3">
+    <span class="capitulo-num">03</span>
+
+    <div class="capitulo-imagen-wrap">
+      <img src="../assets/images/nosotros/cap3.jpg"
+           alt="La primera cita"
+           class="capitulo-imagen"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%221000%22><defs><linearGradient id=%22g3%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%22 stop-color=%22%232a1a20%22/><stop offset=%221%22 stop-color=%22%235a3a44%22/></linearGradient></defs><rect width=%22800%22 height=%221000%22 fill=%22url(%23g3)%22/><text x=%22400%22 y=%22500%22 font-family=%22serif%22 font-size=%22120%22 fill=%22rgba(242,140,166,0.3)%22 text-anchor=%22middle%22 font-style=%22italic%22>Capítulo 03</text></svg>'">
+    </div>
+
+    <div class="capitulo-texto">
+      <span class="capitulo-etiqueta">La primera cita</span>
+      <h2 class="capitulo-titulo">Ese instante en que <em>supe que eras tú</em></h2>
+      <p class="capitulo-cuerpo">
+        Estaba más nervioso de lo que admitiría. Repetí mentalmente mil veces lo que iba a decir y al final dije
+        cualquier cosa. Pero te reíste. Y con eso bastó.
+        <em>[Aquí el lugar, lo que pidieron, de qué hablaron, ese momento exacto en el que supiste que esto era distinto, y por qué.]</em>
+      </p>
+      <button class="capitulo-btn">Leer completo</button>
+    </div>
+  </section>
+
+  <!-- ============ CITA 2 ============ -->
+  <section class="cita-destacada">
+    <p class="cita-texto">
+      "No hay final feliz sin un comienzo <em>que valga la pena contar</em>."
+    </p>
+    <p class="cita-autor">Nuestra historia</p>
+  </section>
+
+  <!-- ============ CAPÍTULO 04 ============ -->
+  <section class="capitulo reverso" data-cap="4">
+    <span class="capitulo-num">04</span>
+
+    <div class="capitulo-imagen-wrap">
+      <img src="../assets/images/nosotros/cap4.jpg"
+           alt="El primer te amo"
+           class="capitulo-imagen"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%221000%22><defs><linearGradient id=%22g4%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%22 stop-color=%22%232a1a20%22/><stop offset=%221%22 stop-color=%22%235a3a44%22/></linearGradient></defs><rect width=%22800%22 height=%221000%22 fill=%22url(%23g4)%22/><text x=%22400%22 y=%22500%22 font-family=%22serif%22 font-size=%22120%22 fill=%22rgba(242,140,166,0.3)%22 text-anchor=%22middle%22 font-style=%22italic%22>Capítulo 04</text></svg>'">
+    </div>
+
+    <div class="capitulo-texto">
+      <span class="capitulo-etiqueta">Tres palabras</span>
+      <h2 class="capitulo-titulo">La primera vez que <em>te dije "te amo"</em></h2>
+      <p class="capitulo-cuerpo">
+        No lo planeé. Salió. Salió en un momento cualquiera, de un día cualquiera, y lo dije como si fuera lo más
+        natural del mundo. Y lo era.
+        <em>[Aquí ese momento exacto: dónde estaban, qué estaban haciendo, cómo reaccionó cada uno, qué pasó después.]</em>
+      </p>
+      <button class="capitulo-btn">Leer completo</button>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 05 ============ -->
+  <section class="capitulo" data-cap="5">
+    <span class="capitulo-num">05</span>
+
+    <div class="capitulo-imagen-wrap">
+      <img src="../assets/images/nosotros/cap5.jpg"
+           alt="Nuestros viajes"
+           class="capitulo-imagen"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%221000%22><defs><linearGradient id=%22g5%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%22 stop-color=%22%232a1a20%22/><stop offset=%221%22 stop-color=%22%235a3a44%22/></linearGradient></defs><rect width=%22800%22 height=%221000%22 fill=%22url(%23g5)%22/><text x=%22400%22 y=%22500%22 font-family=%22serif%22 font-size=%22120%22 fill=%22rgba(242,140,166,0.3)%22 text-anchor=%22middle%22 font-style=%22italic%22>Capítulo 05</text></svg>'">
+    </div>
+
+    <div class="capitulo-texto">
+      <span class="capitulo-etiqueta">Aventuras</span>
+      <h2 class="capitulo-titulo">Los lugares que <em>descubrimos juntos</em></h2>
+      <p class="capitulo-cuerpo">
+        Descubrí que viajar contigo es distinto. Los lugares no importan tanto; lo que importa es con quién
+        los ves por primera vez.
+        <em>[Aquí relatas viajes, escapadas, tardes que se sintieron como aventuras. Los momentos que se volvieron anécdotas.]</em>
+      </p>
+      <button class="capitulo-btn">Leer completo</button>
+    </div>
+  </section>
+
+  <!-- ============ CITA 3 ============ -->
+  <section class="cita-destacada">
+    <p class="cita-texto">
+      "De todos los lugares a los que he ido,<br>
+      <em>mi favorito siempre ha sido a tu lado</em>."
+    </p>
+    <p class="cita-autor">Para siempre</p>
+  </section>
+
+  <!-- ============ CAPÍTULO 06 ============ -->
+  <section class="capitulo reverso" data-cap="6">
+    <span class="capitulo-num">06</span>
+
+    <div class="capitulo-imagen-wrap">
+      <img src="../assets/images/nosotros/cap6.jpg"
+           alt="Nuestro presente"
+           class="capitulo-imagen"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%221000%22><defs><linearGradient id=%22g6%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%22 stop-color=%22%232a1a20%22/><stop offset=%221%22 stop-color=%22%235a3a44%22/></linearGradient></defs><rect width=%22800%22 height=%221000%22 fill=%22url(%23g6)%22/><text x=%22400%22 y=%22500%22 font-family=%22serif%22 font-size=%22120%22 fill=%22rgba(242,140,166,0.3)%22 text-anchor=%22middle%22 font-style=%22italic%22>Capítulo 06</text></svg>'">
+    </div>
+
+    <div class="capitulo-texto">
+      <span class="capitulo-etiqueta">El presente</span>
+      <h2 class="capitulo-titulo">Hoy, <em>aquí, contigo</em></h2>
+      <p class="capitulo-cuerpo">
+        Después de todo lo vivido, lo que más me gusta es lo simple: un café, una serie, un silencio cómodo.
+        Nada extraordinario. Todo perfecto.
+        <em>[Aquí hablas del presente: de lo que disfrutas ahora con ella, de la rutina que se volvió especial, de cómo se ve el amor en lo cotidiano.]</em>
+      </p>
+      <button class="capitulo-btn">Leer completo</button>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 07 ============ -->
+  <section class="capitulo" data-cap="7">
+    <span class="capitulo-num">07</span>
+
+    <div class="capitulo-imagen-wrap">
+      <img src="../assets/images/nosotros/cap7.jpg"
+           alt="Nuestro futuro"
+           class="capitulo-imagen"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%221000%22><defs><linearGradient id=%22g7%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%22 stop-color=%22%232a1a20%22/><stop offset=%221%22 stop-color=%22%235a3a44%22/></linearGradient></defs><rect width=%22800%22 height=%221000%22 fill=%22url(%23g7)%22/><text x=%22400%22 y=%22500%22 font-family=%22serif%22 font-size=%22120%22 fill=%22rgba(242,140,166,0.3)%22 text-anchor=%22middle%22 font-style=%22italic%22>Capítulo 07</text></svg>'">
+    </div>
+
+    <div class="capitulo-texto">
+      <span class="capitulo-etiqueta">Lo que viene</span>
+      <h2 class="capitulo-titulo">Todo lo que aún <em>nos queda por vivir</em></h2>
+      <p class="capitulo-cuerpo">
+        No sé qué capítulos nos esperan. No sé cuántas páginas faltan. Pero sí sé que quiero escribirlas todas
+        contigo, en el mismo libro.
+        <em>[Aquí hablas del futuro: sueños, metas, planes, todo lo que quieres construir con ella.]</em>
+      </p>
+      <button class="capitulo-btn">Leer completo</button>
+    </div>
+  </section>
+
+  <!-- ============ EPÍLOGO ============ -->
+  <section class="epilogo">
+    <h2>Y esto es solo <em>el comienzo</em>.</h2>
+    <p>
+      Estos siete capítulos son solo los que ya escribimos. Los que siguen los escribiremos juntos,
+      día a día, sin prisa.
+    </p>
+    <a href="recuerdos.html" class="epilogo-btn">Ver nuestros recuerdos</a>
+  </section>
+
+  <footer class="footer"><p>Capítulo actual: <a href="recuerdos.html">Recuerdos →</a></p></footer>
 
   <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
   <script src="../js/script.js"></script>
   <script src="../js/musica-global.js"></script>
   <script src="../js/confeti.js"></script>
   <script src="../js/pwa.js"></script>
+
+  <script>
+    // ========== REVEAL AL SCROLL ==========
+    (function () {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add("visible");
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll(".capitulo, .cita-destacada").forEach(el => io.observe(el));
+    })();
+
+    // ========== PARALLAX SUAVE EN IMÁGENES ==========
+    (function () {
+      const imgs = document.querySelectorAll(".capitulo-imagen");
+      if (!imgs.length) return;
+
+      let ticking = false;
+      window.addEventListener("scroll", () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            imgs.forEach(img => {
+              const rect = img.getBoundingClientRect();
+              const centro = rect.top + rect.height / 2;
+              const pantallaCentro = window.innerHeight / 2;
+              const offset = (centro - pantallaCentro) / window.innerHeight;
+              // Movimiento sutil entre -3% y 3%
+              const translateY = offset * 40;
+              img.style.transform = `scale(1) translateY(${translateY}px)`;
+            });
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+    })();
+
+    // ========== BOTONES "LEER COMPLETO" ==========
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".capitulo-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const cuerpo = btn.previousElementSibling;
+          if (!cuerpo) return;
+          const abierto = cuerpo.classList.toggle("expandido");
+          btn.classList.toggle("abierto", abierto);
+          btn.textContent = abierto ? "Cerrar" : "Leer completo";
+        });
+      });
+    });
+
+    // ========== BARRA DE PROGRESO ==========
+    (function () {
+      const barra = document.getElementById("historiaProgreso");
+      if (!barra) return;
+      window.addEventListener("scroll", () => {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const progreso = (window.scrollY / total) * 100;
+        barra.style.width = progreso + "%";
+      }, { passive: true });
+    })();
+
+    // ========== TEXTO MÁQUINA DE ESCRIBIR EN LA CITA ==========
+    (function () {
+      const cita = document.querySelector(".cine-intro h1");
+      if (!cita) return;
+      // Ya viene animado con CSS, no hacemos más
+    })();
+  </script>
 </body>
 </html>
