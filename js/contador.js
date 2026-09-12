@@ -3,7 +3,7 @@
    ⚠️ EDITA esta fecha con la tuya real
    ========================================= */
 
-const FECHA_INICIO = new Date("2026-06-30T18:00:00"); // 👈 CAMBIA ESTO
+const FECHA_INICIO = new Date("2026-06-26T18:00:00"); // 👈 CAMBIA ESTO
 
 function actualizarContador() {
   const ahora = new Date();

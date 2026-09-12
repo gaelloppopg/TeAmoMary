@@ -461,24 +461,28 @@
       100% { transform: translate(4%, 5%) scale(1.15); }
     }
 
-    .video-modal-inner {
-      position: relative;
-      width: 100%;
-      max-width: 1200px;
-      aspect-ratio: 16 / 9;
-      border-radius: 20px;
-      overflow: hidden;
-      background: #000;
-      box-shadow:
-        0 40px 100px rgba(0, 0, 0, 0.9),
-        0 0 120px rgba(242, 140, 166, 0.35);
-      transform: scale(0.7) rotateX(15deg);
-      opacity: 0;
-      transition:
-        transform 1s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.8s ease;
-      z-index: 2;
-    }
+.video-modal-inner {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 90vw;
+  max-height: 88vh;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.9),
+    0 0 120px rgba(242, 140, 166, 0.35);
+  transform: scale(0.7) rotateX(15deg);
+  opacity: 0;
+  transition:
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.8s ease;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
     .video-modal.activo .video-modal-inner {
       transform: scale(1) rotateX(0);
       opacity: 1;
