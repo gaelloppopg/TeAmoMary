@@ -789,6 +789,16 @@
       .diario-textarea { min-height: 130px; }
     }
   </style>
+
+   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "32e04d3a-499a-4e73-a029-f50adf80584b",
+    });
+  });
+</script>
 </head>
 <body class="page-inner diario-page"
       data-cancion-titulo="Nuestra Canción"
@@ -801,15 +811,6 @@
     <h1>Nuestro <em>Diario</em></h1>
     <p>Un lugar donde guardamos los momentos, uno por uno.</p>
 
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "32e04d3a-499a-4e73-a029-f50adf80584b",
-    });
-  });
-</script>
   </header>
 
   <!-- ===== ACCIONES ===== -->
