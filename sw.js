@@ -3,7 +3,7 @@
    ============================================ */
 
 // ⚠️ IMPORTANTE: Cada vez que edites este archivo, subí el número de versión
-const CACHE = "novia-v6";
+const CACHE = "novia-v7";
 
 const ASSETS = [
   "./",
@@ -70,12 +70,16 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const url = e.request.url;
 
-  // 🛡️ EXCEPCIÓN PRINCIPAL: NO interceptar NADA que no sea de nuestro sitio
-  // JSONBin, Google Fonts, APIs externas → van directo a internet
+  // 🛡️ EXCEPCIÓN 1: No interceptar peticiones de OneSignal
+  if (url.includes("onesignal.com") || url.includes("OneSignalSDK")) {
+    return;
+  }
+
+  // 🛡️ EXCEPCIÓN 2: NO interceptar NADA que no sea de nuestro sitio
   const esDeNuestroSitio = url.startsWith(self.location.origin);
 
   if (!esDeNuestroSitio) {
-    return; // Dejar pasar sin caché
+    return;
   }
 
   // 🛡️ Solo interceptar GET

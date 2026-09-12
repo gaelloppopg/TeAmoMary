@@ -1,15 +1,19 @@
 /* ============================================
    DIARIO — Mural de post-its sincronizado con JSONBin
+   + Notificaciones push con OneSignal
    ============================================ */
 
 (function () {
   "use strict";
 
   // ========== CONFIGURACIÓN JSONBIN ==========
-  // ✅ Access Key limitada (más segura que la Master Key)
-const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
+  const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
   const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
   const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
+
+  // ========== CONFIGURACIÓN ONESIGNAL ==========
+  const ONESIGNAL_APP_ID = "32e04d3a-499a-4e73-a029-f50adf80584b";
+  const ONESIGNAL_REST_KEY = "os_v2_app_glqe2osjtjhhhibj6ufn7acyjoefx427n6sea7nwxt4ouuo5arrhwnzk4m7akb2dxn2k3zhtitkym7z2zt5jexwj3ic5vl3rrwmqm3q";
 
   // Intervalo de auto-sync (30 segundos)
   const SYNC_INTERVAL = 30 * 1000;
@@ -83,6 +87,46 @@ const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4
       syncIndicator.textContent = "Sin conexión";
     } else {
       syncIndicator.textContent = "Conectado";
+    }
+  }
+
+  // ========== NOTIFICACIONES PUSH ==========
+  async function enviarNotificacion(autor) {
+    const mensaje = autor === "Gael"
+      ? "Gael escribió algo nuevo en el diario 💜"
+      : "Mary escribió algo nuevo en el diario 💜";
+
+    try {
+      const response = await fetch("https://api.onesignal.com/notifications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Authorization": "Key " + ONESIGNAL_REST_KEY
+        },
+        body: JSON.stringify({
+          app_id: ONESIGNAL_APP_ID,
+          target_channel: "push",
+          headings: {
+            en: "Nuestro Diario",
+            es: "Nuestro Diario"
+          },
+          contents: {
+            en: mensaje,
+            es: mensaje
+          },
+          included_segments: ["Subscribed Users"],
+          url: "https://gaellpoppp.github.io/TeAmoMary/pages/diario.html"
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        console.warn("⚠️ Notificación no enviada:", err);
+      } else {
+        console.log("✅ Notificación enviada");
+      }
+    } catch (err) {
+      console.error("Error enviando notificación:", err);
     }
   }
 
@@ -349,6 +393,9 @@ const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4
         alert("⚠️ Hubo un problema al guardar. Revisá tu conexión.");
       } else {
         if (window.lanzarConfeti) window.lanzarConfeti(1500);
+
+        // 🆕 Enviar notificación push al otro
+        enviarNotificacion(nuevaEntrada.autor);
       }
     };
 
