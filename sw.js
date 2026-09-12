@@ -2,8 +2,8 @@
    Service Worker - Cache offline + excepciones
    ============================================ */
 
-// ⚠️ IMPORTANTE: Cambiá el número de versión cada vez que edites este archivo
-const CACHE = "novia-v5";
+// ⚠️ IMPORTANTE: Cada vez que edites este archivo, subí el número de versión
+const CACHE = "novia-v6";
 
 const ASSETS = [
   "./",
@@ -70,29 +70,23 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const url = e.request.url;
 
-  // 🛡️ EXCEPCIÓN 1: NO interceptar nada que NO sea de nuestro sitio
-  // Esto incluye JSONBin, Google Fonts, cualquier API externa, etc.
+  // 🛡️ EXCEPCIÓN PRINCIPAL: NO interceptar NADA que no sea de nuestro sitio
+  // JSONBin, Google Fonts, APIs externas → van directo a internet
   const esDeNuestroSitio = url.startsWith(self.location.origin);
-  
+
   if (!esDeNuestroSitio) {
-    // Dejar pasar la petición tal cual (sin caché)
-    return;
+    return; // Dejar pasar sin caché
   }
 
-  // 🛡️ EXCEPCIÓN 2: Solo interceptar peticiones GET
-  // PUT, POST, DELETE van directo a internet
+  // 🛡️ Solo interceptar GET
   if (e.request.method !== "GET") {
     return;
   }
 
-  // ========== ESTRATEGIA: network-first para HTML, cache-first para el resto ==========
-  // Si es HTML → siempre buscar lo nuevo primero (para que se actualice)
-  // Si es CSS/JS/imagen → usar caché primero (más rápido)
-  
+  // ========== Network-first para HTML, cache-first para el resto ==========
   const esHTML = e.request.headers.get("accept")?.includes("text/html");
-  
+
   if (esHTML) {
-    // Network-first: intenta traer lo nuevo, si falla usa caché
     e.respondWith(
       fetch(e.request)
         .then((res) => {
@@ -106,12 +100,12 @@ self.addEventListener("fetch", (e) => {
     );
     return;
   }
-  
+
   // Para JS, CSS, imágenes → cache-first
   e.respondWith(
     caches.match(e.request).then((cached) => {
       if (cached) return cached;
-      
+
       return fetch(e.request).then((res) => {
         if (res && res.status === 200 && res.type === "basic") {
           const copy = res.clone();

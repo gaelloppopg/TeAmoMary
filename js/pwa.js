@@ -3,7 +3,6 @@
    ========================================= */
 
 // ========== REGISTRO DEL SERVICE WORKER ==========
-// Detecta si estamos en /pages/ o en la raíz para encontrar sw.js
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     const enPages = location.pathname.includes("/pages/");
@@ -13,8 +12,6 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register(swPath, { scope: swScope })
       .then((reg) => {
         console.log("✅ Service Worker registrado. Scope:", reg.scope);
-
-        // Buscar actualizaciones cada vez que carga la página
         reg.update().catch(() => {});
       })
       .catch((e) => {
@@ -22,7 +19,6 @@ if ("serviceWorker" in navigator) {
       });
   });
 
-  // Detectar cuando hay una nueva versión del SW disponible
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     console.log("🔄 Nueva versión del Service Worker activa");
   });
