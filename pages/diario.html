@@ -21,6 +21,26 @@
     })();
   </script>
 
+  <!-- ===== OneSignal SDK (ANTES de </head>) ===== -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "32e04d3a-499a-4e73-a029-f50adf80584b",
+        allowLocalhostAsSecureOrigin: true,
+        notifyButton: { enable: false }
+      });
+
+      // Pedir permiso después de 5 segundos
+      setTimeout(() => {
+        OneSignal.Notifications.requestPermission().then((aceptado) => {
+          console.log("Permiso aceptado:", aceptado);
+        });
+      }, 5000);
+    });
+  </script>
+
   <style>
     /* ============================================
        DIARIO — MURAL DE POST-ITS EN HOJA DE CUADERNO
@@ -41,29 +61,14 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ===== HOJA DE CUADERNO (fondo) ===== */
     body.diario-page::before {
       content: "";
       position: fixed;
       inset: 0;
       background-color: #fbf6e9;
       background-image:
-        linear-gradient(
-          to bottom,
-          transparent 0,
-          transparent 27px,
-          rgba(120, 150, 200, 0.35) 27px,
-          rgba(120, 150, 200, 0.35) 28px,
-          transparent 28px
-        ),
-        linear-gradient(
-          to right,
-          transparent 0,
-          transparent 70px,
-          rgba(220, 100, 120, 0.45) 70px,
-          rgba(220, 100, 120, 0.45) 71px,
-          transparent 71px
-        ),
+        linear-gradient(to bottom, transparent 0, transparent 27px, rgba(120, 150, 200, 0.35) 27px, rgba(120, 150, 200, 0.35) 28px, transparent 28px),
+        linear-gradient(to right, transparent 0, transparent 70px, rgba(220, 100, 120, 0.45) 70px, rgba(220, 100, 120, 0.45) 71px, transparent 71px),
         radial-gradient(circle at 20% 30%, rgba(200, 180, 150, 0.08) 0%, transparent 40%),
         radial-gradient(circle at 80% 70%, rgba(200, 180, 150, 0.06) 0%, transparent 40%);
       background-size: 100% 28px, 100% 100%, 100% 100%, 100% 100%;
@@ -76,8 +81,7 @@
       content: "";
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(ellipse at center, transparent 60%, rgba(80, 60, 30, 0.12) 100%);
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(80, 60, 30, 0.12) 100%);
       z-index: -1;
       pointer-events: none;
     }
@@ -102,9 +106,7 @@
       transition: color 0.3s ease;
       text-decoration: none;
     }
-    body.diario-page .nav-back a:hover {
-      color: #c99c5a;
-    }
+    body.diario-page .nav-back a:hover { color: #c99c5a; }
 
     /* ============================================
        HEADER
@@ -126,15 +128,10 @@
       color: #4a3520;
       margin-bottom: 14px;
       transform: rotate(-1.5deg);
-      text-shadow:
-        1px 1px 0 rgba(255, 255, 255, 0.8),
-        2px 3px 6px rgba(120, 90, 60, 0.2);
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8), 2px 3px 6px rgba(120, 90, 60, 0.2);
       animation: fadeInDiario 1.2s ease 0.2s both;
     }
-    .diario-header h1 em {
-      color: #c99c5a;
-      font-style: normal;
-    }
+    .diario-header h1 em { color: #c99c5a; font-style: normal; }
 
     .diario-header p {
       font-family: 'Kalam', cursive;
@@ -182,29 +179,17 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow:
-        0 10px 24px rgba(200, 160, 80, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      box-shadow: 0 10px 24px rgba(200, 160, 80, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
       transform: rotate(-1deg);
       position: relative;
     }
-    .btn-nueva-entrada::before {
-      content: "✎";
-      font-size: 1.1rem;
-    }
+    .btn-nueva-entrada::before { content: "✎"; font-size: 1.1rem; }
     .btn-nueva-entrada:hover {
       transform: translateY(-3px) rotate(1deg) scale(1.03);
-      box-shadow:
-        0 16px 34px rgba(200, 160, 80, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      box-shadow: 0 16px 34px rgba(200, 160, 80, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.8);
     }
 
-    .diario-buscador-wrap {
-      position: relative;
-      flex: 1;
-      min-width: 220px;
-      max-width: 340px;
-    }
+    .diario-buscador-wrap { position: relative; flex: 1; min-width: 220px; max-width: 340px; }
     #buscadorDiario {
       width: 100%;
       padding: 12px 20px 12px 42px;
@@ -217,10 +202,7 @@
       outline: none;
       transition: all 0.3s ease;
     }
-    #buscadorDiario::placeholder {
-      color: #a89078;
-      font-style: italic;
-    }
+    #buscadorDiario::placeholder { color: #a89078; font-style: italic; }
     #buscadorDiario:focus {
       border-color: #c99c5a;
       background: #fff;
@@ -237,7 +219,6 @@
       opacity: 0.7;
     }
 
-    /* Indicador de sincronización */
     .diario-sync {
       display: inline-flex;
       align-items: center;
@@ -293,21 +274,14 @@
       grid-auto-flow: dense;
     }
 
-    /* ============================================
-       POST-IT
-       ============================================ */
     .post-it {
       position: relative;
       padding: 34px 22px 22px;
       min-height: 240px;
       background: #fff9b0;
-      box-shadow:
-        0 12px 24px rgba(120, 90, 60, 0.18),
-        0 3px 8px rgba(120, 90, 60, 0.12);
+      box-shadow: 0 12px 24px rgba(120, 90, 60, 0.18), 0 3px 8px rgba(120, 90, 60, 0.12);
       cursor: pointer;
-      transition:
-        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.4s ease;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
       opacity: 0;
       transform: translateY(30px) rotate(var(--rot, 0deg));
       display: flex;
@@ -340,10 +314,7 @@
       height: 22px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 30%, #f88, #c44);
-      box-shadow:
-        0 4px 8px rgba(120, 40, 40, 0.35),
-        inset 0 -3px 5px rgba(0, 0, 0, 0.15),
-        inset 0 3px 5px rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 8px rgba(120, 40, 40, 0.35), inset 0 -3px 5px rgba(0, 0, 0, 0.15), inset 0 3px 5px rgba(255, 255, 255, 0.4);
       z-index: 2;
     }
     .post-it-chinche::after {
@@ -359,7 +330,6 @@
       box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
-    /* Colores de post-its */
     .post-it.color-amarillo { background: #fff9b0; }
     .post-it.color-rosa     { background: #ffd6e8; }
     .post-it.color-celeste  { background: #d4ecff; }
@@ -369,9 +339,7 @@
 
     .post-it:hover {
       transform: translateY(-6px) rotate(var(--rot, 0deg)) scale(1.03);
-      box-shadow:
-        0 20px 40px rgba(120, 90, 60, 0.25),
-        0 6px 14px rgba(120, 90, 60, 0.15);
+      box-shadow: 0 20px 40px rgba(120, 90, 60, 0.25), 0 6px 14px rgba(120, 90, 60, 0.15);
       z-index: 5;
     }
 
@@ -397,11 +365,7 @@
     }
     .post-it-autor.gael { color: #4a6a8a; }
     .post-it-autor.mary { color: #a84a7a; }
-    .post-it-fecha {
-      white-space: nowrap;
-      opacity: 0.75;
-      font-size: 0.68rem;
-    }
+    .post-it-fecha { white-space: nowrap; opacity: 0.75; font-size: 0.68rem; }
 
     .post-it-titulo {
       font-family: 'Caveat', cursive;
@@ -441,13 +405,8 @@
       transition: opacity 0.3s ease;
       text-align: right;
     }
-    .post-it:hover .post-it-hint {
-      opacity: 0.9;
-    }
+    .post-it:hover .post-it-hint { opacity: 0.9; }
 
-    /* ============================================
-       EMPTY STATE
-       ============================================ */
     .diario-vacio {
       grid-column: 1 / -1;
       text-align: center;
@@ -457,12 +416,7 @@
       color: #8a6a4a;
       line-height: 1.6;
     }
-    .diario-vacio::before {
-      content: "📌";
-      display: block;
-      font-size: 3rem;
-      margin-bottom: 16px;
-    }
+    .diario-vacio::before { content: "📌"; display: block; font-size: 3rem; margin-bottom: 16px; }
     .diario-vacio strong {
       display: block;
       font-family: 'Caveat', cursive;
@@ -489,10 +443,7 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
-    .diario-modal.activo {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .diario-modal.activo { opacity: 1; pointer-events: auto; }
 
     .diario-papel {
       position: relative;
@@ -503,46 +454,21 @@
       padding: 50px 50px 45px;
       background: #fbf6e9;
       background-image:
-        linear-gradient(
-          to bottom,
-          transparent 0,
-          transparent 27px,
-          rgba(120, 150, 200, 0.3) 27px,
-          rgba(120, 150, 200, 0.3) 28px,
-          transparent 28px
-        ),
-        linear-gradient(
-          to right,
-          transparent 0,
-          transparent 55px,
-          rgba(220, 100, 120, 0.4) 55px,
-          rgba(220, 100, 120, 0.4) 56px,
-          transparent 56px
-        );
+        linear-gradient(to bottom, transparent 0, transparent 27px, rgba(120, 150, 200, 0.3) 27px, rgba(120, 150, 200, 0.3) 28px, transparent 28px),
+        linear-gradient(to right, transparent 0, transparent 55px, rgba(220, 100, 120, 0.4) 55px, rgba(220, 100, 120, 0.4) 56px, transparent 56px);
       background-size: 100% 28px, 100% 100%;
       border-radius: 4px;
-      box-shadow:
-        0 40px 100px rgba(60, 40, 20, 0.5),
-        0 10px 30px rgba(60, 40, 20, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      box-shadow: 0 40px 100px rgba(60, 40, 20, 0.5), 0 10px 30px rgba(60, 40, 20, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.9);
       transform: scale(0.9) rotate(-1deg);
       opacity: 0;
-      transition:
-        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.5s ease;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
       scrollbar-width: thin;
       scrollbar-color: rgba(150, 120, 90, 0.5) transparent;
       z-index: 2;
     }
     .diario-papel::-webkit-scrollbar { width: 6px; }
-    .diario-papel::-webkit-scrollbar-thumb {
-      background: rgba(150, 120, 90, 0.4);
-      border-radius: 50px;
-    }
-    .diario-modal.activo .diario-papel {
-      transform: scale(1) rotate(0);
-      opacity: 1;
-    }
+    .diario-papel::-webkit-scrollbar-thumb { background: rgba(150, 120, 90, 0.4); border-radius: 50px; }
+    .diario-modal.activo .diario-papel { transform: scale(1) rotate(0); opacity: 1; }
 
     .diario-cerrar {
       position: absolute;
@@ -564,11 +490,7 @@
       font-family: 'Inter', sans-serif;
       box-shadow: 0 4px 12px rgba(120, 90, 60, 0.2);
     }
-    .diario-cerrar:hover {
-      background: #8a6a4a;
-      color: #fff;
-      transform: rotate(90deg) scale(1.05);
-    }
+    .diario-cerrar:hover { background: #8a6a4a; color: #fff; transform: rotate(90deg) scale(1.05); }
 
     .diario-modal-meta {
       display: flex;
@@ -592,9 +514,7 @@
     }
     .diario-modal-autor.gael { color: #4a6a8a; }
     .diario-modal-autor.mary { color: #a84a7a; }
-    .diario-modal-fecha {
-      opacity: 0.75;
-    }
+    .diario-modal-fecha { opacity: 0.75; }
 
     .diario-modal-titulo {
       font-family: 'Caveat', cursive;
@@ -643,44 +563,25 @@
       color: #4a3520;
       box-shadow: 0 6px 16px rgba(200, 160, 80, 0.3);
     }
-    .btn-diario.primario:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(200, 160, 80, 0.45);
-    }
+    .btn-diario.primario:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(200, 160, 80, 0.45); }
     .btn-diario.peligro {
       background: rgba(217, 102, 102, 0.15);
       color: #b04a4a;
       border: 1.5px solid rgba(217, 102, 102, 0.4);
     }
-    .btn-diario.peligro:hover {
-      background: rgba(217, 102, 102, 0.25);
-      border-color: rgba(217, 102, 102, 0.7);
-    }
+    .btn-diario.peligro:hover { background: rgba(217, 102, 102, 0.25); border-color: rgba(217, 102, 102, 0.7); }
     .btn-diario.neutro {
       background: rgba(255, 255, 255, 0.85);
       color: #7a6248;
       border: 1.5px solid rgba(150, 120, 90, 0.3);
     }
-    .btn-diario.neutro:hover {
-      background: #fff;
-      border-color: rgba(150, 120, 90, 0.6);
-    }
+    .btn-diario.neutro:hover { background: #fff; border-color: rgba(150, 120, 90, 0.6); }
 
     /* ============================================
        FORMULARIO
        ============================================ */
-    .diario-form {
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-    }
-
-    .diario-campo {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    .diario-form { display: flex; flex-direction: column; gap: 22px; }
+    .diario-campo { display: flex; flex-direction: column; gap: 8px; }
     .diario-label {
       font-family: 'Kalam', cursive;
       font-size: 0.82rem;
@@ -705,27 +606,16 @@
       box-sizing: border-box;
     }
     .diario-input::placeholder,
-    .diario-textarea::placeholder {
-      color: #a89078;
-      font-style: italic;
-    }
+    .diario-textarea::placeholder { color: #a89078; font-style: italic; }
     .diario-input:focus,
     .diario-textarea:focus {
       border-color: #c99c5a;
       background: #fff;
       box-shadow: 0 0 0 4px rgba(201, 156, 90, 0.15);
     }
-    .diario-textarea {
-      min-height: 200px;
-      resize: vertical;
-      line-height: 1.8;
-    }
+    .diario-textarea { min-height: 200px; resize: vertical; line-height: 1.8; }
 
-    .diario-autores {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .diario-autores { display: flex; gap: 10px; flex-wrap: wrap; }
     .diario-autor-btn {
       flex: 1;
       min-width: 120px;
@@ -744,10 +634,7 @@
       justify-content: center;
       gap: 8px;
     }
-    .diario-autor-btn:hover {
-      border-color: rgba(150, 120, 90, 0.6);
-      transform: translateY(-2px);
-    }
+    .diario-autor-btn:hover { border-color: rgba(150, 120, 90, 0.6); transform: translateY(-2px); }
     .diario-autor-btn.activo {
       background: linear-gradient(135deg, #fff9b0, #ffe8a0);
       border-color: #c99c5a;
@@ -755,26 +642,15 @@
       box-shadow: 0 6px 16px rgba(200, 160, 80, 0.3);
     }
 
-    .diario-form-acciones {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
+    .diario-form-acciones { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
 
     /* ============================================
        RESPONSIVE
        ============================================ */
     @media (max-width: 768px) {
       .diario-header { padding: 40px 20px 15px; }
-      .mural-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
-      }
-      .post-it {
-        padding: 30px 18px 18px;
-        min-height: 200px;
-      }
+      .mural-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+      .post-it { padding: 30px 18px 18px; min-height: 200px; }
       .post-it-titulo { font-size: 1.3rem; }
       .post-it-preview { font-size: 0.88rem; -webkit-line-clamp: 4; }
       .diario-papel { padding: 40px 26px 35px; }
@@ -783,22 +659,10 @@
     }
 
     @media (max-width: 480px) {
-      .mural-grid {
-        grid-template-columns: 1fr;
-      }
+      .mural-grid { grid-template-columns: 1fr; }
       .diario-textarea { min-height: 130px; }
     }
   </style>
-
-   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "32e04d3a-499a-4e73-a029-f50adf80584b",
-    });
-  });
-</script>
 </head>
 <body class="page-inner diario-page"
       data-cancion-titulo="Nuestra Canción"
@@ -810,7 +674,6 @@
   <header class="diario-header">
     <h1>Nuestro <em>Diario</em></h1>
     <p>Un lugar donde guardamos los momentos, uno por uno.</p>
-
   </header>
 
   <!-- ===== ACCIONES ===== -->
