@@ -6,8 +6,6 @@
   "use strict";
 
   // ========== CONFIGURACIÓN JSONBIN ==========
-  // ⚠️ IMPORTANTE: La Master Key y el Bin ID se escriben SIN espacios
-  // y SIN saltos de línea para que la URL se arme bien.
   const JSONBIN_MASTER_KEY = "$2a$10$nSNoABZwoHOkZHHujNKHW.aigQvGa.u22m2BIzXbIqGtKP2cDKzs.";
   const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
   const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
@@ -160,11 +158,13 @@
       return;
     }
 
-    muralGrid.innerHTML = filtradas.map((entrada, i) => {
+    muralGrid.innerHTML = filtradas.map((entrada) => {
       const rot = ((hashCode(entrada.id) % 5) - 2) * 0.7;
       const color = COLORES[Math.abs(hashCode(entrada.id)) % COLORES.length];
-      const autorClase = entrada.autor === "Mica" ? "mica" : "yo";
-      const autorIcono = entrada.autor === "Mica" ? "✿" : "✎";
+      // 👇 DETECTAR AUTOR: Mary o Gael
+      const esMary = entrada.autor === "Mary";
+      const autorClase = esMary ? "mary" : "gael";
+      const autorIcono = esMary ? "✿" : "✎";
 
       const titulo = escaparHTML(entrada.titulo || "(Sin título)");
       const preview = escaparHTML((entrada.texto || "").slice(0, 200));
@@ -219,14 +219,15 @@
 
   // ========== MODAL: LECTURA ==========
   function abrirLectura(entrada) {
+    const esMary = entrada.autor === "Mary";
     const modal = document.createElement("div");
     modal.className = "diario-modal";
     modal.innerHTML = `
       <div class="diario-papel">
         <button class="diario-cerrar" aria-label="Cerrar">✕</button>
         <div class="diario-modal-meta">
-          <span class="diario-modal-autor ${entrada.autor === "Mica" ? "mica" : "yo"}">
-            ${entrada.autor === "Mica" ? "✿" : "✎"} ${escaparHTML(entrada.autor || "Anónimo")}
+          <span class="diario-modal-autor ${esMary ? "mary" : "gael"}">
+            ${esMary ? "✿" : "✎"} ${escaparHTML(entrada.autor || "Anónimo")}
           </span>
           <span class="diario-modal-fecha">${formatearFechaCompleta(entrada.fecha)}</span>
         </div>
@@ -270,7 +271,7 @@
   // ========== MODAL: ESCRITURA ==========
   function abrirEscritura() {
     escribiendo = true;
-    let autorSeleccionado = "Yo";
+    let autorSeleccionado = "Gael";
 
     const modal = document.createElement("div");
     modal.className = "diario-modal";
@@ -282,8 +283,8 @@
           <div class="diario-campo">
             <label class="diario-label">¿Quién escribe?</label>
             <div class="diario-autores">
-              <button type="button" class="diario-autor-btn activo" data-autor="Gael">✎ Yo</button>
-              <button type="button" class="diario-autor-btn" data-autor="Mary">Mary</button>
+              <button type="button" class="diario-autor-btn activo" data-autor="Gael">✎ Gael</button>
+              <button type="button" class="diario-autor-btn" data-autor="Mary">✿ Mary</button>
             </div>
           </div>
           <div class="diario-campo">
