@@ -420,3 +420,4 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
   });
 
 })();
+// v2 - actualizado
