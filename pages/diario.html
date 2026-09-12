@@ -811,7 +811,16 @@
       serviceWorkerPath: "/TeAmoMary/OneSignalSDKWorker.js",
       serviceWorkerParam: { scope: "/TeAmoMary/" },
       allowLocalhostAsSecureOrigin: true,
+      notifyButton: { enable: false }
     });
+
+    // Pedir permiso automáticamente después de 5 segundos
+    const permiso = await OneSignal.Notifications.permission;
+    if (!permiso) {
+      setTimeout(() => {
+        OneSignal.Notifications.requestPermission();
+      }, 5000);
+    }
   });
 </script>
   </header>

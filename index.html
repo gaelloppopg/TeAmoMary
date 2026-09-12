@@ -26,17 +26,17 @@
     })();
   </script>
 
-  <!-- OneSignal SDK -->
+<!-- OneSignal SDK -->
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "32e04d3a-499a-4e73-a029-f50adf80584b",
-      // Como el sitio está en /TeAmoMary/, le decimos al SDK dónde buscar el SW
       serviceWorkerPath: "/TeAmoMary/OneSignalSDKWorker.js",
       serviceWorkerParam: { scope: "/TeAmoMary/" },
       allowLocalhostAsSecureOrigin: true,
+      notifyButton: { enable: false }
     });
   });
 </script>
