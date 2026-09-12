@@ -2,14 +2,33 @@
    PWA - Registro SW + botón instalar
    ========================================= */
 
+// ========== REGISTRO DEL SERVICE WORKER ==========
+// Detecta si estamos en /pages/ o en la raíz para encontrar sw.js
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("✅ Service Worker registrado"))
-      .catch((e) => console.warn("SW no registrado (normal si file://):", e.message));
+    const enPages = location.pathname.includes("/pages/");
+    const swPath = enPages ? "../sw.js" : "./sw.js";
+    const swScope = enPages ? "../" : "./";
+
+    navigator.serviceWorker.register(swPath, { scope: swScope })
+      .then((reg) => {
+        console.log("✅ Service Worker registrado. Scope:", reg.scope);
+
+        // Buscar actualizaciones cada vez que carga la página
+        reg.update().catch(() => {});
+      })
+      .catch((e) => {
+        console.warn("SW no registrado (normal si file://):", e.message);
+      });
+  });
+
+  // Detectar cuando hay una nueva versión del SW disponible
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    console.log("🔄 Nueva versión del Service Worker activa");
   });
 }
 
+// ========== BOTÓN DE INSTALAR PWA ==========
 let deferredPrompt = null;
 const btnInstalar = document.createElement("button");
 btnInstalar.className = "btn-instalar";

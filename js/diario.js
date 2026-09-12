@@ -158,13 +158,11 @@
       return;
     }
 
-    muralGrid.innerHTML = filtradas.map((entrada) => {
+    muralGrid.innerHTML = filtradas.map((entrada, i) => {
       const rot = ((hashCode(entrada.id) % 5) - 2) * 0.7;
       const color = COLORES[Math.abs(hashCode(entrada.id)) % COLORES.length];
-      // 👇 DETECTAR AUTOR: Mary o Gael
-      const esMary = entrada.autor === "Mary";
-      const autorClase = esMary ? "mary" : "gael";
-      const autorIcono = esMary ? "✿" : "✎";
+      const autorClase = entrada.autor === "Mary" ? "mary" : "gael";
+      const autorIcono = entrada.autor === "Mary" ? "✿" : "✎";
 
       const titulo = escaparHTML(entrada.titulo || "(Sin título)");
       const preview = escaparHTML((entrada.texto || "").slice(0, 200));
@@ -219,15 +217,14 @@
 
   // ========== MODAL: LECTURA ==========
   function abrirLectura(entrada) {
-    const esMary = entrada.autor === "Mary";
     const modal = document.createElement("div");
     modal.className = "diario-modal";
     modal.innerHTML = `
       <div class="diario-papel">
         <button class="diario-cerrar" aria-label="Cerrar">✕</button>
         <div class="diario-modal-meta">
-          <span class="diario-modal-autor ${esMary ? "mary" : "gael"}">
-            ${esMary ? "✿" : "✎"} ${escaparHTML(entrada.autor || "Anónimo")}
+          <span class="diario-modal-autor ${entrada.autor === "Mary" ? "mary" : "gael"}">
+            ${entrada.autor === "Mary" ? "✿" : "✎"} ${escaparHTML(entrada.autor || "Anónimo")}
           </span>
           <span class="diario-modal-fecha">${formatearFechaCompleta(entrada.fecha)}</span>
         </div>

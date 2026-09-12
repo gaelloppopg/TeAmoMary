@@ -4,7 +4,7 @@
 
 // ⚠️ IMPORTANTE: cada vez que hagas cambios grandes en el sitio,
 // cambiá el número de la versión (v2, v3, v4...) para forzar la actualización
-const CACHE = "novia-v3";
+const CACHE = "novia-v4";
 
 const ASSETS = [
   "./",
