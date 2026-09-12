@@ -282,8 +282,8 @@
           <div class="diario-campo">
             <label class="diario-label">¿Quién escribe?</label>
             <div class="diario-autores">
-              <button type="button" class="diario-autor-btn activo" data-autor="Yo">✎ Yo</button>
-              <button type="button" class="diario-autor-btn" data-autor="Mica">✿ Mica</button>
+              <button type="button" class="diario-autor-btn activo" data-autor="Gael">✎ Yo</button>
+              <button type="button" class="diario-autor-btn" data-autor="Mary">Mary</button>
             </div>
           </div>
           <div class="diario-campo">
