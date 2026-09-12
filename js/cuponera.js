@@ -3,14 +3,14 @@
    ========================================= */
 
 const CUPONES = [
-  { id: "c1", titulo: "Un abrazo de 5 minutos", costo: 10, emoji: "🤗" },
-  { id: "c2", titulo: "Elegir la película de la noche", costo: 20, emoji: "🎬" },
-  { id: "c3", titulo: "Desayuno en la cama", costo: 30, emoji: "🥐" },
-  { id: "c4", titulo: "Cita sorpresa", costo: 50, emoji: "🌹" },
-  { id: "c5", titulo: "Un día sin discutir (yo me aguanto)", costo: 40, emoji: "😇" },
-  { id: "c6", titulo: "Masaje de espalda", costo: 25, emoji: "💆" },
-  { id: "c7", titulo: "Cena hecha por mí", costo: 45, emoji: "🍝" },
-  { id: "c8", titulo: "Un capricho sin excusas", costo: 100, emoji: "🎁" }
+  { id: "c1", titulo: "no se", costo: 10, emoji: "🤗" },
+  { id: "c2", titulo: "no se", costo: 20, emoji: "🎬" },
+  { id: "c3", titulo: "no se", costo: 30, emoji: "🥐" },
+  { id: "c4", titulo: "no se", costo: 50, emoji: "🌹" },
+  { id: "c5", titulo: "no se", costo: 40, emoji: "😇" },
+  { id: "c6", titulo: "no se", costo: 25, emoji: "💆" },
+  { id: "c7", titulo: "no se", costo: 45, emoji: "🍝" },
+  { id: "c8", titulo: "no se", costo: 100, emoji: "🎁" }
 ];
 
 const STORAGE_PUNTOS = "puntos_amor";
