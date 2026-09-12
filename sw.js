@@ -3,7 +3,7 @@
    ============================================ */
 
 // ⚠️ IMPORTANTE: Cada vez que edites este archivo, subí el número de versión
-const CACHE = "novia-v8";
+const CACHE = "novia-v10";
 
 const ASSETS = [
   "./",
@@ -133,4 +133,65 @@ self.addEventListener("message", (e) => {
       console.log("🗑️ Todos los cachés fueron borrados");
     });
   }
+});
+// ========== PUSH NOTIFICATIONS ==========
+self.addEventListener("push", (event) => {
+  console.log("📬 Push recibido");
+
+  let data = {
+    title: "Nuestro Diario 💜",
+    body: "Hay algo nuevo en el diario",
+    url: "/pages/diario.html"
+  };
+
+  if (event.data) {
+    try {
+      const parsed = event.data.json();
+      data = { ...data, ...parsed };
+    } catch (e) {
+      data.body = event.data.text();
+    }
+  }
+
+  const options = {
+    body: data.body,
+    icon: "/assets/images/icons/icon-192.png",
+    badge: "/assets/images/icons/icon-192.png",
+    vibrate: [200, 100, 200],
+    data: {
+      url: data.url
+    },
+    actions: [
+      {
+        action: "abrir",
+        title: "Abrir diario"
+      }
+    ]
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// Cuando el usuario toca la notificación
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const url = event.notification.data?.url || "/pages/diario.html";
+
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      // Si ya hay una pestaña abierta, enfocarla
+      for (const client of clientList) {
+        if (client.url.includes("/pages/diario.html") && "focus" in client) {
+          return client.focus();
+        }
+      }
+      // Si no, abrir una nueva
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    })
+  );
 });

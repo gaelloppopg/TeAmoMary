@@ -590,6 +590,14 @@
     <p>Pequeños detalles que son tuyos sin serlo</p>
   </header>
 
+  <section style="max-width: 1200px; margin: 40px auto 20px; padding: 0 24px; text-align: center;">
+  <button class="btn-agregar-galeria" id="btnAgregarRecuerdo">
+    ➕ Agregar un recuerdo
+  </button>
+</section>
+
+<section class="galeria-usuario" id="galeriaUsuarioRecuerdos"></section>
+
   <section class="galeria" id="galeria">
     <figure class="galeria-item reveal">
       <img src="../assets/images/nosotros/recuerdos/recuerdo1.jpg" alt="Recuerdo 1" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>📸</text></svg>'">
@@ -739,6 +747,19 @@
   </div>
 
   <footer class="footer"><p>Sigue con <a href="cartas.html">Cartas →</a></p></footer>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("btnAgregarRecuerdo");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        if (window.galeriaUsuario) {
+          window.galeriaUsuario.crearModalSubida("recuerdos");
+        }
+      });
+    }
+  });
+</script>
 
   <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
   <script src="../js/script.js"></script>
@@ -953,5 +974,7 @@
 
     })();
   </script>
+
+  <script src="../js/galeria-usuario.js"></script>
 </body>
 </html>

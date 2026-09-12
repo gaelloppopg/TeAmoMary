@@ -785,6 +785,26 @@
     </div>
   </header>
 
+  <section style="max-width: 1200px; margin: 40px auto 20px; padding: 0 24px; text-align: center;">
+  <button class="btn-agregar-galeria" id="btnAgregarRazon">
+    ➕ Agregar una razón
+  </button>
+</section>
+
+<section class="galeria-usuario" id="galeriaUsuarioRazones"></section>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("btnAgregarRazon");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        if (window.galeriaUsuario) {
+          window.galeriaUsuario.crearModalSubida("razones");
+        }
+      });
+    }
+  });
+</script>
+
   <!-- ===== GRID ===== -->
   <section class="razones-grid" id="razonesGrid"></section>
 
@@ -1229,5 +1249,7 @@
 
     })();
   </script>
+
+  <script src="../js/galeria-usuario.js"></script>
 </body>
 </html>
