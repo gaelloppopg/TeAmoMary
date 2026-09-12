@@ -5,10 +5,10 @@
 (function () {
   "use strict";
 
-  // ========== CONFIGURACIÓN JSONBIN ==========
- const JSONBIN_MASTER_KEY = "$2a$10$nSNoABZwoHOkZHHujNKHW.aigQvGa.u22m2BIzXbIqGtKP2cDKzs.";
-  const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
-  const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+// ========== CONFIGURACIÓN JSONBIN ==========
+const JSONBIN_MASTER_KEY = "$2a$10$nSNoABZwoHOkZHHujNKHW.aigQvGa.u22m2BIzXbIqGtKP2cDKzs.";
+const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
+const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
   // Intervalo de auto-sync (30 segundos)
   const SYNC_INTERVAL = 30 * 1000;
