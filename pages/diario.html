@@ -801,25 +801,13 @@
     <h1>Nuestro <em>Diario</em></h1>
     <p>Un lugar donde guardamos los momentos, uno por uno.</p>
 
-    <!-- OneSignal SDK -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "32e04d3a-499a-4e73-a029-f50adf80584b",
-      serviceWorkerPath: "/TeAmoMary/OneSignalSDKWorker.js",
-      serviceWorkerParam: { scope: "/TeAmoMary/" },
-      allowLocalhostAsSecureOrigin: true,
-      notifyButton: { enable: false }
     });
-
-    // 🆕 Pedir permiso después de 5 segundos
-    setTimeout(() => {
-      OneSignal.Notifications.requestPermission().then((aceptado) => {
-        console.log("Permiso aceptado:", aceptado);
-      });
-    }, 5000);
   });
 </script>
   </header>
