@@ -1407,3 +1407,330 @@ input[type="file"] {
   color: #7a5c8c;
   font-size: 0.9rem;
 }
+/* ================================
+   FILTROS DE RECUERDOS
+   ================================ */
+.filtros-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  padding: 22px 26px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(160, 100, 220, 0.12);
+  border: 1px solid rgba(242, 140, 166, 0.15);
+  margin-bottom: 20px;
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 160px;
+}
+
+.filtro-busqueda {
+  flex: 2;
+  min-width: 220px;
+}
+
+.filtro-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #8a7aa8;
+}
+
+.filtro-select,
+.filtro-input {
+  padding: 10px 14px;
+  border: 1.5px solid rgba(180, 130, 240, 0.25);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #3a2145;
+  outline: none;
+  background: #fff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.filtro-select:focus,
+.filtro-input:focus {
+  border-color: #a874e8;
+  box-shadow: 0 0 0 3px rgba(168, 116, 232, 0.12);
+}
+
+.btn-nuevo-album {
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #a874e8, #d4a373);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  height: fit-content;
+}
+.btn-nuevo-album:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(168, 116, 232, 0.4);
+}
+
+/* Chips de álbumes */
+.albums-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.album-chip {
+  padding: 8px 18px;
+  background: #fff;
+  border: 1.5px solid rgba(180, 130, 240, 0.25);
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #7a5c8c;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.album-chip:hover {
+  border-color: #a874e8;
+  transform: translateY(-2px);
+}
+.album-chip.activo {
+  background: linear-gradient(135deg, #a874e8, #d4a373);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(168, 116, 232, 0.35);
+}
+
+/* Meta dentro del recuerdo */
+.recuerdo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.recuerdo-album {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  background: rgba(168, 116, 232, 0.12);
+  color: #a874e8;
+  border-radius: 50px;
+}
+
+.recuerdo-autor {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+}
+.recuerdo-autor.gael {
+  color: #4a6a8a;
+  background: rgba(74, 106, 138, 0.1);
+}
+.recuerdo-autor.mary {
+  color: #a84a7a;
+  background: rgba(168, 74, 122, 0.1);
+}
+
+.recuerdo-fecha {
+  font-size: 0.75rem;
+  color: #a08bb8;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filtros-barra {
+    padding: 18px;
+    gap: 12px;
+  }
+  .filtro-grupo,
+  .filtro-busqueda {
+    min-width: 100%;
+  }
+  .btn-nuevo-album {
+    width: 100%;
+  }
+}
+
+
+
+/* ================================
+   GALERÍA DE RECUERDOS — Diseño tipo tarjeta
+   ================================ */
+.galeria {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.galeria-item {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(242, 140, 166, 0.15);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.galeria-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(242, 140, 166, 0.3);
+}
+
+.galeria-item img,
+.galeria-item video {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.galeria-item:hover img {
+  transform: scale(1.05);
+}
+
+.galeria-item figcaption {
+  padding: 18px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Fecha en rosa, chica, arriba */
+.recuerdo-fecha {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #f28ca6;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Texto de la descripción */
+.recuerdo-texto {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  color: #6b5560;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ================================
+   LIGHTBOX (foto completa al presionar)
+   ================================ */
+.lightbox-galeria {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  opacity: 0;
+  animation: fadeInLightbox 0.4s ease forwards;
+  cursor: zoom-out;
+}
+
+@keyframes fadeInLightbox {
+  to { opacity: 1; }
+}
+
+.lightbox-contenido {
+  max-width: 95vw;
+  max-height: 90vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-contenido img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+  animation: zoomLightbox 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes zoomLightbox {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.lightbox-caption {
+  margin-top: 20px;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 600px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.lightbox-cerrar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.lightbox-cerrar:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+  .lightbox-cerrar {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  .lightbox-caption {
+    font-size: 0.9rem;
+    padding: 0 10px;
+  }
+}
