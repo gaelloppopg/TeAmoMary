@@ -1,10 +1,9 @@
 /* ============================================
    GALERÍA DE USUARIO con ÁLBUMES Y FECHAS
    - Fotos: ImgBB | Videos: Cloudinary
-   - Guardar en JSONBin
-   - Álbumes aislados + filtro por fecha
-   - Búsqueda global (incluye originales)
-   - Eliminar recuerdos (incluye originales)
+   - Originales SIN álbum (no se duplican)
+   - Eliminar recuerdos, videos y álbumes
+   - Filtro por fecha mejorado
    ============================================ */
 
 (function () {
@@ -47,20 +46,19 @@
     return fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
   }
 
-  // ========== RECUERDOS ORIGINALES (hardcodeados) ==========
+  // ========== ORIGINALES (sin álbum) ==========
   const RECUERDOS_ORIGINALES_BASE = [
-    { id: "orig-rec-1", url: "../assets/images/nosotros/recuerdos/recuerdo1.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo1.jpg", titulo: "Recuerdo 1", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
-    { id: "orig-rec-2", url: "../assets/images/nosotros/recuerdos/recuerdo2.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo2.jpg", titulo: "Recuerdo 2", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
-    { id: "orig-rec-3", url: "../assets/images/nosotros/recuerdos/recuerdo3.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo3.jpg", titulo: "Recuerdo 3", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
-    { id: "orig-rec-4", url: "../assets/images/nosotros/recuerdos/recuerdo4.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo4.jpg", titulo: "Recuerdo 4", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
-    { id: "orig-rec-5", url: "../assets/images/nosotros/recuerdos/recuerdo5.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo5.jpg", titulo: "Recuerdo 5", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
-    { id: "orig-rec-6", url: "../assets/images/nosotros/recuerdos/recuerdo6.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo6.jpg", titulo: "Recuerdo 6", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true }
+    { id: "orig-rec-1", url: "../assets/images/nosotros/recuerdos/recuerdo1.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo1.jpg", titulo: "Recuerdo 1", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true, albumId: null },
+    { id: "orig-rec-2", url: "../assets/images/nosotros/recuerdos/recuerdo2.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo2.jpg", titulo: "Recuerdo 2", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true, albumId: null },
+    { id: "orig-rec-3", url: "../assets/images/nosotros/recuerdos/recuerdo3.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo3.jpg", titulo: "Recuerdo 3", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true, albumId: null },
+    { id: "orig-rec-4", url: "../assets/images/nosotros/recuerdos/recuerdo4.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo4.jpg", titulo: "Recuerdo 4", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true, albumId: null },
+    { id: "orig-rec-5", url: "../assets/images/nosotros/recuerdos/recuerdo5.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo5.jpg", titulo: "Recuerdo 5", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true, albumId: null },
+    { id: "orig-rec-6", url: "../assets/images/nosotros/recuerdos/recuerdo6.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo6.jpg", titulo: "Recuerdo 6", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true, albumId: null }
   ];
 
   function getOriginalesEliminados() {
-    try {
-      return JSON.parse(localStorage.getItem("recuerdos_eliminados") || "[]");
-    } catch { return []; }
+    try { return JSON.parse(localStorage.getItem("recuerdos_eliminados") || "[]"); }
+    catch { return []; }
   }
   function setOriginalesEliminados(lista) {
     localStorage.setItem("recuerdos_eliminados", JSON.stringify(lista));
@@ -183,11 +181,10 @@
     return data;
   }
 
-  // ========== ELIMINAR RECUERDO ==========
+  // ========== ELIMINAR ==========
   async function eliminarRecuerdo(itemId) {
     if (!confirm("¿Eliminar este recuerdo? No se puede recuperar 💜")) return;
 
-    // Recuerdo original
     if (itemId.startsWith("orig-rec-")) {
       const eliminados = getOriginalesEliminados();
       if (!eliminados.includes(itemId)) {
@@ -202,7 +199,6 @@
       return;
     }
 
-    // Recuerdo subido
     try {
       await eliminarDeBin("recuerdos", itemId);
       todosLosRecuerdos = todosLosRecuerdos.filter(r => r.id !== itemId);
@@ -210,9 +206,7 @@
       renderizarRecuerdos();
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       alert("✅ Recuerdo eliminado");
-    } catch (err) {
-      alert("❌ Error: " + err.message);
-    }
+    } catch (err) { alert("❌ Error: " + err.message); }
   }
   window.eliminarRecuerdoGaleria = eliminarRecuerdo;
 
@@ -259,7 +253,7 @@
     return filtrados;
   }
 
-  // ========== CREAR / ELIMINAR ÁLBUM ==========
+  // ========== ÁLBUMES ==========
   async function crearAlbum() {
     const nombre = prompt("Nombre del álbum (ej: Playa, Cumpleaños):");
     if (!nombre || !nombre.trim()) return;
@@ -396,6 +390,7 @@
     const contenedor = document.getElementById("recuerdosFiltros");
     if (!contenedor) return;
 
+    // Meses con contenido
     const meses = new Set();
     todosLosRecuerdos.forEach(r => meses.add(claveMes(r.fecha)));
     recuerdosOriginales.forEach(r => meses.add(claveMes(r.fecha)));
@@ -415,13 +410,13 @@
           </select>
         </div>
         <div class="filtro-grupo" style="flex:1; min-width:180px;">
-          <label class="filtro-label">📅 Fecha</label>
+          <label class="filtro-label">📅 Mes</label>
           <select id="filtroFecha" class="filtro-select">
-            <option value="todas" ${filtrosActivos.fecha === "todas" ? 'selected' : ''}>Todas las fechas</option>
+            <option value="todas" ${filtrosActivos.fecha === "todas" ? 'selected' : ''}>Todos los meses</option>
             ${mesesOrdenados.map(m => {
               const [year, month] = m.split("-");
               const nombreMes = new Date(year, month - 1).toLocaleDateString("es-ES", { month: "long", year: "numeric" });
-              return `<option value="${m}" ${filtrosActivos.fecha === m ? 'selected' : ''}>${nombreMes}</option>`;
+              return `<option value="${m}" ${filtrosActivos.fecha === m ? 'selected' : ''}>${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)}</option>`;
             }).join("")}
           </select>
         </div>
@@ -482,7 +477,7 @@
     });
   }
 
-  // ========== RENDERIZAR RECUERDOS (FOTOS) ==========
+  // ========== RENDERIZAR RECUERDOS ==========
   function renderizarRecuerdos() {
     const contenedor = document.getElementById("galeriaUsuarioRecuerdos");
     if (!contenedor) return;
