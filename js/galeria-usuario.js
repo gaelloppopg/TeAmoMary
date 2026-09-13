@@ -98,28 +98,53 @@
   }
 
   // ========== JSONBIN ==========
-  async function guardarEnBin(tipo, item) {
-    const res = await fetch(JSONBIN_URL + "/latest", {
-      headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
-    });
-    if (!res.ok) throw new Error("Error leyendo JSONBin");
-    const data = await res.json();
-    const nuevoContenido = {
-      entradas: data.entradas || [],
-      suscripciones: data.suscripciones || [],
-      recuerdos: data.recuerdos || [],
-      razones: data.razones || [],
-      albums: data.albums || []
-    };
-    nuevoContenido[tipo].push(item);
-    const putRes = await fetch(JSONBIN_URL, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
-      body: JSON.stringify(nuevoContenido)
-    });
-    if (!putRes.ok) throw new Error("Error guardando en JSONBin");
-    return true;
+async function guardarEnBin(tipo, item) {
+  const res = await fetch(JSONBIN_URL + "/latest", {
+    headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+  });
+  if (!res.ok) throw new Error("Error leyendo JSONBin");
+  const data = await res.json();
+  
+  const nuevoContenido = {
+    entradas: data.entradas || [],
+    suscripciones: data.suscripciones || [],
+    recuerdos: data.recuerdos || [],
+    razones: data.razones || [],
+    albums: data.albums || []
+  };
+  nuevoContenido[tipo].push(item);
+
+  // Contar tamaño aproximado
+  const jsonString = JSON.stringify(nuevoContenido);
+  const tamañoKB = (jsonString.length / 1024).toFixed(1);
+  console.log(`📊 Tamaño del bin: ${tamañoKB} KB (límite: 100 KB)`);
+
+  const putRes = await fetch(JSONBIN_URL, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+    body: jsonString
+  });
+
+  // 🚨 Detectar errores reales
+  if (!putRes.ok) {
+    const errText = await putRes.text();
+    console.error("❌ Error al guardar en JSONBin:", putRes.status, errText);
+
+    if (putRes.status === 413) {
+      throw new Error("El bin está lleno. Límite alcanzado. Necesitás borrar algunos recuerdos o crear un plan pago en JSONBin.");
+    }
+    if (putRes.status === 401) {
+      throw new Error("Master Key inválida. Revisá el código.");
+    }
+    if (putRes.status === 404) {
+      throw new Error("Bin no encontrado. Revisá el ID.");
+    }
+    throw new Error(`Error ${putRes.status}: ${errText.slice(0, 100)}`);
   }
+
+  console.log(`✅ Guardado exitoso: ${tipo} (${tamañoKB} KB)`);
+  return true;
+}
 
   async function actualizarEnBin(tipo, item) {
     const res = await fetch(JSONBIN_URL + "/latest", {

@@ -2,15 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recuerdos 📸</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Recuerdos 💜</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/animations.css" />
   <link rel="stylesheet" href="../css/responsive.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="manifest" href="../manifest.json" />
-  <meta name="theme-color" content="#f28ca6" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>" />
+  <meta name="theme-color" content="#e9d5ff" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
 
   <script>
     (function() {
@@ -23,667 +23,902 @@
 
   <style>
     /* ============================================
-       VIDEOS EN BURBUJAS
+       RECUERDOS — EXPERIENCIA PREMIUM
        ============================================ */
-    .sec-videos-nueva { max-width: 1300px; margin: 100px auto 140px; padding: 0 24px; position: relative; }
-    .videos-titulo { text-align: center; margin-bottom: 80px; position: relative; z-index: 2; }
-    .videos-titulo .kicker {
-      display: inline-block;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.68rem;
-      letter-spacing: 8px;
-      text-transform: uppercase;
-      color: #d4a373;
-      font-weight: 500;
-      margin-bottom: 22px;
-      opacity: 0.8;
-      position: relative;
-      padding: 0 18px;
-    }
-    .videos-titulo .kicker::before,
-    .videos-titulo .kicker::after {
-      content: ""; position: absolute; top: 50%; width: 22px; height: 1px;
-      background: #d4a373; opacity: 0.5;
-    }
-    .videos-titulo .kicker::before { left: -14px; }
-    .videos-titulo .kicker::after { right: -14px; }
-    .videos-titulo h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.9rem, 4.5vw, 3rem);
+
+    html, body.recuerdos-page { margin: 0; padding: 0; min-height: 100vh; }
+
+    body.recuerdos-page {
+      background: #faf3ff;
       color: #3a2145;
-      font-weight: 400;
-      margin-bottom: 18px;
-      line-height: 1.15;
-    }
-    .videos-titulo h2 em { font-style: italic; color: #f28ca6; }
-    .videos-titulo .sub {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 300;
-      font-size: 1.15rem;
-      color: #7a5c8c;
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-    .burbujas-escenario { display: grid; grid-template-columns: 1fr; gap: 90px; position: relative; padding: 40px 0; }
-    .burbuja-video {
+      font-family: 'Inter', sans-serif;
       position: relative;
-      width: 100%;
-      max-width: 700px;
-      margin: 0 auto;
-      aspect-ratio: 16 / 9;
-      cursor: pointer;
-      user-select: none;
-      opacity: 0;
-      transform: translateY(60px) scale(0.9);
-      transition: opacity 1.4s ease, transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-      animation: flotarBurbuja 6s ease-in-out infinite;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    .burbuja-video:nth-child(2) { animation-delay: -2s; animation-duration: 7s; }
-    .burbuja-video:nth-child(3) { animation-delay: -4s; animation-duration: 8s; }
-    .burbuja-video:nth-child(4) { animation-delay: -1s; animation-duration: 6.5s; }
-    @keyframes flotarBurbuja {
-      0%, 100% { transform: translateY(0) rotate(-0.5deg); }
-      25% { transform: translateY(-14px) rotate(0.5deg); }
-      50% { transform: translateY(-6px) rotate(-0.3deg); }
-      75% { transform: translateY(-18px) rotate(0.6deg); }
+
+    /* Evitar scroll cuando el modal está abierto */
+    body.modal-abierto {
+      overflow: hidden !important;
+      height: 100vh;
+      height: 100dvh;
     }
-    .burbuja-video.visible { opacity: 1; transform: translateY(0) scale(1); }
-    .burbuja-inner {
-      position: absolute;
-      inset: 0;
-      border-radius: 50% / 45%;
-      overflow: hidden;
-      background: #030105;
-      transition: border-radius 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1.2s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 30px 70px rgba(242, 140, 166, 0.25), 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 60px rgba(242, 140, 166, 0.15);
-      isolation: isolate;
+
+    .aurora-canvas {
+      position: fixed; inset: 0; z-index: -3; pointer-events: none;
     }
-    .burbuja-inner::before {
+    .particulas-canvas {
+      position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    }
+
+    body.recuerdos-page::after {
       content: "";
-      position: absolute;
-      top: 8%; left: 12%; width: 35%; height: 25%;
-      background: radial-gradient(ellipse at center, rgba(255,255,255,0.35), transparent 70%);
-      border-radius: 50%;
-      filter: blur(8px);
-      z-index: 6;
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(circle at 8% 22%, rgba(201, 156, 240, 0.35) 1px, transparent 1.5px),
+        radial-gradient(circle at 78% 18%, rgba(240, 170, 200, 0.4) 1px, transparent 1.5px),
+        radial-gradient(circle at 44% 76%, rgba(201, 156, 240, 0.3) 1px, transparent 1.5px),
+        radial-gradient(circle at 92% 60%, rgba(240, 170, 200, 0.35) 1px, transparent 1.5px);
+      z-index: -1;
       pointer-events: none;
+      animation: titilarEstrellas 6s ease-in-out infinite alternate;
     }
-    .burbuja-video:hover .burbuja-inner {
-      box-shadow: 0 40px 100px rgba(242, 140, 166, 0.45), 0 15px 40px rgba(0, 0, 0, 0.35), inset 0 0 80px rgba(242, 140, 166, 0.25);
-      transform: scale(1.02);
+    @keyframes titilarEstrellas {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
-    .burbuja-inner video,
-    .burbuja-inner img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-      opacity: 0;
-      filter: blur(25px) brightness(0.2) saturate(0);
-      transform: scale(1.15);
-      transition: opacity 1.6s ease, filter 1.8s ease, transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    body.recuerdos-page .nav-back {
+      position: sticky; top: 0;
+      padding: 16px 30px;
+      background: rgba(255, 250, 255, 0.65);
+      border-bottom: 1px solid rgba(180, 130, 240, 0.12);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      z-index: 100;
+    }
+    body.recuerdos-page .nav-back a {
+      color: #6a4780;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+    body.recuerdos-page .nav-back a:hover { color: #a874e8; }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .recuerdos-hero {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 90px 24px 30px;
+      text-align: center;
+      position: relative;
       z-index: 2;
     }
-    .burbuja-video.revelado .burbuja-inner video,
-    .burbuja-video.revelado .burbuja-inner img {
-      opacity: 1;
-      filter: blur(0) brightness(1) saturate(1);
-      transform: scale(1);
-    }
-    .burbuja-portada {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      display: flex;
+    .recuerdos-hero-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px;
-      background: radial-gradient(ellipse at 50% 50%, rgba(20, 8, 15, 0.35), rgba(3, 1, 5, 0.92) 75%), linear-gradient(135deg, #050208, #0d0510 50%, #050208);
-      transition: opacity 1.2s ease, transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
-    }
-    .burbuja-video.revelado .burbuja-portada {
-      opacity: 0;
-      transform: scale(1.15);
-      filter: blur(15px);
-      pointer-events: none;
-    }
-    .burbuja-contenido {
-      position: relative;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-    }
-    .burbuja-simbolo { position: relative; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
-    .anillo-b {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid rgba(242, 140, 166, 0.5);
-      animation: anilloPulsoB 3.6s ease-in-out infinite;
-    }
-    .anillo-b:nth-child(1) { inset: 0; }
-    .anillo-b:nth-child(2) { inset: 12px; animation-delay: 0.6s; }
-    .anillo-b:nth-child(3) { inset: 24px; animation-delay: 1.2s; }
-    @keyframes anilloPulsoB {
-      0%, 100% { transform: scale(1); opacity: 0.55; }
-      50% { transform: scale(1.18); opacity: 1; box-shadow: 0 0 45px rgba(242, 140, 166, 0.7); }
-    }
-    .nucleo-b {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: radial-gradient(circle, #fff 0%, #f28ca6 40%, rgba(242, 140, 166, 0) 80%);
-      box-shadow: 0 0 20px rgba(242, 140, 166, 0.9), 0 0 45px rgba(242, 140, 166, 0.6);
-      animation: nucleoPulsoB 2.4s ease-in-out infinite;
-    }
-    @keyframes nucleoPulsoB {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.35); opacity: 1; }
-    }
-    .burbuja-texto {
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.68rem;
-      letter-spacing: 7px;
+      gap: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 8px;
       text-transform: uppercase;
-      color: rgba(245, 230, 234, 0.75);
-      animation: fadeTextoB 3.4s ease-in-out infinite;
-      text-shadow: 0 0 20px rgba(242, 140, 166, 0.5);
-    }
-    @keyframes fadeTextoB {
-      0%, 100% { opacity: 0.5; letter-spacing: 7px; }
-      50% { opacity: 1; letter-spacing: 9px; }
-    }
-    .burbuja-eliminar {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: rgba(217, 102, 102, 0.85);
-      color: #fff;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      z-index: 15;
+      color: #a874e8;
+      font-weight: 600;
+      margin-bottom: 26px;
       opacity: 0;
+      animation: fadeInRecuerdos 1.2s ease 0.2s forwards;
     }
-    .burbuja-video:hover .burbuja-eliminar { opacity: 1; }
-    .burbuja-eliminar:hover { background: #d96666; transform: scale(1.15); }
-    .ripple-absorcion { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
-    .ripple-absorcion::before,
-    .ripple-absorcion::after {
+    .recuerdos-hero-badge::before,
+    .recuerdos-hero-badge::after {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #c99cf0, transparent);
+    }
+    .recuerdos-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2rem, 5.5vw, 3.6rem);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: #3a2145;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeInRecuerdos 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+    }
+    .recuerdos-hero h1 em {
+      color: #a874e8;
+      font-style: italic;
+      text-shadow: 0 0 40px rgba(201, 156, 240, 0.5);
+      position: relative;
+      display: inline-block;
+    }
+    .recuerdos-hero h1 em::after {
       content: "";
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      width: 100%; height: 100%;
-      border-radius: 50% / 45%;
-      border: 2px solid rgba(242, 140, 166, 0.9);
+      left: 0; right: 0; bottom: -8px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #c99cf0, transparent);
+      animation: lineaHero 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+      transform-origin: center;
+    }
+    @keyframes lineaHero {
+      from { transform: scaleX(0); opacity: 0; }
+      to { transform: scaleX(1); opacity: 1; }
+    }
+    .recuerdos-hero p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+      font-style: italic;
+      font-weight: 300;
+      color: #7a5c8c;
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto;
       opacity: 0;
+      animation: fadeInRecuerdos 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
     }
-    .burbuja-video.absorbiendo .ripple-absorcion::before { animation: rippleAnima 1.2s ease-out; }
-    .burbuja-video.absorbiendo .ripple-absorcion::after { animation: rippleAnima 1.2s ease-out 0.25s; }
-    @keyframes rippleAnima {
-      0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+    @keyframes fadeInRecuerdos {
+      from { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
     }
-    .explosion-canvas { position: absolute; inset: 0; z-index: 8; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
-    .burbuja-video.revelando .explosion-canvas { opacity: 1; }
-    .flash-revelado {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle, rgba(255,255,255,0.7), transparent 65%);
-      z-index: 7;
-      pointer-events: none;
-      opacity: 0;
-    }
-    .burbuja-video.revelando .flash-revelado { animation: flashAnimB 1s ease-out; }
-    @keyframes flashAnimB { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
 
-    /* MODAL VIDEOS */
-    .video-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: rgba(3, 1, 5, 0.98);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease;
-      backdrop-filter: blur(20px);
-    }
-    .video-modal.activo { opacity: 1; pointer-events: auto; }
-    .video-modal-inner {
-      max-width: 90vw;
-      max-height: 88vh;
-      border-radius: 20px;
-      overflow: hidden;
-      background: #000;
-      transform: scale(0.7) rotateX(15deg);
-      opacity: 0;
-      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .video-modal.activo .video-modal-inner { transform: scale(1) rotateX(0); opacity: 1; }
-    .video-modal-inner video,
-    .video-modal-inner img { max-width: 90vw; max-height: 85vh; display: block; object-fit: contain; }
-    .video-modal-cerrar {
-      position: absolute;
-      top: 24px; right: 24px;
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      border: 1px solid rgba(242, 140, 166, 0.4);
-      background: rgba(10, 5, 10, 0.7);
-      backdrop-filter: blur(10px);
-      color: #f28ca6;
-      font-size: 1.4rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      z-index: 5;
-    }
-    .video-modal-cerrar:hover { background: #f28ca6; color: #0a050a; transform: rotate(90deg) scale(1.05); }
-
-    /* GALERÍA */
-    .galeria {
-      max-width: 1200px;
-      margin: 0 auto 40px;
+    /* ============================================
+       CONTROLES PREMIUM
+       ============================================ */
+    .recuerdos-controles {
+      max-width: 1000px;
+      margin: 50px auto 0;
       padding: 0 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeInRecuerdos 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+    }
+
+    .recuerdos-contador {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 22px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(180, 130, 240, 0.22);
+      border-radius: 50px;
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      box-shadow: 0 8px 24px rgba(160, 100, 220, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #6a4780;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .recuerdos-contador-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #a874e8;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+      text-transform: none;
+      font-weight: 500;
+    }
+
+    .recuerdos-buscador-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+    #buscadorRecuerdos {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 20px 12px 46px;
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(180, 130, 240, 0.22);
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      color: #4a2a5a;
+      outline: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      box-shadow: 0 8px 24px rgba(160, 100, 220, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    #buscadorRecuerdos::placeholder {
+      color: #a08bb8;
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+    }
+    #buscadorRecuerdos:focus {
+      border-color: rgba(180, 130, 240, 0.55);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 12px 32px rgba(160, 100, 220, 0.22), inset 0 1px 0 rgba(255, 255, 255, 1), 0 0 0 4px rgba(201, 156, 240, 0.15);
+    }
+    .recuerdos-buscador-wrap::before {
+      content: "";
+      position: absolute;
+      left: 18px; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      border: 1.5px solid #c99cf0;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .recuerdos-buscador-wrap::after {
+      content: "";
+      position: absolute;
+      left: 30px; top: 60%;
+      width: 8px; height: 1.5px;
+      background: #c99cf0;
+      transform: rotate(45deg);
+      transform-origin: left;
+      pointer-events: none;
+      border-radius: 2px;
+    }
+
+    .btn-nuevo-recuerdo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 26px;
+      background: linear-gradient(135deg, #a874e8 0%, #f28ca6 100%);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 28px rgba(160, 100, 220, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .btn-nuevo-recuerdo::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.8s ease;
+    }
+    .btn-nuevo-recuerdo:hover::before { transform: translateX(100%); }
+    .btn-nuevo-recuerdo:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 16px 38px rgba(160, 100, 220, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    .btn-nuevo-recuerdo::after {
+      content: "✨";
+      margin-left: 4px;
+    }
+
+    /* ============================================
+       GRID DE RECUERDOS
+       ============================================ */
+    .recuerdos-grid {
+      max-width: 1320px;
+      margin: 30px auto 0;
+      padding: 10px 24px 120px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 24px;
-    }
-    .galeria-item {
-      background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(242, 140, 166, 0.15);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      margin: 0;
       position: relative;
+      z-index: 2;
     }
-    .galeria-item:hover { transform: translateY(-6px); box-shadow: 0 20px 45px rgba(242, 140, 166, 0.3); }
-    .galeria-item img {
+
+    .recuerdo-card {
+      position: relative;
+      padding: 0;
+      border-radius: 4px 24px 4px 24px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 244, 255, 0.95) 55%, rgba(255, 248, 252, 0.98) 100%);
+      border: 1px solid rgba(200, 160, 240, 0.3);
+      box-shadow: 0 14px 38px rgba(160, 100, 220, 0.12), 0 4px 12px rgba(200, 160, 240, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1);
+      cursor: pointer;
+      transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease, border-color 0.3s ease;
+      opacity: 0;
+      transform: translateY(30px) scale(0.96);
+      overflow: hidden;
+      isolation: isolate;
+      will-change: transform;
+    }
+    .recuerdo-card::before {
+      content: "";
+      position: absolute;
+      top: -30%; left: -20%;
+      width: 120%; height: 120%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(220, 180, 255, 0.45) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+      transition: opacity 0.6s ease, transform 0.8s ease;
+    }
+    .recuerdo-card::after {
+      content: "";
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 22px; height: 22px;
+      border-top: 1px solid rgba(201, 156, 240, 0.5);
+      border-right: 1px solid rgba(201, 156, 240, 0.5);
+      border-radius: 0 8px 0 0;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+    }
+    .recuerdo-card.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .recuerdo-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(201, 156, 240, 0.65);
+      box-shadow: 0 24px 60px rgba(160, 100, 220, 0.25), 0 8px 24px rgba(200, 160, 240, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+    .recuerdo-card:hover::before { opacity: 1; transform: scale(1.15); }
+    .recuerdo-card:hover::after {
+      top: 10px; right: 10px;
+      width: 30px; height: 30px;
+      border-color: rgba(201, 156, 240, 1);
+      border-radius: 0 12px 0 0;
+    }
+
+    .recuerdo-media {
       width: 100%;
-      height: 220px;
+      aspect-ratio: 4 / 3;
       object-fit: cover;
       display: block;
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .galeria-item:hover img { transform: scale(1.05); }
-    .galeria-item figcaption {
-      padding: 20px 22px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background: #fff;
+      border-radius: 4px 24px 0 0;
+      background: #f0e8f8;
       position: relative;
+      z-index: 1;
     }
-    .galeria-item .recuerdo-fecha {
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: #f28ca6;
+
+    .recuerdo-info {
+      padding: 18px 22px 22px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .recuerdo-fecha {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      margin: 0;
+      color: #a874e8;
+      font-weight: 600;
+      margin-bottom: 10px;
+      opacity: 0.85;
     }
-    .galeria-item .recuerdo-texto {
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95rem;
-      color: #6b5560;
+    .recuerdo-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #4a2a5a;
+      margin: 0 0 6px;
+      letter-spacing: 0.003em;
+    }
+    .recuerdo-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: #8a7aa8;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(201, 156, 240, 0.4);
       line-height: 1.5;
-      margin: 0;
-      font-weight: 300;
     }
-    .btn-eliminar-recuerdo {
+
+    .recuerdo-delete {
       position: absolute;
-      bottom: 15px;
-      right: 15px;
-      width: 34px;
-      height: 34px;
+      top: 14px;
+      right: 42px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: none;
       background: rgba(217, 102, 102, 0.15);
       color: #d96666;
-      font-size: 1rem;
+      font-size: 0.85rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
       opacity: 0;
+      z-index: 5;
     }
-    .galeria-item:hover .btn-eliminar-recuerdo { opacity: 1; }
-    .btn-eliminar-recuerdo:hover { background: #d96666; color: #fff; transform: scale(1.15); }
+    .recuerdo-card:hover .recuerdo-delete { opacity: 1; }
+    .recuerdo-delete:hover { background: #d96666; color: #fff; transform: scale(1.15); }
 
-    /* BOTONES */
-    .btn-agregar-galeria {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 32px;
-      background: linear-gradient(135deg, #f28ca6, #d4a373);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 10px 24px rgba(242, 140, 166, 0.4);
+    .recuerdos-vacio {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 30px;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: #a08bb8;
+      line-height: 1.6;
     }
-    .btn-agregar-galeria:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 34px rgba(242, 140, 166, 0.6); }
+    .recuerdos-vacio::before {
+      content: "❦";
+      display: block;
+      font-size: 2.4rem;
+      color: #c99cf0;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
 
-    /* FILTROS */
-    .filtros-barra {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: flex-end;
-      padding: 22px 26px;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 12px 32px rgba(160, 100, 220, 0.12);
-      border: 1px solid rgba(242, 140, 166, 0.15);
-      margin-bottom: 20px;
-    }
-    .filtro-grupo { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 180px; }
-    .filtro-busqueda { flex: 2; min-width: 240px; }
-    .filtro-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8a7aa8; }
-    .filtro-select, .filtro-input {
-      padding: 10px 14px;
-      border: 1.5px solid rgba(180, 130, 240, 0.25);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      color: #3a2145;
-      outline: none;
-      background: #fff;
-      transition: all 0.3s ease;
-    }
-    .filtro-select:focus, .filtro-input:focus { border-color: #a874e8; box-shadow: 0 0 0 3px rgba(168, 116, 232, 0.12); }
-    .btn-nuevo-album {
-      padding: 10px 22px;
-      background: linear-gradient(135deg, #a874e8, #d4a373);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      height: fit-content;
-    }
-    .btn-nuevo-album:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(168, 116, 232, 0.4); }
-
-    .albums-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; padding: 0 4px; }
-    .album-chip {
-      padding: 8px 18px;
-      background: #fff;
-      border: 1.5px solid rgba(180, 130, 240, 0.25);
-      border-radius: 50px;
-      font-family: inherit;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #7a5c8c;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .album-chip:hover { border-color: #a874e8; transform: translateY(-2px); }
-    .album-chip.activo { background: linear-gradient(135deg, #a874e8, #d4a373); color: #fff; border-color: transparent; box-shadow: 0 8px 20px rgba(168, 116, 232, 0.35); }
-
-    /* LIGHTBOX */
-    .lightbox-galeria {
+    /* ============================================
+       MODAL DE RECUERDO (VISOR CENTRADO Y FIJO)
+       ============================================ */
+    .recuerdo-modal {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
       z-index: 9999;
-      background: rgba(0, 0, 0, 0.94);
+      background: rgba(20, 10, 35, 0.96);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
-      opacity: 0;
-      animation: fadeInLightbox 0.4s ease forwards;
-      cursor: zoom-out;
-    }
-    @keyframes fadeInLightbox { to { opacity: 1; } }
-    .lightbox-contenido { max-width: 95vw; max-height: 90vh; position: relative; display: flex; flex-direction: column; align-items: center; }
-    .lightbox-contenido img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 12px; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); }
-    .lightbox-caption { margin-top: 20px; color: #fff; font-family: 'Poppins', sans-serif; font-size: 1rem; text-align: center; max-width: 600px; line-height: 1.5; opacity: 0.9; }
-    .lightbox-cerrar {
-      position: absolute;
-      top: 20px; right: 20px;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      font-size: 1.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      z-index: 10;
-    }
-    .lightbox-cerrar:hover { background: rgba(255, 255, 255, 0.3); transform: rotate(90deg); }
-    .lightbox-eliminar {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      padding: 12px 20px;
-      border-radius: 50px;
-      background: rgba(217, 102, 102, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      z-index: 10;
-    }
-    .lightbox-eliminar:hover { background: #d96666; transform: scale(1.05); }
-
-    /* MODAL SUBIDA */
-    .subida-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: rgba(60, 30, 90, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
-      backdrop-filter: blur(14px);
+      transition: opacity 0.35s ease;
+      touch-action: none;
+      overscroll-behavior: none;
+      overflow: hidden;
+      -webkit-user-select: none;
+      user-select: none;
     }
-    .subida-modal.activo { opacity: 1; pointer-events: auto; }
-    .subida-papel {
-      background: #fff;
-      border-radius: 24px;
-      padding: 40px 35px;
-      max-width: 520px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+    .recuerdo-modal.activo {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .recuerdo-modal-contenido {
       position: relative;
-      transform: scale(0.9);
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
-    .subida-modal.activo .subida-papel { transform: scale(1); }
-    .subida-cerrar {
+
+    .recuerdo-modal-media {
+      display: block;
+      max-width: 100vw;
+      max-height: 100vh;
+      max-height: 100dvh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
+      pointer-events: auto;
+      margin: auto;
+    }
+
+    .recuerdo-modal-info {
       position: absolute;
-      top: 15px; right: 15px;
-      width: 40px; height: 40px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 30px 24px calc(30px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(to top, rgba(10, 5, 20, 0.95) 0%, rgba(10, 5, 20, 0.7) 60%, transparent 100%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 3;
+      transition: opacity 0.3s ease;
+    }
+    .recuerdo-modal-titulo {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: #fff;
+      margin: 0 0 6px;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    }
+    .recuerdo-modal-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .recuerdo-modal-fecha {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(201, 156, 240, 0.9);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .recuerdo-modal-cerrar {
+      position: absolute;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      right: 16px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
-      border: none;
-      background: rgba(242, 140, 166, 0.15);
-      color: #a874e8;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
       font-size: 1.2rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: all 0.3s ease;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      -webkit-tap-highlight-color: transparent;
     }
-    .subida-cerrar:hover { background: #a874e8; color: #fff; }
-    .subida-titulo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #a874e8; margin-bottom: 8px; text-align: center; }
-    .subida-sub { text-align: center; color: #7a5c8c; font-size: 0.9rem; margin-bottom: 25px; font-style: italic; }
-    .subida-campo { margin-bottom: 18px; }
-    .subida-label { display: block; font-size: 0.75rem; font-weight: 700; color: #8a7aa8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
-    .subida-input, .subida-textarea {
+    .recuerdo-modal-cerrar:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .recuerdo-modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .recuerdo-modal-nav:active {
+      transform: translateY(-50%) scale(0.92);
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .recuerdo-modal-nav.prev { left: 12px; }
+    .recuerdo-modal-nav.next { right: 12px; }
+    .recuerdo-modal-nav:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+
+    /* Ocultar info al tocar la imagen (para verla completa) */
+    .recuerdo-modal.ocultar-info .recuerdo-modal-info {
+      opacity: 0;
+    }
+
+    /* ============================================
+       MODAL NUEVO RECUERDO
+       ============================================ */
+    .nuevo-modal {
+      position: fixed; inset: 0;
+      z-index: 9999;
+      background: rgba(60, 30, 90, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow-y: auto;
+    }
+    .nuevo-modal.activo { opacity: 1; pointer-events: auto; }
+
+    .nuevo-marco {
+      position: relative;
+      max-width: 560px;
       width: 100%;
-      padding: 12px 16px;
+      padding: 4px;
+      background: linear-gradient(135deg, rgba(201, 156, 240, 0.9), rgba(240, 200, 230, 0.7), rgba(201, 156, 240, 0.9));
+      border-radius: 40px;
+      transform: scale(0.85);
+      opacity: 0;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+      box-shadow: 0 40px 120px rgba(120, 60, 180, 0.4);
+      margin: auto;
+    }
+    .nuevo-modal.activo .nuevo-marco { transform: scale(1); opacity: 1; }
+
+    .nuevo-inner {
+      padding: 45px 40px 40px;
+      background: linear-gradient(150deg, rgba(255, 253, 255, 1), rgba(252, 244, 255, 0.98), rgba(255, 248, 252, 1));
+      border-radius: 36px;
+      position: relative;
+    }
+    .nuevo-inner h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.7rem;
+      color: #3a2145;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .nuevo-campo { margin-bottom: 18px; }
+    .nuevo-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8a7aa8;
+      margin-bottom: 8px;
+    }
+    .nuevo-input,
+    .nuevo-textarea {
+      width: 100%;
+      padding: 14px 18px;
       border: 1.5px solid rgba(180, 130, 240, 0.3);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 0.95rem;
+      border-radius: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
       color: #3a2145;
       outline: none;
       transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.85);
       box-sizing: border-box;
-      background: #fff;
     }
-    .subida-input:focus, .subida-textarea:focus { border-color: #a874e8; box-shadow: 0 0 0 4px rgba(168, 116, 232, 0.15); }
-    .subida-textarea { min-height: 80px; resize: vertical; }
-    input[type="file"] {
+    .nuevo-input:focus,
+    .nuevo-textarea:focus {
+      border-color: #a874e8;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(168, 116, 232, 0.15);
+    }
+    .nuevo-textarea {
+      resize: vertical;
+      min-height: 70px;
+      line-height: 1.5;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .nuevo-file-wrap {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
       width: 100%;
-      padding: 10px;
-      border: 2px dashed rgba(180, 130, 240, 0.4);
-      border-radius: 12px;
-      background: rgba(242, 140, 166, 0.05);
-      font-size: 0.85rem;
+    }
+    .nuevo-file-wrap input[type="file"] {
+      position: absolute;
+      left: 0; top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
       cursor: pointer;
     }
-    .subida-autores { display: flex; gap: 10px; }
-    .subida-autor-btn {
-      flex: 1;
-      padding: 10px 16px;
-      border: 1.5px solid rgba(180, 130, 240, 0.3);
-      border-radius: 12px;
-      background: #fff;
-      font-family: inherit;
-      font-size: 0.9rem;
+    .nuevo-file-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border: 1.5px dashed rgba(180, 130, 240, 0.5);
+      border-radius: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: #a874e8;
       font-weight: 600;
-      color: #7a5c8c;
-      cursor: pointer;
+      letter-spacing: 1px;
+      background: rgba(255, 255, 255, 0.5);
       transition: all 0.3s ease;
+      cursor: pointer;
     }
-    .subida-autor-btn:hover { border-color: #a874e8; }
-    .subida-autor-btn.activo { background: linear-gradient(135deg, #a874e8, #d4a373); color: #fff; border-color: transparent; }
-    .subida-acciones { display: flex; gap: 10px; margin-top: 25px; }
-    .subida-btn {
+    .nuevo-file-btn:hover {
+      border-color: #a874e8;
+      background: rgba(201, 156, 240, 0.1);
+    }
+    .nuevo-preview {
+      margin-top: 12px;
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 12px;
+      object-fit: cover;
+      display: none;
+    }
+    .nuevo-preview.visible { display: block; }
+    .nuevo-acciones {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+    .nuevo-btn {
       flex: 1;
       padding: 14px 20px;
       border-radius: 50px;
       border: none;
       font-family: inherit;
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .subida-btn.primario { background: linear-gradient(135deg, #f28ca6, #d4a373); color: #fff; box-shadow: 0 8px 24px rgba(242, 140, 166, 0.4); }
-    .subida-btn.primario:hover { transform: translateY(-2px); }
-    .subida-btn.neutro { background: #f5f0fa; color: #7a5c8c; }
-    .subida-btn.neutro:hover { background: #ebe2f5; }
-    .subida-progreso { text-align: center; margin-top: 20px; padding: 20px; background: rgba(242, 140, 166, 0.08); border-radius: 16px; }
-    .subida-spinner { width: 40px; height: 40px; border: 4px solid rgba(168, 116, 232, 0.2); border-top-color: #a874e8; border-radius: 50%; margin: 0 auto 12px; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .subida-progreso p { color: #7a5c8c; font-size: 0.9rem; }
+    .nuevo-btn.primario {
+      background: linear-gradient(135deg, #c99cf0, #a874e8);
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(160, 100, 220, 0.4);
+    }
+    .nuevo-btn.primario:hover { transform: translateY(-2px); }
+    .nuevo-btn.neutro {
+      background: rgba(255, 255, 255, 0.9);
+      color: #7a5c8c;
+      border: 1.5px solid rgba(180, 130, 240, 0.3);
+    }
+    .nuevo-btn.neutro:hover { background: #f5f0fa; }
 
+    /* Footer */
+    body.recuerdos-page .footer {
+      border-top: 1px solid rgba(180, 130, 240, 0.15);
+      color: #7a5c8c;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 50px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    body.recuerdos-page .footer a { color: #a874e8; text-decoration: none; }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      .sec-videos-nueva { padding: 0 16px; margin: 60px auto 90px; }
-      .videos-titulo { margin-bottom: 50px; }
-      .burbujas-escenario { gap: 60px; }
-      .burbuja-video { max-width: 100%; }
-      .burbuja-inner { border-radius: 45% / 40%; }
-      .filtros-barra { padding: 18px; gap: 12px; }
-      .filtro-grupo, .filtro-busqueda { min-width: 100%; }
-      .btn-nuevo-album { width: 100%; }
+      .recuerdos-hero { padding: 60px 20px 20px; }
+      .recuerdos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 18px;
+        padding: 10px 16px 80px;
+        margin-top: 20px;
+      }
+      .recuerdo-info { padding: 14px 18px 18px; }
+      .recuerdo-titulo { font-size: 1rem; }
+      .nuevo-inner { padding: 35px 25px 30px; }
+      .recuerdo-modal-nav { width: 42px; height: 42px; font-size: 1.2rem; }
+      .recuerdo-modal-nav.prev { left: 8px; }
+      .recuerdo-modal-nav.next { right: 8px; }
+      .recuerdo-modal-info { padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px)); }
+    }
+    @media (max-width: 480px) {
+      .recuerdos-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; padding: 10px 16px 60px; }
+      .recuerdos-controles { flex-direction: column; align-items: stretch; }
+      .recuerdos-contador, .btn-nuevo-recuerdo { justify-content: center; }
     }
   </style>
 </head>
-<body class="page-inner"
+<body class="page-inner recuerdos-page"
       data-cancion-titulo="Nuestra Canción"
       data-cancion-artista="Para ti 💕">
 
-  <nav class="nav-back"><a href="../index.html">← Volver</a></nav>
+  <nav class="nav-back"><a href="../index.html">← Volver al inicio</a></nav>
 
-  <header class="page-header">
-    <h1>Cosas que me recuerdan a ti</h1>
-    <p>Pequeños detalles que son tuyos sin serlo</p>
+  <canvas class="aurora-canvas" id="auroraCanvas"></canvas>
+  <canvas class="particulas-canvas" id="particulasCanvas"></canvas>
+
+  <!-- HERO -->
+  <header class="recuerdos-hero">
+    <span class="recuerdos-hero-badge">Momentos que guardo</span>
+    <h1>Recuerdos que <em>nos pertenecen</em></h1>
+    <p>
+      Cada foto, cada video, cada instante.<br>
+      Todo lo que vivimos juntos, aquí para siempre.
+    </p>
+
+    <!-- CONTROLES -->
+    <div class="recuerdos-controles">
+      <div class="recuerdos-contador">
+        <span class="recuerdos-contador-num" id="contadorRecuerdos">0</span>
+        <span>recuerdos</span>
+      </div>
+
+      <div class="recuerdos-buscador-wrap">
+        <input type="text" id="buscadorRecuerdos" placeholder="Buscar un recuerdo..." />
+      </div>
+
+      <button class="btn-nuevo-recuerdo" id="btnNuevoRecuerdo">Nuevo recuerdo</button>
+    </div>
   </header>
 
-  <!-- Botones agregar -->
-  <section style="max-width: 1200px; margin: 40px auto 20px; padding: 0 24px; text-align: center; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; align-items: center;">
-    <button class="btn-agregar-galeria" id="btnAgregarRecuerdo">📸 Agregar foto</button>
-    <button class="btn-agregar-galeria" id="btnAgregarVideo" style="background: linear-gradient(135deg, #a874e8, #f28ca6);">🎬 Agregar video</button>
-    <span id="contadorRecuerdos" style="color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;"></span>
-  </section>
+  <!-- GRID -->
+  <section class="recuerdos-grid" id="recuerdosGrid"></section>
 
-  <!-- Filtros -->
-  <section id="recuerdosFiltros" style="max-width: 1200px; margin: 0 auto 30px; padding: 0 24px;"></section>
-
-  <!-- Galería de fotos (subidas + originales) -->
-  <section class="galeria" id="galeriaUsuarioRecuerdos"></section>
-
-  <!-- Videos en burbujas -->
-  <section class="sec-videos-nueva">
-    <div class="videos-titulo">
-      <span class="kicker">Archivo privado</span>
-      <h2>Momentos en <em>movimiento</em></h2>
-      <p class="sub">Videos guardados aquí que solo quiero mostrarte a ti.</p>
-    </div>
-    <div class="burbujas-escenario" id="burbujasEscenario"></div>
-  </section>
-
-  <!-- Modal videos -->
-  <div class="video-modal" id="videoModal">
-    <button class="video-modal-cerrar" id="videoModalCerrar" aria-label="Cerrar">✕</button>
-    <div class="video-modal-inner" id="videoModalInner"></div>
-  </div>
-
-  <footer class="footer"><p>Sigue con <a href="cartas.html">Cartas →</a></p></footer>
+  <footer class="footer"><p>Ahora → <a href="razones.html">Volvamos a las razones</a></p></footer>
 
   <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
   <script src="../js/script.js"></script>
   <script src="../js/musica-global.js"></script>
-  <script src="../js/video-musica.js"></script>
   <script src="../js/confeti.js"></script>
   <script src="../js/pwa.js"></script>
-  <script src="../js/galeria-usuario.js"></script>
 
-  <!-- ============================================
-       SCRIPT DE BURBUJAS DE VIDEO
-       ============================================ -->
+  <!-- MODAL VER RECUERDO -->
+  <div class="recuerdo-modal" id="recuerdoModal">
+    <div class="recuerdo-modal-contenido" id="recuerdoModalContenido">
+      <img class="recuerdo-modal-media" id="recuerdoModalImagen" src="" alt="" style="display: none;" />
+      <video class="recuerdo-modal-media" id="recuerdoModalVideo" controls playsinline preload="metadata" style="display: none;"></video>
+    </div>
+    <button class="recuerdo-modal-cerrar" id="recuerdoModalCerrar" aria-label="Cerrar">✕</button>
+    <button class="recuerdo-modal-nav prev" id="recuerdoModalPrev" aria-label="Anterior">‹</button>
+    <button class="recuerdo-modal-nav next" id="recuerdoModalNext" aria-label="Siguiente">›</button>
+    <div class="recuerdo-modal-info" id="recuerdoModalInfo">
+      <span class="recuerdo-modal-fecha" id="recuerdoModalFecha"></span>
+      <h3 class="recuerdo-modal-titulo" id="recuerdoModalTitulo"></h3>
+      <p class="recuerdo-modal-desc" id="recuerdoModalDesc"></p>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVO RECUERDO -->
+  <div class="nuevo-modal" id="nuevoModal">
+    <div class="nuevo-marco">
+      <button class="recuerdo-modal-cerrar" id="nuevoModalCerrar" aria-label="Cerrar" style="border-color: rgba(180, 130, 240, 0.4); background: rgba(255, 255, 255, 0.95); color: #a874e8; box-shadow: 0 8px 22px rgba(180, 130, 240, 0.25);">✕</button>
+      <div class="nuevo-inner">
+        <h2>Nuevo recuerdo</h2>
+
+        <div class="nuevo-campo">
+          <label class="nuevo-label">Título</label>
+          <input type="text" id="nuevoTituloInput" class="nuevo-input" placeholder="Un título para este recuerdo..." maxlength="100" />
+        </div>
+
+        <div class="nuevo-campo">
+          <label class="nuevo-label">Descripción (opcional)</label>
+          <textarea id="nuevoDescInput" class="nuevo-textarea" placeholder="Algo más para recordar..." maxlength="300"></textarea>
+        </div>
+
+        <div class="nuevo-campo">
+          <label class="nuevo-label">Archivo (foto o video)</label>
+          <div class="nuevo-file-wrap">
+            <div class="nuevo-file-btn" id="nuevoFileBtn">📎 Seleccionar archivo</div>
+            <input type="file" id="nuevoArchivoInput" accept="image/*,video/*" />
+          </div>
+          <img class="nuevo-preview" id="nuevoPreviewImg" alt="Previsualización" />
+          <video class="nuevo-preview" id="nuevoPreviewVideo" controls playsinline style="display: none;"></video>
+        </div>
+
+        <div class="nuevo-acciones">
+          <button class="nuevo-btn primario" id="btnGuardarNuevo">Guardar</button>
+          <button class="nuevo-btn neutro" id="btnCancelarNuevo">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
+    /* ============================================
+       RECUERDOS — Sistema completo
+       ============================================ */
     (function () {
       "use strict";
 
@@ -691,316 +926,535 @@
       const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
       const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
-      const VIDEOS_ORIGINALES_BASE = [
-        { id: "orig-vid-1", titulo: "Recuerdo 1", url: "../assets/videos/recuerdo.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
-        { id: "orig-vid-2", titulo: "Recuerdo 2", url: "../assets/videos/recuerdo2.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
-        { id: "orig-vid-3", titulo: "Recuerdo 3", url: "../assets/videos/recuerdo3.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true }
-      ];
+      let recuerdos = [];
+      let filtroTexto = "";
+      let recuerdoActualIndex = -1;
+      let recuerdosFiltrados = [];
 
-      function getEliminados() {
-        try { return JSON.parse(localStorage.getItem("recuerdos_eliminados") || "[]"); }
-        catch { return []; }
-      }
-
-      function claveMes(fechaISO) {
-        const fecha = new Date(fechaISO);
-        return fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
-      }
-
-      function crearMiniBurbujas(contenedor) {
-        for (let i = 0; i < 6; i++) {
-          const b = document.createElement("div");
-          b.className = "mini-b";
-          const size = Math.random() * 30 + 10;
-          b.style.cssText = `position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(242,140,166,0.15) 40%, transparent 70%);border:1px solid rgba(242,140,166,0.25);box-shadow:inset 0 0 15px rgba(242,140,166,0.3);animation:flotarMini 5s ease-in-out infinite;opacity:0.7;`;
-          b.style.width = size + "px";
-          b.style.height = size + "px";
-          const angulo = (Math.PI * 2 * i) / 6 + Math.random() * 0.5;
-          const radio = 52 + Math.random() * 15;
-          b.style.left = (50 + Math.cos(angulo) * radio) + "%";
-          b.style.top = (50 + Math.sin(angulo) * (radio * 0.7)) + "%";
-          b.style.transform = "translate(-50%, -50%)";
-          b.style.animationDelay = (Math.random() * 4) + "s";
-          contenedor.appendChild(b);
-        }
-      }
-
-      function explosion(canvas) {
-        const ctx = canvas.getContext("2d");
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * devicePixelRatio;
-        canvas.height = rect.height * devicePixelRatio;
-        ctx.scale(devicePixelRatio, devicePixelRatio);
-        const w = rect.width, h = rect.height;
-        const particles = [];
-        for (let i = 0; i < 70; i++) {
-          const angle = (Math.PI * 2 * i) / 70 + Math.random() * 0.4;
-          const speed = Math.random() * 6 + 3;
-          particles.push({
-            x: w / 2, y: h / 2,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            r: Math.random() * 3.5 + 1,
-            vida: 1,
-            hue: Math.random() < 0.6 ? "242, 140, 166" : "255, 255, 255"
+      // ========== CARGAR RECUERDOS ==========
+      async function cargarRecuerdos() {
+        try {
+          const res = await fetch(JSONBIN_URL + "/latest", {
+            headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
           });
+          if (res.ok) {
+            const data = await res.json();
+            recuerdos = data.recuerdos || [];
+          }
+        } catch (err) {
+          console.warn("No se pudieron cargar los recuerdos:", err);
+          recuerdos = [];
         }
+        recuerdos.sort((a, b) => new Date(b.fecha || 0) - new Date(a.fecha || 0));
+      }
+
+      // ========== GUARDAR RECUERDO ==========
+      async function guardarRecuerdoEnBin(recuerdo) {
+        const res = await fetch(JSONBIN_URL + "/latest", {
+          headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+        });
+        if (!res.ok) throw new Error("Error leyendo JSONBin");
+        const data = await res.json();
+        const nuevoContenido = {
+          entradas: data.entradas || [],
+          suscripciones: data.suscripciones || [],
+          recuerdos: data.recuerdos || [],
+          razones: data.razones || [],
+          albums: data.albums || []
+        };
+        nuevoContenido.recuerdos.unshift(recuerdo);
+        const putRes = await fetch(JSONBIN_URL, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+          body: JSON.stringify(nuevoContenido)
+        });
+        if (!putRes.ok) throw new Error("Error guardando en JSONBin");
+        return true;
+      }
+
+      // ========== ELIMINAR RECUERDO ==========
+      async function eliminarRecuerdoEnBin(recuerdoId) {
+        const res = await fetch(JSONBIN_URL + "/latest", {
+          headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+        });
+        if (!res.ok) throw new Error("Error leyendo JSONBin");
+        const data = await res.json();
+        const nuevoContenido = {
+          entradas: data.entradas || [],
+          suscripciones: data.suscripciones || [],
+          recuerdos: (data.recuerdos || []).filter(r => r.id !== recuerdoId),
+          razones: data.razones || [],
+          albums: data.albums || []
+        };
+        const putRes = await fetch(JSONBIN_URL, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+          body: JSON.stringify(nuevoContenido)
+        });
+        if (!putRes.ok) throw new Error("Error guardando en JSONBin");
+        return true;
+      }
+
+      // ============================================
+      // AURORAS DE FONDO
+      // ============================================
+      (function auroraFondo() {
+        const canvas = document.getElementById("auroraCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        let w, h;
+        function resize() {
+          w = canvas.width = window.innerWidth * devicePixelRatio;
+          h = canvas.height = window.innerHeight * devicePixelRatio;
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = window.innerHeight + "px";
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        const blobs = [
+          { x: 0.2, y: 0.3, r: 0.55, color: [233, 213, 255], speed: 0.00010, fase: 0 },
+          { x: 0.8, y: 0.7, r: 0.5, color: [255, 214, 232], speed: 0.00013, fase: Math.PI },
+          { x: 0.5, y: 0.5, r: 0.45, color: [240, 220, 255], speed: 0.00008, fase: Math.PI * 1.4 },
+          { x: 0.15, y: 0.8, r: 0.4, color: [255, 235, 245], speed: 0.00011, fase: Math.PI * 0.6 }
+        ];
         const start = performance.now();
-        function animate(now) {
-          const t = (now - start) / 1500;
+        function render(now) {
+          const t = now - start;
           ctx.clearRect(0, 0, w, h);
-          if (t >= 1) { canvas.style.opacity = "0"; return; }
-          particles.forEach(p => {
-            p.x += p.vx; p.y += p.vy;
-            p.vx *= 0.95; p.vy *= 0.95;
-            p.vida = 1 - t;
+          blobs.forEach(b => {
+            const cx = (b.x + Math.sin(t * b.speed + b.fase) * 0.12) * w;
+            const cy = (b.y + Math.cos(t * b.speed * 1.3 + b.fase) * 0.12) * h;
+            const r = b.r * Math.min(w, h);
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+            gradient.addColorStop(0, `rgba(${b.color[0]}, ${b.color[1]}, ${b.color[2]}, 0.55)`);
+            gradient.addColorStop(0.5, `rgba(${b.color[0]}, ${b.color[1]}, ${b.color[2]}, 0.2)`);
+            gradient.addColorStop(1, `rgba(${b.color[0]}, ${b.color[1]}, ${b.color[2]}, 0)`);
+            ctx.fillStyle = gradient;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r * p.vida, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${p.hue}, ${p.vida})`;
-            ctx.shadowBlur = 18;
-            ctx.shadowColor = `rgba(${p.hue}, ${p.vida})`;
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
             ctx.fill();
           });
-          requestAnimationFrame(animate);
+          requestAnimationFrame(render);
         }
-        requestAnimationFrame(animate);
+        requestAnimationFrame(render);
+      })();
+
+      // ============================================
+      // PARTÍCULAS DE POLVO
+      // ============================================
+      (function polvoDorado() {
+        const canvas = document.getElementById("particulasCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        let w, h;
+        function resize() {
+          w = canvas.width = window.innerWidth * devicePixelRatio;
+          h = canvas.height = window.innerHeight * devicePixelRatio;
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = window.innerHeight + "px";
+        }
+        resize();
+        window.addEventListener("resize", resize);
+        const N = Math.min(70, Math.floor(window.innerWidth / 22));
+        const parts = [];
+        for (let i = 0; i < N; i++) {
+          parts.push({
+            x: Math.random() * w, y: Math.random() * h,
+            r: (Math.random() * 1.5 + 0.4) * devicePixelRatio,
+            vx: (Math.random() - 0.5) * 0.15 * devicePixelRatio,
+            vy: (Math.random() - 0.5) * 0.15 * devicePixelRatio,
+            a: Math.random() * 0.5 + 0.2, fase: Math.random() * Math.PI * 2,
+            tipo: Math.random() < 0.6 ? "lav" : "dor"
+          });
+        }
+        let mouseX = -9999, mouseY = -9999;
+        window.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX * devicePixelRatio;
+          mouseY = e.clientY * devicePixelRatio;
+        });
+        function render() {
+          ctx.clearRect(0, 0, w, h);
+          parts.forEach(p => {
+            p.x += p.vx; p.y += p.vy; p.fase += 0.01;
+            const dx = mouseX - p.x, dy = mouseY - p.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 200 * devicePixelRatio && dist > 1) {
+              const fuerza = (200 * devicePixelRatio - dist) / (200 * devicePixelRatio);
+              p.x += (dx / dist) * fuerza * 0.4 * devicePixelRatio;
+              p.y += (dy / dist) * fuerza * 0.4 * devicePixelRatio;
+            }
+            if (p.x < -20) p.x = w + 20;
+            if (p.x > w + 20) p.x = -20;
+            if (p.y < -20) p.y = h + 20;
+            if (p.y > h + 20) p.y = -20;
+            const alpha = p.a * (0.7 + 0.3 * Math.sin(p.fase));
+            const color = p.tipo === "lav" ? `rgba(201, 156, 240, ${alpha})` : `rgba(212, 163, 115, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.shadowBlur = 12 * devicePixelRatio;
+            ctx.shadowColor = color;
+            ctx.fill();
+          });
+          requestAnimationFrame(render);
+        }
+        render();
+      })();
+
+      // ============================================
+      // RENDERIZAR RECUERDOS
+      // ============================================
+      const grid = document.getElementById("recuerdosGrid");
+      const contadorEl = document.getElementById("contadorRecuerdos");
+      const buscador = document.getElementById("buscadorRecuerdos");
+
+      function formatFecha(fechaISO) {
+        if (!fechaISO) return "";
+        try {
+          const d = new Date(fechaISO);
+          const opciones = { year: "numeric", month: "long", day: "numeric" };
+          return d.toLocaleDateString("es-ES", opciones);
+        } catch {
+          return "";
+        }
       }
 
-      const modal = document.getElementById("videoModal");
-      const modalInner = document.getElementById("videoModalInner");
-      const modalCerrar = document.getElementById("videoModalCerrar");
-      let burbujaActiva = null;
-      let playerActivo = null;
+      function renderRecuerdos(filtro = "") {
+        if (!grid) return;
+        const filtroLower = filtro.trim().toLowerCase();
+        
+        recuerdosFiltrados = filtroLower
+          ? recuerdos.filter(r =>
+              (r.titulo || "").toLowerCase().includes(filtroLower) ||
+              (r.descripcion || "").toLowerCase().includes(filtroLower)
+            )
+          : recuerdos;
 
-      function abrirModal(item, burbuja) {
-        burbujaActiva = burbuja;
-        modalInner.innerHTML = "";
-        if (item.tipo === "video") {
-          playerActivo = document.createElement("video");
-          playerActivo.src = item.url;
-          playerActivo.controls = true;
-          playerActivo.playsInline = true;
-        } else {
-          playerActivo = document.createElement("img");
-          playerActivo.src = item.url;
-        }
-        modalInner.appendChild(playerActivo);
-        modal.classList.add("activo");
-        document.body.style.overflow = "hidden";
-        setTimeout(() => {
-          if (item.tipo === "video" && playerActivo.play) playerActivo.play().catch(() => {});
-        }, 500);
-      }
-
-      function cerrarModal() {
-        if (!modal.classList.contains("activo")) return;
-        if (playerActivo && playerActivo.pause) playerActivo.pause();
-        if (burbujaActiva) {
-          setTimeout(() => {
-            burbujaActiva.classList.add("absorbiendo");
-            burbujaActiva.scrollIntoView({ behavior: "smooth", block: "center" });
-          }, 400);
-          setTimeout(() => burbujaActiva.classList.remove("absorbiendo"), 1800);
-        }
-        setTimeout(() => {
-          modal.classList.remove("activo");
-          document.body.style.overflow = "";
-          setTimeout(() => { modalInner.innerHTML = ""; playerActivo = null; }, 600);
-        }, 900);
-        burbujaActiva = null;
-      }
-
-      modalCerrar.addEventListener("click", cerrarModal);
-      modal.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modal.classList.contains("activo")) cerrarModal();
-      });
-
-      // Eliminar video
-      async function eliminarVideo(itemId) {
-        if (!confirm("¿Eliminar este video? No se puede recuperar 💜")) return;
-
-        // Video original
-        if (itemId.startsWith("orig-vid-")) {
-          const eliminados = getEliminados();
-          if (!eliminados.includes(itemId)) {
-            eliminados.push(itemId);
-            localStorage.setItem("recuerdos_eliminados", JSON.stringify(eliminados));
-          }
-          if (window.lanzarConfeti) window.lanzarConfeti(800);
-          renderizarBurbujas();
-          alert("✅ Video eliminado");
+        if (recuerdosFiltrados.length === 0) {
+          grid.innerHTML = `<div class="recuerdos-vacio">No encontré ese recuerdo... pero seguro que lo vivimos.</div>`;
+          if (contadorEl) contadorEl.textContent = recuerdos.length;
           return;
         }
 
-        // Video subido
+        grid.innerHTML = recuerdosFiltrados.map((r, i) => `
+          <article class="recuerdo-card" data-id="${r.id}" data-index="${i}" style="transition-delay: ${Math.min(i * 40, 600)}ms">
+            <button class="recuerdo-delete" onclick="event.stopPropagation(); eliminarRecuerdo('${r.id}')" title="Eliminar">🗑️</button>
+            <img class="recuerdo-media" src="${r.archivo}" alt="${r.titulo || 'Recuerdo'}" loading="lazy" />
+            <div class="recuerdo-info">
+              <span class="recuerdo-fecha">${formatFecha(r.fecha)}</span>
+              <h3 class="recuerdo-titulo">${r.titulo || "Sin título"}</h3>
+              ${r.descripcion ? `<p class="recuerdo-desc">${r.descripcion}</p>` : ""}
+            </div>
+          </article>
+        `).join("");
+
+        animarContador(recuerdos.length);
+
+        grid.querySelectorAll(".recuerdo-card").forEach(card => {
+          card.addEventListener("click", () => {
+            const index = parseInt(card.dataset.index, 10);
+            abrirRecuerdo(index);
+          });
+        });
+
+        observarReveals();
+      }
+
+      function animarContador(total) {
+        if (!contadorEl) return;
+        const duracion = 800;
+        const inicio = performance.now();
+        const desde = parseInt(contadorEl.textContent) || 0;
+        function paso(now) {
+          const t = Math.min((now - inicio) / duracion, 1);
+          const ease = 1 - Math.pow(1 - t, 3);
+          contadorEl.textContent = Math.round(desde + (total - desde) * ease);
+          if (t < 1) requestAnimationFrame(paso);
+        }
+        requestAnimationFrame(paso);
+      }
+
+      let io = null;
+      function observarReveals() {
+        if (io) io.disconnect();
+        io = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.1 });
+        grid.querySelectorAll(".recuerdo-card:not(.visible)").forEach(el => io.observe(el));
+      }
+
+      // ========== BUSCADOR ==========
+      let debounceTimer;
+      if (buscador) {
+        buscador.addEventListener("input", (e) => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            filtroTexto = e.target.value;
+            renderRecuerdos(filtroTexto);
+          }, 120);
+        });
+      }
+
+      // ============================================
+      // MODAL VER RECUERDO
+      // ============================================
+      const modal = document.getElementById("recuerdoModal");
+      const modalCerrar = document.getElementById("recuerdoModalCerrar");
+      const modalImagen = document.getElementById("recuerdoModalImagen");
+      const modalVideo = document.getElementById("recuerdoModalVideo");
+      const modalInfo = document.getElementById("recuerdoModalInfo");
+      const modalFecha = document.getElementById("recuerdoModalFecha");
+      const modalTitulo = document.getElementById("recuerdoModalTitulo");
+      const modalDesc = document.getElementById("recuerdoModalDesc");
+      const modalPrev = document.getElementById("recuerdoModalPrev");
+      const modalNext = document.getElementById("recuerdoModalNext");
+
+      function esVideo(url) {
+        if (!url) return false;
+        const videoExts = [".mp4", ".webm", ".ogg", ".mov", ".avi", ".mkv"];
+        const urlLower = url.toLowerCase();
+        return videoExts.some(ext => urlLower.includes(ext)) || urlLower.includes("video");
+      }
+
+      function abrirRecuerdo(index) {
+        recuerdoActualIndex = index;
+        const recuerdo = recuerdosFiltrados[index];
+        if (!recuerdo) return;
+
+        // Bloquear scroll
+        document.body.classList.add("modal-abierto");
+        window.scrollTo(0, window.scrollY);
+
+        // Resetear
+        modalImagen.style.display = "none";
+        modalVideo.style.display = "none";
+        modalImagen.src = "";
+        modalVideo.pause();
+        modalVideo.src = "";
+
+        const esVid = esVideo(recuerdo.archivo) || (recuerdo.tipo && recuerdo.tipo.startsWith("video"));
+
+        if (esVid) {
+          modalVideo.src = recuerdo.archivo;
+          modalVideo.style.display = "block";
+        } else {
+          modalImagen.src = recuerdo.archivo;
+          modalImagen.alt = recuerdo.titulo || "Recuerdo";
+          modalImagen.style.display = "block";
+        }
+
+        modalFecha.textContent = formatFecha(recuerdo.fecha);
+        modalTitulo.textContent = recuerdo.titulo || "Sin título";
+        modalDesc.textContent = recuerdo.descripcion || "";
+        modalDesc.style.display = recuerdo.descripcion ? "block" : "none";
+
+        modalPrev.disabled = recuerdoActualIndex <= 0;
+        modalNext.disabled = recuerdoActualIndex >= recuerdosFiltrados.length - 1;
+
+        modal.classList.remove("ocultar-info");
+        modal.classList.add("activo");
+
+        if (window.lanzarConfeti) window.lanzarConfeti(300);
+      }
+
+      function cerrarRecuerdo() {
+        modal.classList.remove("activo");
+        document.body.classList.remove("modal-abierto");
+        modalVideo.pause();
+        modalVideo.src = "";
+        modalImagen.src = "";
+        recuerdoActualIndex = -1;
+      }
+
+      function navegarRecuerdo(direccion) {
+        const nuevoIndex = recuerdoActualIndex + direccion;
+        if (nuevoIndex < 0 || nuevoIndex >= recuerdosFiltrados.length) return;
+        abrirRecuerdo(nuevoIndex);
+      }
+
+      modalCerrar.addEventListener("click", (e) => {
+        e.stopPropagation();
+        cerrarRecuerdo();
+      });
+
+      // Cerrar al tocar el fondo
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) cerrarRecuerdo();
+      });
+
+      modalPrev.addEventListener("click", (e) => {
+        e.stopPropagation();
+        navegarRecuerdo(-1);
+      });
+
+      modalNext.addEventListener("click", (e) => {
+        e.stopPropagation();
+        navegarRecuerdo(1);
+      });
+
+      // Tocar la imagen para ocultar/mostrar la info
+      [modalImagen, modalVideo].forEach(el => {
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          modal.classList.toggle("ocultar-info");
+        });
+      });
+
+      // ========== ELIMINAR RECUERDO ==========
+      window.eliminarRecuerdo = async function (recuerdoId) {
+        if (!confirm("¿Eliminar este recuerdo? No se puede recuperar 💜")) return;
         try {
-          const res = await fetch(JSONBIN_URL + "/latest", {
-            headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
-          });
-          const data = await res.json();
-          const nuevo = {
-            entradas: data.entradas || [],
-            suscripciones: data.suscripciones || [],
-            recuerdos: (data.recuerdos || []).filter(r => r.id !== itemId),
-            razones: data.razones || [],
-            albums: data.albums || []
-          };
-          await fetch(JSONBIN_URL, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
-            body: JSON.stringify(nuevo)
-          });
-          if (window.lanzarConfeti) window.lanzarConfeti(800);
-          renderizarBurbujas();
-          if (window.galeriaUsuario) {
-            window.galeriaUsuario.cargarDatos().then(() => {
-              window.galeriaUsuario.renderizarRecuerdos();
-            });
-          }
-          alert("✅ Video eliminado");
+          await eliminarRecuerdoEnBin(recuerdoId);
+          await cargarRecuerdos();
+          renderRecuerdos(filtroTexto);
+          if (window.lanzarConfeti) window.lanzarConfeti(600);
         } catch (err) {
           alert("❌ Error: " + err.message);
         }
+      };
+
+      // ============================================
+      // MODAL NUEVO RECUERDO
+      // ============================================
+      const nuevoModal = document.getElementById("nuevoModal");
+      const btnNuevo = document.getElementById("btnNuevoRecuerdo");
+      const nuevoModalCerrar = document.getElementById("nuevoModalCerrar");
+      const btnCancelarNuevo = document.getElementById("btnCancelarNuevo");
+      const btnGuardarNuevo = document.getElementById("btnGuardarNuevo");
+      const nuevoTituloInput = document.getElementById("nuevoTituloInput");
+      const nuevoDescInput = document.getElementById("nuevoDescInput");
+      const nuevoArchivoInput = document.getElementById("nuevoArchivoInput");
+      const nuevoFileBtn = document.getElementById("nuevoFileBtn");
+      const nuevoPreviewImg = document.getElementById("nuevoPreviewImg");
+      const nuevoPreviewVideo = document.getElementById("nuevoPreviewVideo");
+
+      function abrirNuevoModal() {
+        nuevoTituloInput.value = "";
+        nuevoDescInput.value = "";
+        nuevoArchivoInput.value = "";
+        nuevoPreviewImg.classList.remove("visible");
+        nuevoPreviewImg.src = "";
+        nuevoPreviewVideo.classList.remove("visible");
+        nuevoPreviewVideo.src = "";
+        nuevoFileBtn.textContent = "📎 Seleccionar archivo";
+        nuevoModal.classList.add("activo");
+        document.body.classList.add("modal-abierto");
+        setTimeout(() => nuevoTituloInput.focus(), 400);
       }
-      window.eliminarVideo = eliminarVideo;
 
-      async function renderizarBurbujas() {
-        const escenario = document.getElementById("burbujasEscenario");
-        if (!escenario) return;
+      function cerrarNuevoModal() {
+        nuevoModal.classList.remove("activo");
+        document.body.classList.remove("modal-abierto");
+      }
 
-        try {
-          const res = await fetch(JSONBIN_URL + "/latest", {
-            headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
-          });
-          if (!res.ok) throw new Error("Error cargando");
-          const data = await res.json();
+      if (btnNuevo) btnNuevo.addEventListener("click", abrirNuevoModal);
+      if (nuevoModalCerrar) nuevoModalCerrar.addEventListener("click", cerrarNuevoModal);
+      if (btnCancelarNuevo) btnCancelarNuevo.addEventListener("click", cerrarNuevoModal);
+      nuevoModal.addEventListener("click", (e) => {
+        if (e.target === nuevoModal) cerrarNuevoModal();
+      });
 
-          let videos = (data.recuerdos || []).filter(r => r.tipo === "video");
+      if (nuevoArchivoInput) {
+        nuevoArchivoInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
 
-          const filtros = window.galeriaUsuario ? window.galeriaUsuario.getFiltros() : { album: "sin-album", fecha: "todas", busqueda: "" };
+          nuevoFileBtn.textContent = "📎 " + file.name;
+          const url = URL.createObjectURL(file);
 
-          // Búsqueda global
-          if (filtros.busqueda && filtros.busqueda.trim()) {
-            const q = filtros.busqueda.trim().toLowerCase();
-            videos = videos.filter(v =>
-              (v.titulo || "").toLowerCase().includes(q) ||
-              (v.descripcion || "").toLowerCase().includes(q)
-            );
+          if (file.type.startsWith("video/")) {
+            nuevoPreviewImg.classList.remove("visible");
+            nuevoPreviewImg.style.display = "none";
+            nuevoPreviewVideo.src = url;
+            nuevoPreviewVideo.classList.add("visible");
+            nuevoPreviewVideo.style.display = "block";
           } else {
-            // Álbum
-            if (filtros.album === "sin-album") {
-              videos = videos.filter(v => !v.albumId);
-            } else if (filtros.album && filtros.album !== "") {
-              videos = videos.filter(v => v.albumId === filtros.album);
-            }
+            nuevoPreviewVideo.classList.remove("visible");
+            nuevoPreviewVideo.style.display = "none";
+            nuevoPreviewImg.src = url;
+            nuevoPreviewImg.classList.add("visible");
+            nuevoPreviewImg.style.display = "block";
           }
-
-          // Fecha
-          if (filtros.fecha && filtros.fecha !== "todas") {
-            videos = videos.filter(v => claveMes(v.fecha) === filtros.fecha);
-          }
-
-          // Videos originales (sin filtros de álbum/fecha/búsqueda)
-          const sinFiltros = 
-            filtros.album === "sin-album" && 
-            filtros.fecha === "todas" &&
-            (!filtros.busqueda || !filtros.busqueda.trim());
-
-          if (sinFiltros) {
-            const eliminados = getEliminados();
-            const originalesFiltrados = VIDEOS_ORIGINALES_BASE.filter(v => !eliminados.includes(v.id));
-            videos = [...videos, ...originalesFiltrados];
-          }
-
-          if (videos.length === 0) {
-            escenario.innerHTML = `
-              <div style="text-align:center;padding:60px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;">
-                <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">No hay videos con estos filtros</strong>
-                Probá con otros filtros o subí un video 💜
-              </div>
-            `;
-            return;
-          }
-
-          escenario.innerHTML = videos.map((video) => `
-            <div class="burbuja-video" data-video data-id="${video.id}">
-              <div class="mini-burbujas"></div>
-              <div class="burbuja-inner">
-                <video preload="metadata" playsinline muted>
-                  <source src="${video.url}" type="video/mp4">
-                </video>
-                <div class="burbuja-portada">
-                  <div class="burbuja-contenido">
-                    <div class="burbuja-simbolo">
-                      <div class="anillo-b"></div>
-                      <div class="anillo-b"></div>
-                      <div class="anillo-b"></div>
-                      <div class="nucleo-b"></div>
-                    </div>
-                    <div class="burbuja-texto">Toca para revelar</div>
-                  </div>
-                </div>
-              </div>
-              <button class="burbuja-eliminar" onclick="event.stopPropagation(); eliminarVideo('${video.id}')" title="Eliminar">🗑️</button>
-              <div class="ripple-absorcion"></div>
-              <canvas class="explosion-canvas"></canvas>
-              <div class="flash-revelado"></div>
-            </div>
-          `).join("");
-
-          const burbujas = escenario.querySelectorAll("[data-video]");
-          burbujas.forEach(burbuja => {
-            const miniCont = burbuja.querySelector(".mini-burbujas");
-            if (miniCont) crearMiniBurbujas(miniCont);
-            const video = burbuja.querySelector("video");
-            const explosionCanvas = burbuja.querySelector(".explosion-canvas");
-            const id = burbuja.dataset.id;
-            const item = videos.find(v => v.id === id);
-            if (!video || !item) return;
-
-            video.removeAttribute("controls");
-            video.pause();
-
-            burbuja.addEventListener("click", () => {
-              if (burbuja.classList.contains("revelando") || burbuja.classList.contains("revelado")) {
-                abrirModal(item, burbuja);
-                return;
-              }
-              burbuja.classList.add("revelando");
-              if (explosionCanvas) explosion(explosionCanvas);
-              video.muted = true;
-              video.play().catch(() => {});
-              setTimeout(() => {
-                burbuja.classList.remove("revelando");
-                burbuja.classList.add("revelado");
-                video.pause();
-                video.currentTime = 0;
-                video.muted = false;
-                abrirModal(item, burbuja);
-              }, 900);
-            });
-          });
-
-          const io = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
-          }, { threshold: 0.15 });
-          burbujas.forEach(b => io.observe(b));
-
-        } catch (err) {
-          console.error("Error:", err);
-        }
+        });
       }
 
-      window.renderizarBurbujasVideos = renderizarBurbujas;
+      if (btnGuardarNuevo) {
+        btnGuardarNuevo.addEventListener("click", async () => {
+          const titulo = nuevoTituloInput.value.trim();
+          const descripcion = nuevoDescInput.value.trim();
+          const archivo = nuevoArchivoInput.files[0];
 
-      window.addEventListener("filtrosCambiados", () => {
-        renderizarBurbujas();
+          if (!titulo) { alert("Poné un título 💜"); return; }
+          if (!archivo) { alert("Seleccioná una foto o video 💜"); return; }
+
+          btnGuardarNuevo.disabled = true;
+          btnGuardarNuevo.textContent = "Guardando...";
+
+          try {
+            const base64 = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(archivo);
+            });
+
+            const nuevoRecuerdo = {
+              id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+              titulo,
+              descripcion,
+              archivo: base64,
+              tipo: archivo.type,
+              fecha: new Date().toISOString()
+            };
+
+            await guardarRecuerdoEnBin(nuevoRecuerdo);
+            await cargarRecuerdos();
+            renderRecuerdos(filtroTexto);
+            
+            if (window.lanzarConfeti) window.lanzarConfeti(1500);
+            cerrarNuevoModal();
+          } catch (err) {
+            alert("❌ Error: " + err.message);
+          } finally {
+            btnGuardarNuevo.disabled = false;
+            btnGuardarNuevo.textContent = "Guardar";
+          }
+        });
+      }
+
+      // ========== TECLADO ==========
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          if (modal.classList.contains("activo")) cerrarRecuerdo();
+          if (nuevoModal.classList.contains("activo")) cerrarNuevoModal();
+        }
+        if (modal.classList.contains("activo")) {
+          if (e.key === "ArrowLeft") navegarRecuerdo(-1);
+          if (e.key === "ArrowRight") navegarRecuerdo(1);
+        }
       });
 
-      document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(() => renderizarBurbujas(), 1200);
+      // Prevenir gestos que muevan el modal
+      ["touchmove", "gesturestart", "gesturechange", "gestureend"].forEach(evt => {
+        modal.addEventListener(evt, (e) => {
+          if (e.target === modal || e.target === modalImagen || e.target === modalVideo) {
+            e.preventDefault();
+          }
+        }, { passive: false });
       });
+
+      // ========== INIT ==========
+      document.addEventListener("DOMContentLoaded", async () => {
+        await cargarRecuerdos();
+        renderRecuerdos();
+      });
+
     })();
   </script>
 </body>
