@@ -26,11 +26,7 @@
        RAZONES — EXPERIENCIA PREMIUM
        ============================================ */
 
-    html, body.razones-page {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-    }
+    html, body.razones-page { margin: 0; padding: 0; min-height: 100vh; }
 
     body.razones-page {
       background: #faf3ff;
@@ -41,27 +37,16 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ====== FONDO CON AURORAS ANIMADAS ====== */
     .aurora-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      pointer-events: none;
+      position: fixed; inset: 0; z-index: -3; pointer-events: none;
     }
-
-    /* ====== PARTÍCULAS DORADAS ====== */
     .particulas-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
+      position: fixed; inset: 0; z-index: -2; pointer-events: none;
     }
 
-    /* ====== DESTELLOS ESTÁTICOS ====== */
     body.razones-page::after {
       content: "";
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image:
         radial-gradient(circle at 8% 22%, rgba(201, 156, 240, 0.35) 1px, transparent 1.5px),
         radial-gradient(circle at 78% 18%, rgba(240, 170, 200, 0.4) 1px, transparent 1.5px),
@@ -76,10 +61,8 @@
       100% { opacity: 1; }
     }
 
-    /* ====== NAV ====== */
     body.razones-page .nav-back {
-      position: sticky;
-      top: 0;
+      position: sticky; top: 0;
       padding: 16px 30px;
       background: rgba(255, 250, 255, 0.65);
       border-bottom: 1px solid rgba(180, 130, 240, 0.12);
@@ -96,9 +79,7 @@
       transition: color 0.3s ease;
       text-decoration: none;
     }
-    body.razones-page .nav-back a:hover {
-      color: #a874e8;
-    }
+    body.razones-page .nav-back a:hover { color: #a874e8; }
 
     /* ============================================
        HERO
@@ -106,12 +87,11 @@
     .razones-hero {
       max-width: 960px;
       margin: 0 auto;
-      padding: 90px 24px 40px;
+      padding: 90px 24px 30px;
       text-align: center;
       position: relative;
       z-index: 2;
     }
-
     .razones-hero-badge {
       display: inline-flex;
       align-items: center;
@@ -133,7 +113,6 @@
       height: 1px;
       background: linear-gradient(to right, transparent, #c99cf0, transparent);
     }
-
     .razones-hero h1 {
       font-family: 'Playfair Display', serif;
       font-style: italic;
@@ -156,9 +135,7 @@
     .razones-hero h1 em::after {
       content: "";
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -8px;
+      left: 0; right: 0; bottom: -8px;
       height: 1px;
       background: linear-gradient(to right, transparent, #c99cf0, transparent);
       animation: lineaHero 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
@@ -168,7 +145,6 @@
       from { transform: scaleX(0); opacity: 0; }
       to { transform: scaleX(1); opacity: 1; }
     }
-
     .razones-hero p {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(1.05rem, 1.6vw, 1.25rem);
@@ -187,22 +163,21 @@
     }
 
     /* ============================================
-       CONTROLES PREMIUM
+       CONTROLES PREMIUM + BOTÓN NUEVA RAZÓN
        ============================================ */
     .razones-controles {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 50px auto 0;
       padding: 0 24px;
       display: flex;
       flex-wrap: wrap;
-      align-items: stretch;
+      align-items: center;
       justify-content: center;
       gap: 12px;
       opacity: 0;
       animation: fadeInRazones 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
     }
 
-    /* Contador */
     .razones-contador {
       display: inline-flex;
       align-items: center;
@@ -213,9 +188,7 @@
       border-radius: 50px;
       backdrop-filter: blur(12px) saturate(150%);
       -webkit-backdrop-filter: blur(12px) saturate(150%);
-      box-shadow:
-        0 8px 24px rgba(160, 100, 220, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 24px rgba(160, 100, 220, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
       font-family: 'Inter', sans-serif;
       font-size: 0.72rem;
       letter-spacing: 2px;
@@ -235,16 +208,14 @@
       font-weight: 500;
     }
 
-    /* Buscador */
     .razones-buscador-wrap {
       position: relative;
       flex: 1;
-      min-width: 240px;
-      max-width: 380px;
+      min-width: 200px;
+      max-width: 320px;
     }
     #buscadorRazones {
       width: 100%;
-      height: 100%;
       min-height: 48px;
       padding: 12px 20px 12px 46px;
       background: rgba(255, 255, 255, 0.75);
@@ -257,9 +228,7 @@
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       backdrop-filter: blur(12px) saturate(150%);
       -webkit-backdrop-filter: blur(12px) saturate(150%);
-      box-shadow:
-        0 8px 24px rgba(160, 100, 220, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 24px rgba(160, 100, 220, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
     #buscadorRazones::placeholder {
       color: #a08bb8;
@@ -270,20 +239,14 @@
     #buscadorRazones:focus {
       border-color: rgba(180, 130, 240, 0.55);
       background: rgba(255, 255, 255, 0.95);
-      box-shadow:
-        0 12px 32px rgba(160, 100, 220, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 1),
-        0 0 0 4px rgba(201, 156, 240, 0.15);
-      transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(160, 100, 220, 0.22), inset 0 1px 0 rgba(255, 255, 255, 1), 0 0 0 4px rgba(201, 156, 240, 0.15);
     }
     .razones-buscador-wrap::before {
       content: "";
       position: absolute;
-      left: 18px;
-      top: 50%;
+      left: 18px; top: 50%;
       transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       border: 1.5px solid #c99cf0;
       border-radius: 50%;
       pointer-events: none;
@@ -291,10 +254,8 @@
     .razones-buscador-wrap::after {
       content: "";
       position: absolute;
-      left: 30px;
-      top: 60%;
-      width: 8px;
-      height: 1.5px;
+      left: 30px; top: 60%;
+      width: 8px; height: 1.5px;
       background: #c99cf0;
       transform: rotate(45deg);
       transform-origin: left;
@@ -302,8 +263,7 @@
       border-radius: 2px;
     }
 
-    /* Botón al azar */
-    .btn-azar {
+    .btn-azar, .btn-nueva-razon {
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -319,50 +279,39 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow:
-        0 10px 28px rgba(160, 100, 220, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 28px rgba(160, 100, 220, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
       position: relative;
       overflow: hidden;
       white-space: nowrap;
     }
-    .btn-azar::before {
+    .btn-azar::before, .btn-nueva-razon::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.4) 50%,
-        transparent 70%
-      );
+      background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
       transform: translateX(-100%);
       transition: transform 0.8s ease;
     }
-    .btn-azar:hover::before {
-      transform: translateX(100%);
-    }
-    .btn-azar:hover {
+    .btn-azar:hover::before, .btn-nueva-razon:hover::before { transform: translateX(100%); }
+    .btn-azar:hover, .btn-nueva-razon:hover {
       transform: translateY(-2px) scale(1.03);
-      box-shadow:
-        0 16px 38px rgba(160, 100, 220, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      box-shadow: 0 16px 38px rgba(160, 100, 220, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
-    .btn-azar:active {
-      transform: translateY(0) scale(0.98);
+    .btn-nueva-razon {
+      background: linear-gradient(135deg, #a874e8 0%, #f28ca6 100%);
     }
-    .btn-azar span {
-      position: relative;
-      z-index: 1;
+    .btn-nueva-razon::after {
+      content: "✨";
+      margin-left: 4px;
     }
 
     /* ============================================
-       GRID DE PÉTALOS PREMIUM
+       GRID DE PÉTALOS
        ============================================ */
     .razones-grid {
       max-width: 1320px;
-      margin: 50px auto 0;
-      padding: 20px 24px 120px;
+      margin: 30px auto 0;
+      padding: 10px 24px 120px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 24px;
@@ -370,95 +319,61 @@
       z-index: 2;
     }
 
-    /* Pétalo (razón) */
     .petalo {
       position: relative;
       padding: 32px 28px 30px;
       border-radius: 4px 24px 4px 24px;
-      background:
-        linear-gradient(145deg,
-          rgba(255, 255, 255, 0.98) 0%,
-          rgba(252, 244, 255, 0.95) 55%,
-          rgba(255, 248, 252, 0.98) 100%);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 244, 255, 0.95) 55%, rgba(255, 248, 252, 0.98) 100%);
       border: 1px solid rgba(200, 160, 240, 0.3);
-      box-shadow:
-        0 14px 38px rgba(160, 100, 220, 0.12),
-        0 4px 12px rgba(200, 160, 240, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
+      box-shadow: 0 14px 38px rgba(160, 100, 220, 0.12), 0 4px 12px rgba(200, 160, 240, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1);
       cursor: pointer;
-      transition:
-        transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.5s ease,
-        border-color 0.3s ease;
+      transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease, border-color 0.3s ease;
       opacity: 0;
       transform: translateY(30px) scale(0.96);
       overflow: hidden;
       isolation: isolate;
       will-change: transform;
     }
-
-    /* Brillo tipo pétalo (mancha de luz) */
     .petalo::before {
       content: "";
       position: absolute;
-      top: -30%;
-      left: -20%;
-      width: 120%;
-      height: 120%;
-      background: radial-gradient(
-        ellipse at 30% 20%,
-        rgba(220, 180, 255, 0.45) 0%,
-        transparent 55%
-      );
+      top: -30%; left: -20%;
+      width: 120%; height: 120%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(220, 180, 255, 0.45) 0%, transparent 55%);
       pointer-events: none;
       z-index: 0;
       opacity: 0.6;
       transition: opacity 0.6s ease, transform 0.8s ease;
     }
-
-    /* Ornamento esquina */
     .petalo::after {
       content: "";
       position: absolute;
-      top: 14px;
-      right: 14px;
-      width: 22px;
-      height: 22px;
+      top: 14px; right: 14px;
+      width: 22px; height: 22px;
       border-top: 1px solid rgba(201, 156, 240, 0.5);
       border-right: 1px solid rgba(201, 156, 240, 0.5);
       border-radius: 0 8px 0 0;
       transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 1;
     }
-
-    .petalo.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    /* Hover elegante */
+    .petalo.visible { opacity: 1; transform: translateY(0) scale(1); }
     .petalo:hover {
       transform: translateY(-8px) scale(1.02);
       border-color: rgba(201, 156, 240, 0.65);
-      box-shadow:
-        0 24px 60px rgba(160, 100, 220, 0.25),
-        0 8px 24px rgba(200, 160, 240, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
+      box-shadow: 0 24px 60px rgba(160, 100, 220, 0.25), 0 8px 24px rgba(200, 160, 240, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1);
     }
-    .petalo:hover::before {
-      opacity: 1;
-      transform: scale(1.15);
-    }
+    .petalo:hover::before { opacity: 1; transform: scale(1.15); }
     .petalo:hover::after {
-      top: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
+      top: 10px; right: 10px;
+      width: 30px; height: 30px;
       border-color: rgba(201, 156, 240, 1);
       border-radius: 0 12px 0 0;
     }
+    .petalo.destacado {
+      border-color: rgba(201, 156, 240, 0.8);
+      box-shadow: 0 24px 60px rgba(160, 100, 220, 0.35), 0 0 0 4px rgba(201, 156, 240, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
 
-    /* Número de razón */
     .petalo-num {
       display: inline-flex;
       align-items: baseline;
@@ -483,8 +398,6 @@
       letter-spacing: 0;
       text-transform: none;
     }
-
-    /* Texto */
     .petalo-texto {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.1rem;
@@ -494,18 +407,41 @@
       position: relative;
       z-index: 2;
       letter-spacing: 0.003em;
+      margin: 0;
     }
-
-    /* Tarjeta destacada al buscar */
-    .petalo.destacado {
-      border-color: rgba(201, 156, 240, 0.8);
-      box-shadow:
-        0 24px 60px rgba(160, 100, 220, 0.35),
-        0 0 0 4px rgba(201, 156, 240, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
+    .petalo-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: #8a7aa8;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(201, 156, 240, 0.4);
+      position: relative;
+      z-index: 2;
     }
+    .petalo-delete {
+      position: absolute;
+      top: 14px;
+      right: 42px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(217, 102, 102, 0.15);
+      color: #d96666;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      opacity: 0;
+      z-index: 5;
+    }
+    .petalo:hover .petalo-delete { opacity: 1; }
+    .petalo-delete:hover { background: #d96666; color: #fff; transform: scale(1.15); }
 
-    /* Vacío */
     .razones-vacio {
       grid-column: 1 / -1;
       text-align: center;
@@ -526,11 +462,10 @@
     }
 
     /* ============================================
-       MODAL DE RAZÓN PREMIUM
+       MODAL DE RAZÓN
        ============================================ */
     .razon-modal {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       z-index: 9999;
       background: rgba(60, 30, 90, 0.55);
       display: flex;
@@ -543,77 +478,48 @@
       backdrop-filter: blur(20px) saturate(130%);
       -webkit-backdrop-filter: blur(20px) saturate(130%);
     }
-    .razon-modal.activo {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .razon-modal.activo { opacity: 1; pointer-events: auto; }
 
-    /* Marco ornamental exterior */
     .razon-marco {
       position: relative;
-      max-width: 680px;
+      max-width: 620px;
       width: 100%;
       padding: 4px;
-      background: linear-gradient(
-        135deg,
-        rgba(201, 156, 240, 0.9),
-        rgba(240, 200, 230, 0.7),
-        rgba(201, 156, 240, 0.9)
-      );
+      background: linear-gradient(135deg, rgba(201, 156, 240, 0.9), rgba(240, 200, 230, 0.7), rgba(201, 156, 240, 0.9));
       border-radius: 40px;
       transform: scale(0.85) rotateX(10deg);
       opacity: 0;
-      transition:
-        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.7s ease;
-      box-shadow:
-        0 40px 120px rgba(120, 60, 180, 0.4),
-        0 0 100px rgba(200, 160, 240, 0.5);
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
+      box-shadow: 0 40px 120px rgba(120, 60, 180, 0.4), 0 0 100px rgba(200, 160, 240, 0.5);
       z-index: 2;
     }
-    .razon-modal.activo .razon-marco {
-      transform: scale(1) rotateX(0);
-      opacity: 1;
-    }
+    .razon-modal.activo .razon-marco { transform: scale(1) rotateX(0); opacity: 1; }
 
-    /* Interior del marco */
     .razon-petalo-grande {
       position: relative;
-      padding: 70px 55px 65px;
-      background:
-        linear-gradient(150deg,
-          rgba(255, 253, 255, 1) 0%,
-          rgba(252, 244, 255, 0.98) 55%,
-          rgba(255, 248, 252, 1) 100%);
+      padding: 60px 50px 55px;
+      background: linear-gradient(150deg, rgba(255, 253, 255, 1) 0%, rgba(252, 244, 255, 0.98) 55%, rgba(255, 248, 252, 1) 100%);
       border-radius: 36px;
       text-align: center;
       overflow: hidden;
     }
-
     .razon-petalo-grande::before {
       content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 18% 12%, rgba(220, 180, 255, 0.4), transparent 45%),
-        radial-gradient(circle at 88% 88%, rgba(255, 200, 230, 0.35), transparent 45%);
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 18% 12%, rgba(220, 180, 255, 0.4), transparent 45%), radial-gradient(circle at 88% 88%, rgba(255, 200, 230, 0.35), transparent 45%);
       pointer-events: none;
     }
-
-    /* Ornamento esquina superior */
     .razon-petalo-grande::after {
       content: "❦";
       position: absolute;
-      top: 32px;
-      left: 50%;
+      top: 26px; left: 50%;
       transform: translateX(-50%);
       color: #c99cf0;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       opacity: 0.8;
       text-shadow: 0 0 25px rgba(201, 156, 240, 0.6);
     }
 
-    /* Número grande */
     .razon-modal-num {
       display: inline-block;
       font-family: 'Inter', sans-serif;
@@ -622,8 +528,8 @@
       text-transform: uppercase;
       color: #a874e8;
       font-weight: 600;
-      margin-bottom: 30px;
-      margin-top: 30px;
+      margin-bottom: 25px;
+      margin-top: 25px;
       position: relative;
       z-index: 2;
       padding: 8px 20px;
@@ -632,11 +538,10 @@
       background: rgba(201, 156, 240, 0.08);
     }
 
-    /* Texto grande */
     .razon-modal-texto {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(1.4rem, 3.8vw, 2.1rem);
+      font-size: clamp(1.4rem, 3.8vw, 2rem);
       font-weight: 400;
       line-height: 1.35;
       color: #3a2145;
@@ -644,18 +549,24 @@
       z-index: 2;
       letter-spacing: -0.012em;
     }
-    .razon-modal-texto::first-letter {
-      color: #a874e8;
-      font-size: 1.15em;
+    .razon-modal-texto::first-letter { color: #a874e8; font-size: 1.15em; }
+
+    .razon-modal-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: #7a5c8c;
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px dashed rgba(201, 156, 240, 0.5);
+      position: relative;
+      z-index: 2;
     }
 
-    /* Cerrar */
     .razon-modal-cerrar {
       position: absolute;
-      top: 26px;
-      right: 26px;
-      width: 46px;
-      height: 46px;
+      top: 22px; right: 22px;
+      width: 44px; height: 44px;
       border-radius: 50%;
       border: 1px solid rgba(180, 130, 240, 0.4);
       background: rgba(255, 255, 255, 0.95);
@@ -667,32 +578,135 @@
       justify-content: center;
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 5;
-      font-family: 'Inter', sans-serif;
       box-shadow: 0 8px 22px rgba(180, 130, 240, 0.25);
     }
     .razon-modal-cerrar:hover {
       background: #a874e8;
       color: #fff;
       transform: rotate(90deg) scale(1.08);
-      box-shadow: 0 12px 30px rgba(180, 130, 240, 0.5);
     }
 
     /* ============================================
-       CANVAS DE PÉTALOS AL EXPLOTAR
+       MODAL NUEVA RAZÓN
        ============================================ */
-    .petalos-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 9998;
-      pointer-events: none;
+    .nueva-modal {
+      position: fixed; inset: 0;
+      z-index: 9999;
+      background: rgba(60, 30, 90, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
       opacity: 0;
-      transition: opacity 0.4s ease;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
-    .petalos-canvas.activo {
-      opacity: 1;
-    }
+    .nueva-modal.activo { opacity: 1; pointer-events: auto; }
 
-    /* ====== FOOTER ====== */
+    .nueva-marco {
+      position: relative;
+      max-width: 560px;
+      width: 100%;
+      padding: 4px;
+      background: linear-gradient(135deg, rgba(201, 156, 240, 0.9), rgba(240, 200, 230, 0.7), rgba(201, 156, 240, 0.9));
+      border-radius: 40px;
+      transform: scale(0.85);
+      opacity: 0;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+      box-shadow: 0 40px 120px rgba(120, 60, 180, 0.4);
+    }
+    .nueva-modal.activo .nueva-marco { transform: scale(1); opacity: 1; }
+
+    .nueva-inner {
+      padding: 45px 40px 40px;
+      background: linear-gradient(150deg, rgba(255, 253, 255, 1), rgba(252, 244, 255, 0.98), rgba(255, 248, 252, 1));
+      border-radius: 36px;
+      position: relative;
+    }
+    .nueva-inner h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.7rem;
+      color: #3a2145;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .nueva-num-auto {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: #a874e8;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+    .nueva-campo { margin-bottom: 18px; }
+    .nueva-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8a7aa8;
+      margin-bottom: 8px;
+    }
+    .nueva-textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid rgba(180, 130, 240, 0.3);
+      border-radius: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      color: #3a2145;
+      outline: none;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.85);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.5;
+    }
+    .nueva-textarea:focus {
+      border-color: #a874e8;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(168, 116, 232, 0.15);
+    }
+    .nueva-acciones {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+    .nueva-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 50px;
+      border: none;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nueva-btn.primario {
+      background: linear-gradient(135deg, #c99cf0, #a874e8);
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(160, 100, 220, 0.4);
+    }
+    .nueva-btn.primario:hover { transform: translateY(-2px); }
+    .nueva-btn.neutro {
+      background: rgba(255, 255, 255, 0.9);
+      color: #7a5c8c;
+      border: 1.5px solid rgba(180, 130, 240, 0.3);
+    }
+    .nueva-btn.neutro:hover { background: #f5f0fa; }
+
+    /* Footer */
     body.razones-page .footer {
       border-top: 1px solid rgba(180, 130, 240, 0.15);
       color: #7a5c8c;
@@ -704,47 +718,26 @@
       position: relative;
       z-index: 2;
     }
-    body.razones-page .footer a {
-      color: #a874e8;
-      transition: color 0.3s ease;
-      text-decoration: none;
-    }
-    body.razones-page .footer a:hover {
-      color: #6a4780;
-    }
+    body.razones-page .footer a { color: #a874e8; text-decoration: none; }
 
-    /* ============================================
-       RESPONSIVE
-       ============================================ */
+    /* Responsive */
     @media (max-width: 768px) {
-      .razones-hero { padding: 60px 20px 25px; }
+      .razones-hero { padding: 60px 20px 20px; }
       .razones-grid {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 18px;
-        padding: 20px 16px 80px;
+        padding: 10px 16px 80px;
+        margin-top: 20px;
       }
       .petalo { padding: 26px 22px; }
       .petalo-texto { font-size: 1.02rem; }
-      .razon-petalo-grande { padding: 55px 30px 50px; }
+      .razon-petalo-grande, .nueva-inner { padding: 45px 30px 40px; }
       .razon-modal-cerrar { top: 16px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
-      .razon-marco { border-radius: 32px; }
-      .razon-petalo-grande { border-radius: 28px; }
     }
-
     @media (max-width: 480px) {
-      .razones-grid {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-        margin: 0 auto;
-      }
-      .razones-controles {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .razones-contador { justify-content: center; }
-      .btn-azar { justify-content: center; }
-      .razon-petalo-grande { padding: 50px 24px 45px; }
-      .razon-marco { border-radius: 28px; }
+      .razones-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; padding: 10px 16px 60px; }
+      .razones-controles { flex-direction: column; align-items: stretch; }
+      .razones-contador, .btn-azar, .btn-nueva-razon { justify-content: center; }
     }
   </style>
 </head>
@@ -754,12 +747,10 @@
 
   <nav class="nav-back"><a href="../index.html">← Volver al inicio</a></nav>
 
-  <!-- FONDOS ANIMADOS -->
   <canvas class="aurora-canvas" id="auroraCanvas"></canvas>
   <canvas class="particulas-canvas" id="particulasCanvas"></canvas>
-  <canvas class="petalos-canvas" id="petalosCanvas"></canvas>
 
-  <!-- ===== HERO ===== -->
+  <!-- HERO -->
   <header class="razones-hero">
     <span class="razones-hero-badge">Pequeños motivos, inmensos</span>
     <h1>Mil razones por las que <em>me enamoré de ti</em></h1>
@@ -779,37 +770,15 @@
         <input type="text" id="buscadorRazones" placeholder="Buscar una razón..." />
       </div>
 
+      <button class="btn-nueva-razon" id="btnNuevaRazon">Nueva razón</button>
+
       <button class="btn-azar" id="btnAzar">
         <span>Razón al azar</span>
       </button>
     </div>
   </header>
 
-<!-- Botón agregar -->
-<section style="max-width: 1200px; margin: 40px auto 30px; padding: 0 24px; text-align: center;">
-  <button class="btn-agregar-galeria" id="btnAgregarRazon">
-    ➕ Agregar una razón
-  </button>
-</section>
-
-<!-- Razones agregadas por usuario (mismo estilo que las originales) -->
-<section class="razones-grid" id="galeriaUsuarioRazones"></section>
-
-<section class="galeria-usuario" id="galeriaUsuarioRazones"></section>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.getElementById("btnAgregarRazon");
-    if (btn) {
-      btn.addEventListener("click", () => {
-        if (window.galeriaUsuario) {
-          window.galeriaUsuario.crearModalSubida("razones");
-        }
-      });
-    }
-  });
-</script>
-
-  <!-- ===== GRID ===== -->
+  <!-- GRID -->
   <section class="razones-grid" id="razonesGrid"></section>
 
   <footer class="footer"><p>Ahora → <a href="juego.html">Vamos a jugar</a></p></footer>
@@ -820,27 +789,57 @@
   <script src="../js/confeti.js"></script>
   <script src="../js/pwa.js"></script>
 
-  <!-- ===== MODAL ===== -->
+  <!-- MODAL VER RAZÓN -->
   <div class="razon-modal" id="razonModal">
     <button class="razon-modal-cerrar" id="razonModalCerrar" aria-label="Cerrar">✕</button>
     <div class="razon-marco">
       <div class="razon-petalo-grande">
         <div class="razon-modal-num" id="razonModalNum"></div>
         <div class="razon-modal-texto" id="razonModalTexto"></div>
+        <div class="razon-modal-desc" id="razonModalDesc" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVA RAZÓN -->
+  <div class="nueva-modal" id="nuevaModal">
+    <div class="nueva-marco">
+      <button class="razon-modal-cerrar" id="nuevaModalCerrar" aria-label="Cerrar">✕</button>
+      <div class="nueva-inner">
+        <h2>Nueva razón</h2>
+        <p class="nueva-num-auto" id="nuevaNumAuto">Se guardará como RAZÓN 021</p>
+
+        <div class="nueva-campo">
+          <label class="nueva-label">La razón</label>
+          <textarea id="nuevaTextoInput" class="nueva-textarea" placeholder="Escribí la razón..." maxlength="300"></textarea>
+        </div>
+
+        <div class="nueva-campo">
+          <label class="nueva-label">Descripción (opcional)</label>
+          <textarea id="nuevaDescInput" class="nueva-textarea" placeholder="Algo más para agregar..." maxlength="300" style="min-height: 70px;"></textarea>
+        </div>
+
+        <div class="nueva-acciones">
+          <button class="nueva-btn primario" id="btnGuardarNueva">Guardar</button>
+          <button class="nueva-btn neutro" id="btnCancelarNueva">Cancelar</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
     /* ============================================
-       RAZONES PREMIUM — AURORAS + PARTÍCULAS + PÉTALOS
+       RAZONES — Sistema completo
        ============================================ */
-
     (function () {
       "use strict";
 
-      // ========== RAZONES ==========
-      const RAZONES = [
+      const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
+      const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
+      const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
+
+      // ========== RAZONES ORIGINALES (hardcodeadas) ==========
+      const RAZONES_DEFAULT = [
         "Por esos ojazos",
         "Por tu risa",
         "Amo tu forma de escuchar",
@@ -863,15 +862,102 @@
         "Porque eres, simplemente, tú. Y eso ya es suficiente."
       ];
 
+      let razones = [];       // Todas las razones (default + usuario)
+      let filtroTexto = "";
+
+      // ========== UTILIDADES ==========
+      function numeroRazon(n) {
+        return String(n).padStart(3, "0");
+      }
+
+      // ========== CARGAR RAZONES DEL USUARIO ==========
+      async function cargarRazones() {
+        let razonesUsuario = [];
+        try {
+          const res = await fetch(JSONBIN_URL + "/latest", {
+            headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            razonesUsuario = data.razones || [];
+          }
+        } catch (err) {
+          console.warn("No se pudieron cargar las razones del usuario:", err);
+        }
+
+        // Default
+        const defaultObj = RAZONES_DEFAULT.map((texto, i) => ({
+          id: "default-" + (i + 1),
+          texto,
+          descripcion: "",
+          numero: i + 1,
+          esDefault: true
+        }));
+
+        // Usuario (continúan numeración)
+        const usuarioObj = razonesUsuario.map((r, i) => ({
+          ...r,
+          numero: RAZONES_DEFAULT.length + i + 1
+        }));
+
+        razones = [...defaultObj, ...usuarioObj];
+      }
+
+      // ========== GUARDAR NUEVA RAZÓN ==========
+      async function guardarRazonEnBin(razon) {
+        const res = await fetch(JSONBIN_URL + "/latest", {
+          headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+        });
+        if (!res.ok) throw new Error("Error leyendo JSONBin");
+        const data = await res.json();
+        const nuevoContenido = {
+          entradas: data.entradas || [],
+          suscripciones: data.suscripciones || [],
+          recuerdos: data.recuerdos || [],
+          razones: data.razones || [],
+          albums: data.albums || []
+        };
+        nuevoContenido.razones.push(razon);
+        const putRes = await fetch(JSONBIN_URL, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+          body: JSON.stringify(nuevoContenido)
+        });
+        if (!putRes.ok) throw new Error("Error guardando en JSONBin");
+        return true;
+      }
+
+      // ========== ELIMINAR RAZÓN ==========
+      async function eliminarRazonEnBin(razonId) {
+        const res = await fetch(JSONBIN_URL + "/latest", {
+          headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+        });
+        if (!res.ok) throw new Error("Error leyendo JSONBin");
+        const data = await res.json();
+        const nuevoContenido = {
+          entradas: data.entradas || [],
+          suscripciones: data.suscripciones || [],
+          recuerdos: data.recuerdos || [],
+          razones: (data.razones || []).filter(r => r.id !== razonId),
+          albums: data.albums || []
+        };
+        const putRes = await fetch(JSONBIN_URL, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+          body: JSON.stringify(nuevoContenido)
+        });
+        if (!putRes.ok) throw new Error("Error guardando en JSONBin");
+        return true;
+      }
+
       // ============================================
-      // 1) AURORAS DE FONDO (canvas)
+      // AURORAS DE FONDO
       // ============================================
       (function auroraFondo() {
         const canvas = document.getElementById("auroraCanvas");
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
         let w, h;
-
         function resize() {
           w = canvas.width = window.innerWidth * devicePixelRatio;
           h = canvas.height = window.innerHeight * devicePixelRatio;
@@ -887,14 +973,10 @@
           { x: 0.5, y: 0.5, r: 0.45, color: [240, 220, 255], speed: 0.00008, fase: Math.PI * 1.4 },
           { x: 0.15, y: 0.8, r: 0.4, color: [255, 235, 245], speed: 0.00011, fase: Math.PI * 0.6 }
         ];
-
-        let start = performance.now();
-
+        const start = performance.now();
         function render(now) {
           const t = now - start;
           ctx.clearRect(0, 0, w, h);
-          ctx.globalCompositeOperation = "source-over";
-
           blobs.forEach(b => {
             const cx = (b.x + Math.sin(t * b.speed + b.fase) * 0.12) * w;
             const cy = (b.y + Math.cos(t * b.speed * 1.3 + b.fase) * 0.12) * h;
@@ -908,23 +990,19 @@
             ctx.arc(cx, cy, r, 0, Math.PI * 2);
             ctx.fill();
           });
-
-          // Base suave
-          ctx.globalCompositeOperation = "source-over";
           requestAnimationFrame(render);
         }
         requestAnimationFrame(render);
       })();
 
       // ============================================
-      // 2) PARTÍCULAS DE POLVO DORADO
+      // PARTÍCULAS DE POLVO
       // ============================================
       (function polvoDorado() {
         const canvas = document.getElementById("particulasCanvas");
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
         let w, h;
-
         function resize() {
           w = canvas.width = window.innerWidth * devicePixelRatio;
           h = canvas.height = window.innerHeight * devicePixelRatio;
@@ -933,54 +1011,40 @@
         }
         resize();
         window.addEventListener("resize", resize);
-
         const N = Math.min(70, Math.floor(window.innerWidth / 22));
         const parts = [];
         for (let i = 0; i < N; i++) {
           parts.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
+            x: Math.random() * w, y: Math.random() * h,
             r: (Math.random() * 1.5 + 0.4) * devicePixelRatio,
             vx: (Math.random() - 0.5) * 0.15 * devicePixelRatio,
             vy: (Math.random() - 0.5) * 0.15 * devicePixelRatio,
-            a: Math.random() * 0.5 + 0.2,
-            fase: Math.random() * Math.PI * 2,
+            a: Math.random() * 0.5 + 0.2, fase: Math.random() * Math.PI * 2,
             tipo: Math.random() < 0.6 ? "lav" : "dor"
           });
         }
-
         let mouseX = -9999, mouseY = -9999;
         window.addEventListener("mousemove", (e) => {
           mouseX = e.clientX * devicePixelRatio;
           mouseY = e.clientY * devicePixelRatio;
         });
-
         function render() {
           ctx.clearRect(0, 0, w, h);
           parts.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.fase += 0.01;
-
-            // Atracción suave al mouse
-            const dx = mouseX - p.x;
-            const dy = mouseY - p.y;
+            p.x += p.vx; p.y += p.vy; p.fase += 0.01;
+            const dx = mouseX - p.x, dy = mouseY - p.y;
             const dist = Math.hypot(dx, dy);
             if (dist < 200 * devicePixelRatio && dist > 1) {
               const fuerza = (200 * devicePixelRatio - dist) / (200 * devicePixelRatio);
               p.x += (dx / dist) * fuerza * 0.4 * devicePixelRatio;
               p.y += (dy / dist) * fuerza * 0.4 * devicePixelRatio;
             }
-
-            // Wrap
             if (p.x < -20) p.x = w + 20;
             if (p.x > w + 20) p.x = -20;
             if (p.y < -20) p.y = h + 20;
             if (p.y > h + 20) p.y = -20;
-
             const alpha = p.a * (0.7 + 0.3 * Math.sin(p.fase));
             const color = p.tipo === "lav" ? `rgba(201, 156, 240, ${alpha})` : `rgba(212, 163, 115, ${alpha})`;
-
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             ctx.fillStyle = color;
@@ -994,47 +1058,46 @@
       })();
 
       // ============================================
-      // 3) GRID DE PÉTALOS + BÚSQUEDA
+      // RENDERIZAR RAZONES
       // ============================================
       const grid = document.getElementById("razonesGrid");
       const contadorEl = document.getElementById("contadorRazones");
       const buscador = document.getElementById("buscadorRazones");
       const btnAzar = document.getElementById("btnAzar");
 
-      function numeroRomano(n) {
-        // Simple: devuelve "Razón 01" con padding
-        return String(n).padStart(2, "0");
-      }
-
       function renderRazones(filtro = "") {
+        if (!grid) return;
         const filtroLower = filtro.trim().toLowerCase();
-        const lista = RAZONES.filter(r => r.toLowerCase().includes(filtroLower));
+        const lista = filtroLower
+          ? razones.filter(r =>
+              (r.texto || "").toLowerCase().includes(filtroLower) ||
+              (r.descripcion || "").toLowerCase().includes(filtroLower)
+            )
+          : razones;
 
         if (lista.length === 0) {
           grid.innerHTML = `<div class="razones-vacio">No encontré esa razón... pero estoy seguro de que existe.</div>`;
+          document.getElementById("contadorRazones").textContent = razones.length;
           return;
         }
 
-        grid.innerHTML = lista.map((r, i) => {
-          const indiceReal = RAZONES.indexOf(r);
-          return `
-            <article class="petalo" data-index="${indiceReal}" style="transition-delay: ${Math.min(i * 50, 700)}ms">
-              <span class="petalo-num">Razón <strong>${numeroRomano(indiceReal + 1)}</strong></span>
-              <p class="petalo-texto">${r}</p>
-            </article>
-          `;
-        }).join("");
+        grid.innerHTML = lista.map((r, i) => `
+          <article class="petalo" data-id="${r.id}" data-numero="${r.numero}" style="transition-delay: ${Math.min(i * 40, 600)}ms">
+            ${!r.esDefault ? `<button class="petalo-delete" onclick="event.stopPropagation(); eliminarRazon('${r.id}')" title="Eliminar">🗑️</button>` : ""}
+            <span class="petalo-num">Razón <strong>${numeroRazon(r.numero)}</strong></span>
+            <p class="petalo-texto">${r.texto}</p>
+            ${r.descripcion ? `<p class="petalo-desc">${r.descripcion}</p>` : ""}
+          </article>
+        `).join("");
 
-        // Contador con animación
-        animarContador(RAZONES.length);
+        animarContador(razones.length);
 
-        // Click
         grid.querySelectorAll(".petalo").forEach(p => {
           p.addEventListener("click", () => {
-            const idx = parseInt(p.dataset.index, 10);
-            abrirRazon(idx, p);
+            const id = p.dataset.id;
+            const razon = razones.find(x => x.id === id);
+            if (razon) abrirRazon(razon, p);
           });
-          // Tilt 3D con el mouse
           p.addEventListener("mousemove", (e) => {
             const rect = p.getBoundingClientRect();
             const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -1050,21 +1113,19 @@
       }
 
       function animarContador(total) {
+        if (!contadorEl) return;
         const duracion = 800;
         const inicio = performance.now();
         const desde = parseInt(contadorEl.textContent) || 0;
-
         function paso(now) {
           const t = Math.min((now - inicio) / duracion, 1);
           const ease = 1 - Math.pow(1 - t, 3);
-          const actual = Math.round(desde + (total - desde) * ease);
-          contadorEl.textContent = actual;
+          contadorEl.textContent = Math.round(desde + (total - desde) * ease);
           if (t < 1) requestAnimationFrame(paso);
         }
         requestAnimationFrame(paso);
       }
 
-      // ========== REVEAL AL SCROLL ==========
       let io = null;
       function observarReveals() {
         if (io) io.disconnect();
@@ -1081,28 +1142,35 @@
 
       // ========== BUSCADOR ==========
       let debounceTimer;
-      buscador.addEventListener("input", (e) => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-          renderRazones(e.target.value);
-        }, 120);
-      });
+      if (buscador) {
+        buscador.addEventListener("input", (e) => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            filtroTexto = e.target.value;
+            renderRazones(filtroTexto);
+          }, 120);
+        });
+      }
 
-      // ========== MODAL ==========
+      // ========== MODAL VER RAZÓN ==========
       const modal = document.getElementById("razonModal");
       const modalCerrar = document.getElementById("razonModalCerrar");
       const modalNum = document.getElementById("razonModalNum");
       const modalTexto = document.getElementById("razonModalTexto");
+      const modalDesc = document.getElementById("razonModalDesc");
 
-      function abrirRazon(idx, elemento) {
-        // Explosión de pétalos desde la posición del elemento
-        if (elemento) explosionPetalos(elemento);
-
-        modalNum.textContent = `Razón ${numeroRomano(idx + 1)}`;
-        modalTexto.textContent = RAZONES[idx];
+      function abrirRazon(razon, elemento) {
+        if (elemento && window.lanzarConfeti) window.lanzarConfeti(600);
+        modalNum.textContent = `Razón ${numeroRazon(razon.numero)}`;
+        modalTexto.textContent = razon.texto;
+        if (razon.descripcion) {
+          modalDesc.textContent = razon.descripcion;
+          modalDesc.style.display = "block";
+        } else {
+          modalDesc.style.display = "none";
+        }
         modal.classList.add("activo");
         document.body.style.overflow = "hidden";
-        if (window.lanzarConfeti) window.lanzarConfeti(600);
       }
 
       function cerrarRazon() {
@@ -1114,146 +1182,150 @@
       modal.addEventListener("click", (e) => {
         if (e.target === modal) cerrarRazon();
       });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") cerrarRazon();
-      });
 
-      // ============================================
-      // 4) EXPLOSIÓN DE PÉTALOS
-      // ============================================
-      const petalosCanvas = document.getElementById("petalosCanvas");
-      function explosionPetalos(elemento) {
-        if (!petalosCanvas) return;
-        const rect = elemento.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-
-        petalosCanvas.width = window.innerWidth * devicePixelRatio;
-        petalosCanvas.height = window.innerHeight * devicePixelRatio;
-        petalosCanvas.style.width = window.innerWidth + "px";
-        petalosCanvas.style.height = window.innerHeight + "px";
-        const ctx = petalosCanvas.getContext("2d");
-        ctx.scale(devicePixelRatio, devicePixelRatio);
-
-        petalosCanvas.classList.add("activo");
-
-        const N = 30;
-        const petalos = [];
-        for (let i = 0; i < N; i++) {
-          const ang = (Math.PI * 2 * i) / N + Math.random() * 0.4;
-          const vel = 3 + Math.random() * 5;
-          petalos.push({
-            x: cx, y: cy,
-            vx: Math.cos(ang) * vel,
-            vy: Math.sin(ang) * vel,
-            size: 6 + Math.random() * 10,
-            rot: Math.random() * Math.PI * 2,
-            vrot: (Math.random() - 0.5) * 0.3,
-            color: Math.random() < 0.6 ? [201, 156, 240] : [240, 200, 230],
-            vida: 1
-          });
+      // ========== ELIMINAR RAZÓN ==========
+      window.eliminarRazon = async function (razonId) {
+        if (razonId.startsWith("default-")) {
+          alert("No podés eliminar las razones originales 💜");
+          return;
         }
-
-        const start = performance.now();
-        const DURACION = 1400;
-
-        function paso(now) {
-          const t = (now - start) / DURACION;
-          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-          if (t >= 1) {
-            petalosCanvas.classList.remove("activo");
-            return;
-          }
-
-          petalos.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.15;
-            p.vx *= 0.97;
-            p.vy *= 0.97;
-            p.rot += p.vrot;
-            p.vida = 1 - t;
-
-            ctx.save();
-            ctx.globalAlpha = p.vida;
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rot);
-
-            // Pétalo: forma de elipse
-            ctx.beginPath();
-            ctx.ellipse(0, 0, p.size, p.size * 0.5, 0, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, 0.9)`;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, 0.8)`;
-            ctx.fill();
-            ctx.restore();
-          });
-
-          requestAnimationFrame(paso);
+        if (!confirm("¿Eliminar esta razón? No se puede recuperar 💜")) return;
+        try {
+          await eliminarRazonEnBin(razonId);
+          await cargarRazones();
+          renderRazones(filtroTexto);
+          if (window.lanzarConfeti) window.lanzarConfeti(600);
+        } catch (err) {
+          alert("❌ Error: " + err.message);
         }
-        requestAnimationFrame(paso);
+      };
+
+      // ========== MODAL NUEVA RAZÓN ==========
+      const nuevaModal = document.getElementById("nuevaModal");
+      const btnNueva = document.getElementById("btnNuevaRazon");
+      const nuevaModalCerrar = document.getElementById("nuevaModalCerrar");
+      const btnCancelarNueva = document.getElementById("btnCancelarNueva");
+      const btnGuardarNueva = document.getElementById("btnGuardarNueva");
+      const nuevaTextoInput = document.getElementById("nuevaTextoInput");
+      const nuevaDescInput = document.getElementById("nuevaDescInput");
+      const nuevaNumAuto = document.getElementById("nuevaNumAuto");
+
+      function abrirNuevaModal() {
+        const siguiente = razones.length + 1;
+        nuevaNumAuto.textContent = `Se guardará como RAZÓN ${numeroRazon(siguiente)}`;
+        nuevaTextoInput.value = "";
+        nuevaDescInput.value = "";
+        nuevaModal.classList.add("activo");
+        document.body.style.overflow = "hidden";
+        setTimeout(() => nuevaTextoInput.focus(), 400);
       }
 
-      // ============================================
-      // 5) BOTÓN RAZÓN AL AZAR (con sorteo)
-      // ============================================
-      btnAzar.addEventListener("click", () => {
-        if (btnAzar.disabled) return;
-        btnAzar.disabled = true;
+      function cerrarNuevaModal() {
+        nuevaModal.classList.remove("activo");
+        document.body.style.overflow = "";
+      }
 
-        // Elegir la razón ganadora
-        const ultima = parseInt(btnAzar.dataset.ultima || "-1", 10);
-        let ganadora = Math.floor(Math.random() * RAZONES.length);
-        if (ganadora === ultima && RAZONES.length > 1) {
-          ganadora = (ganadora + 1 + Math.floor(Math.random() * (RAZONES.length - 1))) % RAZONES.length;
-        }
-        btnAzar.dataset.ultima = ganadora;
-
-        // Animación de sorteo: destacar pétalos aleatorios
-        const todos = [...grid.querySelectorAll(".petalo")];
-        let vueltas = 0;
-        const totalVueltas = 14;
-        let delay = 60;
-
-        function destacarAleatorio() {
-          todos.forEach(p => p.classList.remove("destacado"));
-          const random = todos[Math.floor(Math.random() * todos.length)];
-          if (random) random.classList.add("destacado");
-          // Hacer scroll hacia el destacado
-          if (random) {
-            random.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-          vueltas++;
-          if (vueltas < totalVueltas) {
-            delay *= 1.14;
-            setTimeout(destacarAleatorio, delay);
-          } else {
-            // Selección final
-            todos.forEach(p => p.classList.remove("destacado"));
-            const ganadorEl = grid.querySelector(`[data-index="${ganadora}"]`);
-            if (ganadorEl) {
-              ganadorEl.classList.add("destacado");
-              ganadorEl.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
-            setTimeout(() => {
-              abrirRazon(ganadora, ganadorEl);
-              btnAzar.disabled = false;
-            }, 600);
-          }
-        }
-
-        destacarAleatorio();
+      if (btnNueva) btnNueva.addEventListener("click", abrirNuevaModal);
+      if (nuevaModalCerrar) nuevaModalCerrar.addEventListener("click", cerrarNuevaModal);
+      if (btnCancelarNueva) btnCancelarNueva.addEventListener("click", cerrarNuevaModal);
+      nuevaModal.addEventListener("click", (e) => {
+        if (e.target === nuevaModal) cerrarNuevaModal();
       });
 
+      if (btnGuardarNueva) {
+        btnGuardarNueva.addEventListener("click", async () => {
+          const texto = nuevaTextoInput.value.trim();
+          const descripcion = nuevaDescInput.value.trim();
+
+          if (!texto) { alert("Escribí la razón 💜"); return; }
+
+          const nuevaRazon = {
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            texto,
+            descripcion,
+            fecha: new Date().toISOString(),
+            numero: razones.length + 1
+          };
+
+          try {
+            await guardarRazonEnBin(nuevaRazon);
+            razones.push(nuevaRazon);
+            if (window.lanzarConfeti) window.lanzarConfeti(1500);
+            cerrarNuevaModal();
+            renderRazones(filtroTexto);
+          } catch (err) {
+            alert("❌ Error: " + err.message);
+          }
+        });
+      }
+
+      // ========== ESCAPE ==========
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          if (modal.classList.contains("activo")) cerrarRazon();
+          if (nuevaModal.classList.contains("activo")) cerrarNuevaModal();
+        }
+      });
+
+      // ============================================
+      // BOTÓN RAZÓN AL AZAR
+      // ============================================
+      if (btnAzar) {
+        btnAzar.addEventListener("click", () => {
+          if (btnAzar.disabled) return;
+          btnAzar.disabled = true;
+
+          const ultima = parseInt(btnAzar.dataset.ultima || "-1", 10);
+          let ganadora = Math.floor(Math.random() * razones.length);
+          if (ganadora === ultima && razones.length > 1) {
+            ganadora = (ganadora + 1 + Math.floor(Math.random() * (razones.length - 1))) % razones.length;
+          }
+          btnAzar.dataset.ultima = ganadora;
+
+          const todos = [...grid.querySelectorAll(".petalo")];
+          let vueltas = 0;
+          const totalVueltas = 14;
+          let delay = 60;
+
+          function destacarAleatorio() {
+            todos.forEach(p => p.classList.remove("destacado"));
+            const random = todos[Math.floor(Math.random() * todos.length)];
+            if (random) {
+              random.classList.add("destacado");
+              random.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+            vueltas++;
+            if (vueltas < totalVueltas) {
+              delay *= 1.14;
+              setTimeout(destacarAleatorio, delay);
+            } else {
+              todos.forEach(p => p.classList.remove("destacado"));
+              const ganadorEl = todos[ganadora];
+              if (ganadorEl) {
+                ganadorEl.classList.add("destacado");
+                ganadorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+              setTimeout(() => {
+                if (ganadorEl) {
+                  const id = ganadorEl.dataset.id;
+                  const razon = razones.find(x => x.id === id);
+                  if (razon) abrirRazon(razon, ganadorEl);
+                }
+                btnAzar.disabled = false;
+              }, 600);
+            }
+          }
+          destacarAleatorio();
+        });
+      }
+
       // ========== INIT ==========
-      document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", async () => {
+        await cargarRazones();
         renderRazones();
       });
 
     })();
   </script>
-
-  <script src="../js/galeria-usuario.js"></script>
 </body>
 </html>
