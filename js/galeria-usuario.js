@@ -2,15 +2,16 @@
    GALERÍA DE USUARIO con ÁLBUMES
    - Fotos: ImgBB | Videos: Cloudinary
    - Guardar en JSONBin
-   - Álbumes aislados (no se mezclan)
-   - Búsqueda global en TODOS
+   - Álbumes aislados
+   - Búsqueda global
+   - Eliminar recuerdos y álbumes
    ============================================ */
 
 (function () {
   "use strict";
 
   const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
-  const CLOUDINARY_CLOUD_NAME = "sjlitdwr";
+  const CLOUDINARY_CLOUD_NAME = "sjjtdwr";
   const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
 
   const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
@@ -20,7 +21,7 @@
   let todosLosRecuerdos = [];
   let albumsDisponibles = [];
   let filtrosActivos = {
-    album: "sin-album",  // Por defecto mostramos "Sin álbum"
+    album: "sin-album",
     busqueda: ""
   };
 
@@ -112,6 +113,29 @@
     return true;
   }
 
+  async function eliminarDeBin(tipo, itemId) {
+    const res = await fetch(JSONBIN_URL + "/latest", {
+      headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+    });
+    if (!res.ok) throw new Error("Error leyendo JSONBin");
+    const data = await res.json();
+    const nuevoContenido = {
+      entradas: data.entradas || [],
+      suscripciones: data.suscripciones || [],
+      recuerdos: data.recuerdos || [],
+      razones: data.razones || [],
+      albums: data.albums || []
+    };
+    nuevoContenido[tipo] = nuevoContenido[tipo].filter(x => x.id !== itemId);
+    const putRes = await fetch(JSONBIN_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+      body: JSON.stringify(nuevoContenido)
+    });
+    if (!putRes.ok) throw new Error("Error guardando en JSONBin");
+    return true;
+  }
+
   async function cargarDatos() {
     const res = await fetch(JSONBIN_URL + "/latest", {
       headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
@@ -136,22 +160,16 @@
   }
 
   // ========== LÓGICA DE FILTROS ==========
-  // Reglas:
-  //  1. Si hay búsqueda → busca en TODOS (incluyendo álbumes)
-  //  2. Si NO hay búsqueda → filtra por el álbum seleccionado
-  //  3. "sin-album" → solo recuerdos sin álbum
-  //  4. Álbum específico → solo recuerdos de ESE álbum
   function filtrarRecuerdos(lista, esVideo = null) {
     let filtrados = [...lista];
 
-    // Filtrar por tipo si se especifica
     if (esVideo === true) {
       filtrados = filtrados.filter(r => r.tipo === "video");
     } else if (esVideo === false) {
       filtrados = filtrados.filter(r => r.tipo !== "video");
     }
 
-    // Búsqueda: tiene prioridad sobre el filtro de álbum
+    // Búsqueda global
     if (filtrosActivos.busqueda && filtrosActivos.busqueda.trim()) {
       const q = filtrosActivos.busqueda.trim().toLowerCase();
       filtrados = filtrados.filter(r =>
@@ -169,6 +187,21 @@
     }
 
     return filtrados;
+  }
+
+  // ========== ELIMINAR RECUERDO ==========
+  async function eliminarRecuerdo(itemId) {
+    if (!confirm("¿Eliminar este recuerdo? No se puede recuperar 💜")) return;
+    try {
+      await eliminarDeBin("recuerdos", itemId);
+      todosLosRecuerdos = todosLosRecuerdos.filter(r => r.id !== itemId);
+      if (window.lanzarConfeti) window.lanzarConfeti(800);
+      renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
+      alert("✅ Recuerdo eliminado");
+    } catch (err) {
+      alert("❌ Error: " + err.message);
+    }
   }
 
   // ========== CREAR ÁLBUM ==========
@@ -192,9 +225,11 @@
       await guardarEnBin("albums", album);
       albumsDisponibles.push(album);
       if (window.lanzarConfeti) window.lanzarConfeti(1000);
+      filtrosActivos.album = album.id; // Seleccionar el álbum recién creado
       renderizarFiltros();
       renderizarRecuerdos();
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
+      sincronizarFiltrosGlobales();
       alert("✅ Álbum creado: " + album.nombre);
     } catch (err) {
       alert("❌ Error: " + err.message);
@@ -215,29 +250,18 @@
       }
     }
 
-    const res = await fetch(JSONBIN_URL + "/latest", {
-      headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
-    });
-    const data = await res.json();
-    const nuevo = {
-      entradas: data.entradas || [],
-      suscripciones: data.suscripciones || [],
-      recuerdos: data.recuerdos || [],
-      razones: data.razones || [],
-      albums: (data.albums || []).filter(a => a.id !== albumId)
-    };
-    await fetch(JSONBIN_URL, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
-      body: JSON.stringify(nuevo)
-    });
-
-    albumsDisponibles = albumsDisponibles.filter(a => a.id !== albumId);
-    if (filtrosActivos.album === albumId) filtrosActivos.album = "sin-album";
-    renderizarFiltros();
-    renderizarRecuerdos();
-    if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
-    alert("✅ Álbum eliminado");
+    try {
+      await eliminarDeBin("albums", albumId);
+      albumsDisponibles = albumsDisponibles.filter(a => a.id !== albumId);
+      if (filtrosActivos.album === albumId) filtrosActivos.album = "sin-album";
+      renderizarFiltros();
+      renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
+      sincronizarFiltrosGlobales();
+      alert("✅ Álbum eliminado");
+    } catch (err) {
+      alert("❌ Error: " + err.message);
+    }
   }
 
   // ========== MODAL PARA AGREGAR RECUERDOS A ÁLBUM ==========
@@ -245,7 +269,6 @@
     const album = albumsDisponibles.find(a => a.id === albumId);
     if (!album) return;
 
-    // Solo mostrar los que NO están en ningún álbum
     const disponibles = todosLosRecuerdos.filter(r => !r.albumId);
 
     const modal = document.createElement("div");
@@ -359,6 +382,7 @@
       renderizarFiltros();
       renderizarRecuerdos();
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
+      sincronizarFiltrosGlobales();
       alert(`✅ ${seleccionados.size} recuerdos agregados a ${album.nombre}`);
     });
   }
@@ -406,10 +430,8 @@
       ` : ""}
     `;
 
-    // Eventos
     document.getElementById("filtroAlbum").addEventListener("change", (e) => {
       filtrosActivos.album = e.target.value;
-      renderizarFiltros();
       renderizarRecuerdos();
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
@@ -459,7 +481,6 @@
       contador.textContent = `${filtrados.length} ${filtrados.length === 1 ? 'recuerdo' : 'recuerdos'}`;
     }
 
-    // Los originales solo se muestran si estamos en "sin-album" y sin búsqueda
     const mostrarOriginales = 
       filtrosActivos.album === "sin-album" && 
       (!filtrosActivos.busqueda || !filtrosActivos.busqueda.trim());
@@ -476,17 +497,18 @@
     contenedor.innerHTML = filtrados.map(item => `
       <figure class="galeria-item reveal visible" data-id="${item.id}">
         <img src="${item.url}" alt="${item.titulo || ''}" loading="lazy" 
-             onclick="abrirLightboxGaleria('${item.url}', '${(item.descripcion || item.titulo || '').replace(/'/g, "\\'")}')">
+             onclick="abrirLightboxGaleria('${item.url}', '${(item.descripcion || item.titulo || '').replace(/'/g, "\\'")}', '${item.id}')">
         <figcaption>
           <div class="recuerdo-fecha">${formatearFecha(item.fecha)}</div>
           <p class="recuerdo-texto">${item.descripcion || item.titulo || "Sin descripción"}</p>
+          <button class="btn-eliminar-recuerdo" onclick="event.stopPropagation(); eliminarRecuerdoGaleria('${item.id}')" title="Eliminar">🗑️</button>
         </figcaption>
       </figure>
     `).join("");
   }
 
-  // ========== LIGHTBOX ==========
-  window.abrirLightboxGaleria = function(url, titulo) {
+  // ========== LIGHTBOX con botón eliminar ==========
+  window.abrirLightboxGaleria = function(url, titulo, itemId) {
     const lb = document.createElement("div");
     lb.className = "lightbox-galeria";
     lb.innerHTML = `
@@ -495,6 +517,7 @@
         <img src="${url}" alt="${titulo}">
         ${titulo ? `<div class="lightbox-caption">${titulo}</div>` : ""}
       </div>
+      ${itemId ? `<button class="lightbox-eliminar" onclick="event.stopPropagation(); eliminarRecuerdoGaleria('${itemId}'); this.closest('.lightbox-galeria').remove(); document.body.style.overflow='';" title="Eliminar este recuerdo">🗑️ Eliminar</button>` : ""}
     `;
     document.body.appendChild(lb);
     document.body.style.overflow = "hidden";
@@ -510,6 +533,9 @@
       if (e.key === "Escape") { cerrar(); document.removeEventListener("keydown", onKey); }
     });
   };
+
+  // Exponer eliminar globalmente
+  window.eliminarRecuerdoGaleria = eliminarRecuerdo;
 
   // ========== MODAL DE SUBIDA ==========
   function crearModalSubida(tipo, tipoForzado = null) {
@@ -631,7 +657,7 @@
       progreso.style.display = "block";
 
       try {
-        mensaje.textContent = esVideo ? "Subiendo video..." : "Subiendo foto...";
+        mensaje.textContent = esVideo ? "Subiendo video a Cloudinary..." : "Subiendo foto a ImgBB...";
 
         let resultado;
         if (esVideo) {

@@ -25,18 +25,8 @@
     /* ============================================
        VIDEOS EN BURBUJAS
        ============================================ */
-    .sec-videos-nueva {
-      max-width: 1300px;
-      margin: 100px auto 140px;
-      padding: 0 24px;
-      position: relative;
-    }
-    .videos-titulo {
-      text-align: center;
-      margin-bottom: 80px;
-      position: relative;
-      z-index: 2;
-    }
+    .sec-videos-nueva { max-width: 1300px; margin: 100px auto 140px; padding: 0 24px; position: relative; }
+    .videos-titulo { text-align: center; margin-bottom: 80px; position: relative; z-index: 2; }
     .videos-titulo .kicker {
       display: inline-block;
       font-family: 'Poppins', sans-serif;
@@ -52,13 +42,8 @@
     }
     .videos-titulo .kicker::before,
     .videos-titulo .kicker::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 22px;
-      height: 1px;
-      background: #d4a373;
-      opacity: 0.5;
+      content: ""; position: absolute; top: 50%; width: 22px; height: 1px;
+      background: #d4a373; opacity: 0.5;
     }
     .videos-titulo .kicker::before { left: -14px; }
     .videos-titulo .kicker::after { right: -14px; }
@@ -81,14 +66,7 @@
       margin: 0 auto;
       line-height: 1.6;
     }
-
-    .burbujas-escenario {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 90px;
-      position: relative;
-      padding: 40px 0;
-    }
+    .burbujas-escenario { display: grid; grid-template-columns: 1fr; gap: 90px; position: relative; padding: 40px 0; }
     .burbuja-video {
       position: relative;
       width: 100%;
@@ -156,7 +134,6 @@
       filter: blur(0) brightness(1) saturate(1);
       transform: scale(1);
     }
-
     .burbuja-portada {
       position: absolute;
       inset: 0;
@@ -183,14 +160,7 @@
       align-items: center;
       gap: 24px;
     }
-    .burbuja-simbolo {
-      position: relative;
-      width: 90px;
-      height: 90px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .burbuja-simbolo { position: relative; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
     .anillo-b {
       position: absolute;
       border-radius: 50%;
@@ -226,6 +196,30 @@
     @keyframes fadeTextoB {
       0%, 100% { opacity: 0.5; letter-spacing: 7px; }
       50% { opacity: 1; letter-spacing: 9px; }
+    }
+    .burbuja-eliminar {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(217, 102, 102, 0.85);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 15;
+      opacity: 0;
+    }
+    .burbuja-video:hover .burbuja-eliminar { opacity: 1; }
+    .burbuja-eliminar:hover {
+      background: #d96666;
+      transform: scale(1.15);
     }
     .ripple-absorcion { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
     .ripple-absorcion::before,
@@ -328,6 +322,7 @@
       display: flex;
       flex-direction: column;
       margin: 0;
+      position: relative;
     }
     .galeria-item:hover { transform: translateY(-6px); box-shadow: 0 20px 45px rgba(242, 140, 166, 0.3); }
     .galeria-item img {
@@ -344,6 +339,7 @@
       flex-direction: column;
       gap: 8px;
       background: #fff;
+      position: relative;
     }
     .galeria-item .recuerdo-fecha {
       font-family: 'Poppins', sans-serif;
@@ -361,6 +357,30 @@
       line-height: 1.5;
       margin: 0;
       font-weight: 300;
+    }
+    .btn-eliminar-recuerdo {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(217, 102, 102, 0.15);
+      color: #d96666;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+    .galeria-item:hover .btn-eliminar-recuerdo { opacity: 1; }
+    .btn-eliminar-recuerdo:hover {
+      background: #d96666;
+      color: #fff;
+      transform: scale(1.15);
     }
 
     /* BOTONES */
@@ -478,6 +498,23 @@
       z-index: 10;
     }
     .lightbox-cerrar:hover { background: rgba(255, 255, 255, 0.3); transform: rotate(90deg); }
+    .lightbox-eliminar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 12px 20px;
+      border-radius: 50px;
+      background: rgba(217, 102, 102, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .lightbox-eliminar:hover { background: #d96666; transform: scale(1.05); }
 
     /* MODAL SUBIDA */
     .subida-modal {
@@ -625,45 +662,45 @@
   <!-- Filtros -->
   <section id="recuerdosFiltros" style="max-width: 1200px; margin: 0 auto 30px; padding: 0 24px;"></section>
 
-  <!-- Galería: recuerdos originales (solo se ven en "Sin álbum" sin búsqueda) -->
+  <!-- Galería: recuerdos originales (se ocultan con filtros) -->
   <section class="galeria" id="galeria">
     <figure class="galeria-item reveal">
-      <img src="../assets/images/nosotros/recuerdos/recuerdo1.jpg" alt="Recuerdo 1" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>📸</text></svg>'">
+      <img src="../assets/images/nosotros/recuerdos/recuerdo1.jpg" alt="Recuerdo 1" onclick="abrirLightboxGaleria(this.src, 'Un momento especial')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>📸</text></svg>'">
       <figcaption>
         <div class="recuerdo-fecha">11/09/2026</div>
         <p class="recuerdo-texto">no se que descripcion poner</p>
       </figcaption>
     </figure>
     <figure class="galeria-item reveal">
-      <img src="../assets/images/nosotros/recuerdos/recuerdo2.jpg" alt="Recuerdo 2" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌷</text></svg>'">
+      <img src="../assets/images/nosotros/recuerdos/recuerdo2.jpg" alt="Recuerdo 2" onclick="abrirLightboxGaleria(this.src, 'Un momento especial')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌷</text></svg>'">
       <figcaption>
         <div class="recuerdo-fecha">11/09/2026</div>
         <p class="recuerdo-texto">no se que descripcion poner</p>
       </figcaption>
     </figure>
     <figure class="galeria-item reveal">
-      <img src="../assets/images/nosotros/recuerdos/recuerdo3.jpg" alt="Recuerdo 3" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌙</text></svg>'">
+      <img src="../assets/images/nosotros/recuerdos/recuerdo3.jpg" alt="Recuerdo 3" onclick="abrirLightboxGaleria(this.src, 'Un momento especial')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌙</text></svg>'">
       <figcaption>
         <div class="recuerdo-fecha">11/09/2026</div>
         <p class="recuerdo-texto">no se que descripcion poner</p>
       </figcaption>
     </figure>
     <figure class="galeria-item reveal">
-      <img src="../assets/images/nosotros/recuerdos/recuerdo4.jpg" alt="Recuerdo 4" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🍫</text></svg>'">
+      <img src="../assets/images/nosotros/recuerdos/recuerdo4.jpg" alt="Recuerdo 4" onclick="abrirLightboxGaleria(this.src, 'Un momento especial')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🍫</text></svg>'">
       <figcaption>
         <div class="recuerdo-fecha">11/09/2026</div>
         <p class="recuerdo-texto">no se que descripcion poner</p>
       </figcaption>
     </figure>
     <figure class="galeria-item reveal">
-      <img src="../assets/images/nosotros/recuerdos/recuerdo5.jpg" alt="Recuerdo 5" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌧️</text></svg>'">
+      <img src="../assets/images/nosotros/recuerdos/recuerdo5.jpg" alt="Recuerdo 5" onclick="abrirLightboxGaleria(this.src, 'Un momento especial')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>🌧️</text></svg>'">
       <figcaption>
         <div class="recuerdo-fecha">11/09/2026</div>
         <p class="recuerdo-texto">no se que descripcion poner</p>
       </figcaption>
     </figure>
     <figure class="galeria-item reveal">
-      <img src="../assets/images/nosotros/recuerdos/recuerdo6.jpg" alt="Recuerdo 6" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>✨</text></svg>'">
+      <img src="../assets/images/nosotros/recuerdos/recuerdo6.jpg" alt="Recuerdo 6" onclick="abrirLightboxGaleria(this.src, 'Un momento especial')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>✨</text></svg>'">
       <figcaption>
         <div class="recuerdo-fecha">11/09/2026</div>
         <p class="recuerdo-texto">no se que descripcion poner</p>
@@ -820,6 +857,40 @@
         if (e.key === "Escape" && modal.classList.contains("activo")) cerrarModal();
       });
 
+      // Eliminar video
+      async function eliminarVideo(itemId) {
+        if (!confirm("¿Eliminar este video? No se puede recuperar 💜")) return;
+        try {
+          const res = await fetch(JSONBIN_URL + "/latest", {
+            headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+          });
+          const data = await res.json();
+          const nuevo = {
+            entradas: data.entradas || [],
+            suscripciones: data.suscripciones || [],
+            recuerdos: (data.recuerdos || []).filter(r => r.id !== itemId),
+            razones: data.razones || [],
+            albums: data.albums || []
+          };
+          await fetch(JSONBIN_URL, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+            body: JSON.stringify(nuevo)
+          });
+          if (window.lanzarConfeti) window.lanzarConfeti(800);
+          renderizarBurbujas();
+          if (window.galeriaUsuario) {
+            window.galeriaUsuario.cargarDatos().then(() => {
+              window.galeriaUsuario.renderizarRecuerdos();
+            });
+          }
+          alert("✅ Video eliminado");
+        } catch (err) {
+          alert("❌ Error: " + err.message);
+        }
+      }
+      window.eliminarVideo = eliminarVideo;
+
       async function renderizarBurbujas() {
         const escenario = document.getElementById("burbujasEscenario");
         if (!escenario) return;
@@ -834,13 +905,10 @@
           if (!res.ok) throw new Error("Error cargando");
           const data = await res.json();
 
-          // Videos subidos (con Cloudinary)
           let videos = (data.recuerdos || []).filter(r => r.tipo === "video");
 
-          // Aplicar filtros
           const filtros = window.galeriaUsuario ? window.galeriaUsuario.getFiltros() : { album: "sin-album", busqueda: "" };
 
-          // Si hay búsqueda, buscar en TODOS
           if (filtros.busqueda && filtros.busqueda.trim()) {
             const q = filtros.busqueda.trim().toLowerCase();
             videos = videos.filter(v =>
@@ -848,7 +916,6 @@
               (v.descripcion || "").toLowerCase().includes(q)
             );
           } else {
-            // Filtrar por álbum
             if (filtros.album === "sin-album") {
               videos = videos.filter(v => !v.albumId);
             } else if (filtros.album && filtros.album !== "") {
@@ -856,7 +923,6 @@
             }
           }
 
-          // Videos ORIGINALES: solo cuando estamos en "sin-album" y sin búsqueda
           const sinFiltros = 
             filtros.album === "sin-album" && 
             (!filtros.busqueda || !filtros.busqueda.trim());
@@ -899,6 +965,7 @@
                   </div>
                 </div>
               </div>
+              ${!video.esOriginal ? `<button class="burbuja-eliminar" onclick="event.stopPropagation(); eliminarVideo('${video.id}')" title="Eliminar">🗑️</button>` : ""}
               <div class="ripple-absorcion"></div>
               <canvas class="explosion-canvas"></canvas>
               <div class="flash-revelado"></div>
