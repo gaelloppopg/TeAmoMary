@@ -10,7 +10,7 @@
   "use strict";
 
   // ⚠️ REEMPLAZÁ CON TU API KEY DE IMGBB
-  const IMGBB_API_KEY = "TU_API_KEY_DE_IMGBB_AQUI";
+  const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
 
   const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
   const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
