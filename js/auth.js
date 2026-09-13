@@ -3,7 +3,7 @@
    Respuesta: 30/03/2026 | Sesión: 1 hora
    ========================================= */
 
-const RESPUESTA_CORRECTA = "00/03/2026";
+const RESPUESTA_CORRECTA = "30/03/2026";
 const STORAGE_AUTH = "auth_novia_ok";
 const STORAGE_AUTH_TIME = "auth_novia_time";
 const DURACION_SESION_MS = 60 * 60 * 1000; // 1 hora
