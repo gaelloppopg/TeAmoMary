@@ -1,17 +1,17 @@
 /* ============================================
-   GALERÍA DE USUARIO con ÁLBUMES
+   GALERÍA DE USUARIO con ÁLBUMES Y FECHAS
    - Fotos: ImgBB | Videos: Cloudinary
    - Guardar en JSONBin
-   - Álbumes aislados
-   - Búsqueda global
-   - Eliminar recuerdos y álbumes
+   - Álbumes aislados + filtro por fecha
+   - Búsqueda global (incluye originales)
+   - Eliminar recuerdos (incluye originales)
    ============================================ */
 
 (function () {
   "use strict";
 
   const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
-  const CLOUDINARY_CLOUD_NAME = "sjjtdwr";
+  const CLOUDINARY_CLOUD_NAME = "sjlitdwr";
   const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
 
   const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
@@ -20,8 +20,10 @@
 
   let todosLosRecuerdos = [];
   let albumsDisponibles = [];
+  let recuerdosOriginales = [];
   let filtrosActivos = {
     album: "sin-album",
+    fecha: "todas",
     busqueda: ""
   };
 
@@ -33,12 +35,47 @@
     localStorage.setItem("diario_autor_actual", autor);
   }
 
+  function formatearFecha(iso) {
+    const fecha = new Date(iso);
+    return fecha.toLocaleDateString("es-ES", {
+      day: "2-digit", month: "2-digit", year: "numeric"
+    });
+  }
+
+  function claveMes(fechaISO) {
+    const fecha = new Date(fechaISO);
+    return fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
+  }
+
+  // ========== RECUERDOS ORIGINALES (hardcodeados) ==========
+  const RECUERDOS_ORIGINALES_BASE = [
+    { id: "orig-rec-1", url: "../assets/images/nosotros/recuerdos/recuerdo1.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo1.jpg", titulo: "Recuerdo 1", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
+    { id: "orig-rec-2", url: "../assets/images/nosotros/recuerdos/recuerdo2.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo2.jpg", titulo: "Recuerdo 2", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
+    { id: "orig-rec-3", url: "../assets/images/nosotros/recuerdos/recuerdo3.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo3.jpg", titulo: "Recuerdo 3", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
+    { id: "orig-rec-4", url: "../assets/images/nosotros/recuerdos/recuerdo4.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo4.jpg", titulo: "Recuerdo 4", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
+    { id: "orig-rec-5", url: "../assets/images/nosotros/recuerdos/recuerdo5.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo5.jpg", titulo: "Recuerdo 5", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true },
+    { id: "orig-rec-6", url: "../assets/images/nosotros/recuerdos/recuerdo6.jpg", thumb: "../assets/images/nosotros/recuerdos/recuerdo6.jpg", titulo: "Recuerdo 6", descripcion: "no se que descripcion poner", autor: "Gael", fecha: "2026-09-11T00:00:00.000Z", tipo: "imagen", esOriginal: true }
+  ];
+
+  function getOriginalesEliminados() {
+    try {
+      return JSON.parse(localStorage.getItem("recuerdos_eliminados") || "[]");
+    } catch { return []; }
+  }
+  function setOriginalesEliminados(lista) {
+    localStorage.setItem("recuerdos_eliminados", JSON.stringify(lista));
+  }
+  function cargarOriginales() {
+    const eliminados = getOriginalesEliminados();
+    recuerdosOriginales = RECUERDOS_ORIGINALES_BASE.filter(r => !eliminados.includes(r.id));
+  }
+
+  // ========== SUBIDAS ==========
   async function subirAImgBB(archivo) {
     const formData = new FormData();
     formData.append("image", archivo);
     const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-      method: "POST",
-      body: formData
+      method: "POST", body: formData
     });
     if (!res.ok) throw new Error("Error subiendo a ImgBB");
     const data = await res.json();
@@ -50,14 +87,11 @@
     const formData = new FormData();
     formData.append("file", archivo);
     formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
     const resourceType = archivo.type.startsWith("video/") ? "video" : "image";
     const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
-
     const res = await fetch(url, { method: "POST", body: formData });
     if (!res.ok) throw new Error("Error subiendo a Cloudinary");
     const data = await res.json();
-
     let thumb = data.secure_url;
     if (resourceType === "video") {
       thumb = data.secure_url.replace(/\.(mp4|mov|avi|webm)$/i, ".jpg");
@@ -65,6 +99,7 @@
     return { url: data.secure_url, thumb: thumb };
   }
 
+  // ========== JSONBIN ==========
   async function guardarEnBin(tipo, item) {
     const res = await fetch(JSONBIN_URL + "/latest", {
       headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
@@ -144,22 +179,49 @@
     const data = await res.json();
     todosLosRecuerdos = data.recuerdos || [];
     albumsDisponibles = data.albums || [];
+    cargarOriginales();
     return data;
   }
 
-  function formatearFecha(iso) {
-    const fecha = new Date(iso);
-    return fecha.toLocaleDateString("es-ES", {
-      day: "2-digit", month: "2-digit", year: "numeric"
-    });
-  }
+  // ========== ELIMINAR RECUERDO ==========
+  async function eliminarRecuerdo(itemId) {
+    if (!confirm("¿Eliminar este recuerdo? No se puede recuperar 💜")) return;
 
+    // Recuerdo original
+    if (itemId.startsWith("orig-rec-")) {
+      const eliminados = getOriginalesEliminados();
+      if (!eliminados.includes(itemId)) {
+        eliminados.push(itemId);
+        setOriginalesEliminados(eliminados);
+      }
+      cargarOriginales();
+      if (window.lanzarConfeti) window.lanzarConfeti(800);
+      renderizarRecuerdos();
+      renderizarFiltros();
+      alert("✅ Recuerdo eliminado");
+      return;
+    }
+
+    // Recuerdo subido
+    try {
+      await eliminarDeBin("recuerdos", itemId);
+      todosLosRecuerdos = todosLosRecuerdos.filter(r => r.id !== itemId);
+      if (window.lanzarConfeti) window.lanzarConfeti(800);
+      renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
+      alert("✅ Recuerdo eliminado");
+    } catch (err) {
+      alert("❌ Error: " + err.message);
+    }
+  }
+  window.eliminarRecuerdoGaleria = eliminarRecuerdo;
+
+  // ========== FILTROS ==========
   function sincronizarFiltrosGlobales() {
     window.__filtrosRecuerdos = { ...filtrosActivos };
     window.dispatchEvent(new Event("filtrosCambiados"));
   }
 
-  // ========== LÓGICA DE FILTROS ==========
   function filtrarRecuerdos(lista, esVideo = null) {
     let filtrados = [...lista];
 
@@ -176,80 +238,61 @@
         (r.titulo || "").toLowerCase().includes(q) ||
         (r.descripcion || "").toLowerCase().includes(q)
       );
+      if (filtrosActivos.fecha !== "todas") {
+        filtrados = filtrados.filter(r => claveMes(r.fecha) === filtrosActivos.fecha);
+      }
       return filtrados;
     }
 
-    // Filtro por álbum
+    // Álbum
     if (filtrosActivos.album === "sin-album") {
       filtrados = filtrados.filter(r => !r.albumId);
     } else if (filtrosActivos.album && filtrosActivos.album !== "") {
       filtrados = filtrados.filter(r => r.albumId === filtrosActivos.album);
     }
 
+    // Fecha
+    if (filtrosActivos.fecha !== "todas") {
+      filtrados = filtrados.filter(r => claveMes(r.fecha) === filtrosActivos.fecha);
+    }
+
     return filtrados;
   }
 
-  // ========== ELIMINAR RECUERDO ==========
-  async function eliminarRecuerdo(itemId) {
-    if (!confirm("¿Eliminar este recuerdo? No se puede recuperar 💜")) return;
-    try {
-      await eliminarDeBin("recuerdos", itemId);
-      todosLosRecuerdos = todosLosRecuerdos.filter(r => r.id !== itemId);
-      if (window.lanzarConfeti) window.lanzarConfeti(800);
-      renderizarRecuerdos();
-      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
-      alert("✅ Recuerdo eliminado");
-    } catch (err) {
-      alert("❌ Error: " + err.message);
-    }
-  }
-
-  // ========== CREAR ÁLBUM ==========
+  // ========== CREAR / ELIMINAR ÁLBUM ==========
   async function crearAlbum() {
     const nombre = prompt("Nombre del álbum (ej: Playa, Cumpleaños):");
     if (!nombre || !nombre.trim()) return;
-
     const emoji = prompt("Un emoji para el álbum (opcional):", "📸") || "📸";
     const autor = getUltimoAutor();
-
     const album = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      nombre: nombre.trim(),
-      emoji: emoji,
-      autor: autor,
-      recuerdos: [],
-      fecha: new Date().toISOString()
+      nombre: nombre.trim(), emoji, autor,
+      recuerdos: [], fecha: new Date().toISOString()
     };
-
     try {
       await guardarEnBin("albums", album);
       albumsDisponibles.push(album);
       if (window.lanzarConfeti) window.lanzarConfeti(1000);
-      filtrosActivos.album = album.id; // Seleccionar el álbum recién creado
+      filtrosActivos.album = album.id;
       renderizarFiltros();
       renderizarRecuerdos();
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
       alert("✅ Álbum creado: " + album.nombre);
-    } catch (err) {
-      alert("❌ Error: " + err.message);
-    }
+    } catch (err) { alert("❌ Error: " + err.message); }
   }
 
-  // ========== ELIMINAR ÁLBUM ==========
   async function eliminarAlbum(albumId) {
     const album = albumsDisponibles.find(a => a.id === albumId);
     if (!album) return;
-
     if (!confirm(`¿Eliminar el álbum "${album.nombre}"?\n\nLos recuerdos NO se borran, solo se quitan del álbum.`)) return;
-
     for (const recuerdo of todosLosRecuerdos) {
       if (recuerdo.albumId === albumId) {
         recuerdo.albumId = null;
         await actualizarEnBin("recuerdos", recuerdo);
       }
     }
-
     try {
       await eliminarDeBin("albums", albumId);
       albumsDisponibles = albumsDisponibles.filter(a => a.id !== albumId);
@@ -259,16 +302,13 @@
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
       alert("✅ Álbum eliminado");
-    } catch (err) {
-      alert("❌ Error: " + err.message);
-    }
+    } catch (err) { alert("❌ Error: " + err.message); }
   }
 
-  // ========== MODAL PARA AGREGAR RECUERDOS A ÁLBUM ==========
+  // ========== MODAL AGREGAR A ÁLBUM ==========
   function abrirModalAlbum(albumId) {
     const album = albumsDisponibles.find(a => a.id === albumId);
     if (!album) return;
-
     const disponibles = todosLosRecuerdos.filter(r => !r.albumId);
 
     const modal = document.createElement("div");
@@ -278,61 +318,32 @@
         <button class="subida-cerrar" aria-label="Cerrar">✕</button>
         <h2 class="subida-titulo">${album.emoji} ${album.nombre}</h2>
         <p class="subida-sub">Seleccioná los recuerdos sin álbum que querés agregar.</p>
-
         <div style="max-height: 400px; overflow-y: auto; padding: 10px 0;">
           ${disponibles.length === 0 ? `
-            <p style="text-align:center;color:#a08bb8;font-style:italic;padding:40px;">
-              No hay recuerdos sin álbum disponibles.
-            </p>
+            <p style="text-align:center;color:#a08bb8;font-style:italic;padding:40px;">No hay recuerdos sin álbum disponibles.</p>
           ` : `
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
               ${disponibles.map(r => `
-                <div class="album-selector-item" data-id="${r.id}" style="
-                  position: relative;
-                  aspect-ratio: 1;
-                  border-radius: 12px;
-                  overflow: hidden;
-                  cursor: pointer;
-                  border: 3px solid transparent;
-                  transition: all 0.3s ease;
-                ">
+                <div class="album-selector-item" data-id="${r.id}" style="position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;border:3px solid transparent;transition:all 0.3s ease;">
                   <img src="${r.thumb || r.url}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">
                   <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:6px 8px;color:#fff;font-size:0.7rem;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.titulo}</div>
-                  <div class="check-overlay" style="
-                    position: absolute;
-                    top: 8px;
-                    right: 8px;
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    background: rgba(255,255,255,0.9);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 0.8rem;
-                    color: #a874e8;
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                  ">✓</div>
+                  <div class="check-overlay" style="position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#a874e8;opacity:0;transition:opacity 0.3s ease;">✓</div>
                 </div>
               `).join("")}
             </div>
           `}
         </div>
-
         <div class="subida-acciones" style="margin-top: 25px;">
           <button class="subida-btn primario" id="btnGuardarAlbum">Agregar seleccionados</button>
           <button class="subida-btn neutro" id="btnCancelarAlbum">Cancelar</button>
         </div>
       </div>
     `;
-
     document.body.appendChild(modal);
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => modal.classList.add("activo"));
 
     const seleccionados = new Set();
-
     modal.querySelectorAll(".album-selector-item").forEach(item => {
       item.addEventListener("click", () => {
         const id = item.dataset.id;
@@ -354,17 +365,12 @@
       document.body.style.overflow = "";
       setTimeout(() => modal.remove(), 500);
     };
-
     modal.querySelector(".subida-cerrar").addEventListener("click", cerrar);
     modal.querySelector("#btnCancelarAlbum").addEventListener("click", cerrar);
     modal.addEventListener("click", (e) => { if (e.target === modal) cerrar(); });
 
     modal.querySelector("#btnGuardarAlbum").addEventListener("click", async () => {
-      if (seleccionados.size === 0) {
-        alert("Seleccioná al menos un recuerdo 💜");
-        return;
-      }
-
+      if (seleccionados.size === 0) { alert("Seleccioná al menos un recuerdo 💜"); return; }
       for (const id of seleccionados) {
         const recuerdo = todosLosRecuerdos.find(r => r.id === id);
         if (recuerdo) {
@@ -374,9 +380,7 @@
           await actualizarEnBin("recuerdos", recuerdo);
         }
       }
-
       await actualizarEnBin("albums", album);
-
       if (window.lanzarConfeti) window.lanzarConfeti(1500);
       cerrar();
       renderizarFiltros();
@@ -392,11 +396,16 @@
     const contenedor = document.getElementById("recuerdosFiltros");
     if (!contenedor) return;
 
+    const meses = new Set();
+    todosLosRecuerdos.forEach(r => meses.add(claveMes(r.fecha)));
+    recuerdosOriginales.forEach(r => meses.add(claveMes(r.fecha)));
+    const mesesOrdenados = [...meses].sort().reverse();
+
     const albumActual = albumsDisponibles.find(a => a.id === filtrosActivos.album);
 
     contenedor.innerHTML = `
       <div class="filtros-barra">
-        <div class="filtro-grupo" style="flex: 2; min-width: 250px;">
+        <div class="filtro-grupo" style="flex:1.5; min-width:200px;">
           <label class="filtro-label">📁 Álbum</label>
           <select id="filtroAlbum" class="filtro-select">
             <option value="sin-album" ${filtrosActivos.album === "sin-album" ? 'selected' : ''}>📷 Sin álbum</option>
@@ -405,19 +414,27 @@
             `).join("")}
           </select>
         </div>
-
-        <div class="filtro-grupo filtro-busqueda" style="flex: 2; min-width: 250px;">
-          <label class="filtro-label">🔍 Buscar (en todos)</label>
+        <div class="filtro-grupo" style="flex:1; min-width:180px;">
+          <label class="filtro-label">📅 Fecha</label>
+          <select id="filtroFecha" class="filtro-select">
+            <option value="todas" ${filtrosActivos.fecha === "todas" ? 'selected' : ''}>Todas las fechas</option>
+            ${mesesOrdenados.map(m => {
+              const [year, month] = m.split("-");
+              const nombreMes = new Date(year, month - 1).toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+              return `<option value="${m}" ${filtrosActivos.fecha === m ? 'selected' : ''}>${nombreMes}</option>`;
+            }).join("")}
+          </select>
+        </div>
+        <div class="filtro-grupo filtro-busqueda" style="flex:2; min-width:220px;">
+          <label class="filtro-label">🔍 Buscar</label>
           <input type="text" id="filtroBusqueda" class="filtro-input" value="${filtrosActivos.busqueda}" placeholder="Buscar por título o descripción...">
         </div>
-
         <button class="btn-nuevo-album" id="btnNuevoAlbum">➕ Nuevo álbum</button>
         ${albumActual ? `
-          <button class="btn-nuevo-album" id="btnAgregarAAlbum" style="background: linear-gradient(135deg, #f28ca6, #a874e8);">📸 Agregar recuerdos</button>
-          <button class="btn-nuevo-album" id="btnEliminarAlbum" style="background: linear-gradient(135deg, #d96666, #e85a8a);">🗑️ Eliminar álbum</button>
+          <button class="btn-nuevo-album" id="btnAgregarAAlbum" style="background: linear-gradient(135deg, #f28ca6, #a874e8);">📸 Agregar</button>
+          <button class="btn-nuevo-album" id="btnEliminarAlbum" style="background: linear-gradient(135deg, #d96666, #e85a8a);">🗑️ Borrar álbum</button>
         ` : ""}
       </div>
-
       ${albumsDisponibles.length > 0 ? `
         <div class="albums-chips">
           <button class="album-chip ${filtrosActivos.album === "sin-album" ? "activo" : ""}" data-album="sin-album">📷 Sin álbum</button>
@@ -436,25 +453,23 @@
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
     });
-
+    document.getElementById("filtroFecha").addEventListener("change", (e) => {
+      filtrosActivos.fecha = e.target.value;
+      renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
+      sincronizarFiltrosGlobales();
+    });
     document.getElementById("filtroBusqueda").addEventListener("input", (e) => {
       filtrosActivos.busqueda = e.target.value.toLowerCase();
       renderizarRecuerdos();
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
     });
-
     document.getElementById("btnNuevoAlbum").addEventListener("click", crearAlbum);
-
     const btnAgregar = document.getElementById("btnAgregarAAlbum");
-    if (btnAgregar) {
-      btnAgregar.addEventListener("click", () => abrirModalAlbum(filtrosActivos.album));
-    }
-
+    if (btnAgregar) btnAgregar.addEventListener("click", () => abrirModalAlbum(filtrosActivos.album));
     const btnEliminar = document.getElementById("btnEliminarAlbum");
-    if (btnEliminar) {
-      btnEliminar.addEventListener("click", () => eliminarAlbum(filtrosActivos.album));
-    }
+    if (btnEliminar) btnEliminar.addEventListener("click", () => eliminarAlbum(filtrosActivos.album));
 
     contenedor.querySelectorAll(".album-chip").forEach(chip => {
       chip.addEventListener("click", () => {
@@ -470,10 +485,10 @@
   // ========== RENDERIZAR RECUERDOS (FOTOS) ==========
   function renderizarRecuerdos() {
     const contenedor = document.getElementById("galeriaUsuarioRecuerdos");
-    const contenedorOriginal = document.getElementById("galeria");
     if (!contenedor) return;
 
-    let filtrados = filtrarRecuerdos(todosLosRecuerdos, false);
+    const todos = [...todosLosRecuerdos, ...recuerdosOriginales];
+    let filtrados = filtrarRecuerdos(todos, false);
     filtrados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     const contador = document.getElementById("contadorRecuerdos");
@@ -481,22 +496,19 @@
       contador.textContent = `${filtrados.length} ${filtrados.length === 1 ? 'recuerdo' : 'recuerdos'}`;
     }
 
-    const mostrarOriginales = 
-      filtrosActivos.album === "sin-album" && 
-      (!filtrosActivos.busqueda || !filtrosActivos.busqueda.trim());
-
-    if (contenedorOriginal) {
-      contenedorOriginal.style.display = mostrarOriginales ? "grid" : "none";
-    }
-
     if (filtrados.length === 0) {
-      contenedor.innerHTML = "";
+      contenedor.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;">
+          No hay fotos con estos filtros 💜
+        </div>
+      `;
       return;
     }
 
     contenedor.innerHTML = filtrados.map(item => `
       <figure class="galeria-item reveal visible" data-id="${item.id}">
-        <img src="${item.url}" alt="${item.titulo || ''}" loading="lazy" 
+        <img src="${item.url}" alt="${item.titulo || ''}" loading="lazy"
+             onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>📸</text></svg>'"
              onclick="abrirLightboxGaleria('${item.url}', '${(item.descripcion || item.titulo || '').replace(/'/g, "\\'")}', '${item.id}')">
         <figcaption>
           <div class="recuerdo-fecha">${formatearFecha(item.fecha)}</div>
@@ -507,7 +519,7 @@
     `).join("");
   }
 
-  // ========== LIGHTBOX con botón eliminar ==========
+  // ========== LIGHTBOX ==========
   window.abrirLightboxGaleria = function(url, titulo, itemId) {
     const lb = document.createElement("div");
     lb.className = "lightbox-galeria";
@@ -517,7 +529,7 @@
         <img src="${url}" alt="${titulo}">
         ${titulo ? `<div class="lightbox-caption">${titulo}</div>` : ""}
       </div>
-      ${itemId ? `<button class="lightbox-eliminar" onclick="event.stopPropagation(); eliminarRecuerdoGaleria('${itemId}'); this.closest('.lightbox-galeria').remove(); document.body.style.overflow='';" title="Eliminar este recuerdo">🗑️ Eliminar</button>` : ""}
+      ${itemId ? `<button class="lightbox-eliminar" onclick="event.stopPropagation(); eliminarRecuerdoGaleria('${itemId}'); this.closest('.lightbox-galeria').remove(); document.body.style.overflow='';">🗑️ Eliminar</button>` : ""}
     `;
     document.body.appendChild(lb);
     document.body.style.overflow = "hidden";
@@ -526,7 +538,6 @@
       lb.style.opacity = "0";
       setTimeout(() => { lb.remove(); document.body.style.overflow = ""; }, 300);
     };
-
     lb.querySelector(".lightbox-cerrar").addEventListener("click", (e) => { e.stopPropagation(); cerrar(); });
     lb.addEventListener("click", (e) => { if (e.target === lb) cerrar(); });
     document.addEventListener("keydown", function onKey(e) {
@@ -534,21 +545,15 @@
     });
   };
 
-  // Exponer eliminar globalmente
-  window.eliminarRecuerdoGaleria = eliminarRecuerdo;
-
-  // ========== MODAL DE SUBIDA ==========
+  // ========== MODAL SUBIDA ==========
   function crearModalSubida(tipo, tipoForzado = null) {
     const autorDefault = getUltimoAutor();
-
     let titulo;
     if (tipo === "recuerdos") {
       if (tipoForzado === "video") titulo = "Nuevo video";
       else if (tipoForzado === "imagen") titulo = "Nueva foto";
       else titulo = "Nuevo recuerdo";
-    } else {
-      titulo = "Nueva razón";
-    }
+    } else titulo = "Nueva razón";
 
     let accept = "image/*,video/*";
     if (tipoForzado === "video") accept = "video/*";
@@ -561,7 +566,6 @@
         <button class="subida-cerrar" aria-label="Cerrar">✕</button>
         <h2 class="subida-titulo">${titulo}</h2>
         <p class="subida-sub">Completá los datos y subí tu archivo.</p>
-
         <div class="subida-campo">
           <label class="subida-label">¿Quién lo sube?</label>
           <div class="subida-autores">
@@ -569,25 +573,19 @@
             <button type="button" class="subida-autor-btn ${autorDefault === "Mary" ? "activo" : ""}" data-autor="Mary">✿ Mary</button>
           </div>
         </div>
-
         <div class="subida-campo">
           <label class="subida-label">Archivo</label>
           <input type="file" id="archivoSubida" accept="${accept}" />
-          <small style="font-size:0.75rem;color:#8a6a4a;margin-top:6px;display:block;">
-            Máx 32 MB imágenes / 100 MB videos.
-          </small>
+          <small style="font-size:0.75rem;color:#8a6a4a;margin-top:6px;display:block;">Máx 32 MB imágenes / 100 MB videos.</small>
         </div>
-
         <div class="subida-campo">
           <label class="subida-label">Título</label>
           <input type="text" id="tituloSubida" class="subida-input" placeholder="¿Qué es?" maxlength="200" />
         </div>
-
         <div class="subida-campo">
           <label class="subida-label">Descripción (opcional)</label>
           <textarea id="descripcionSubida" class="subida-textarea" placeholder="Contá un poco más..."></textarea>
         </div>
-
         ${tipo === "recuerdos" ? `
           <div class="subida-campo">
             <label class="subida-label">Álbum (opcional)</label>
@@ -599,25 +597,21 @@
             </select>
           </div>
         ` : ""}
-
         <div class="subida-acciones">
           <button class="subida-btn primario" id="btnConfirmarSubida">Subir</button>
           <button class="subida-btn neutro" id="btnCancelarSubida">Cancelar</button>
         </div>
-
         <div class="subida-progreso" id="subidaProgreso" style="display:none;">
           <div class="subida-spinner"></div>
           <p id="subidaMensaje">Subiendo archivo...</p>
         </div>
       </div>
     `;
-
     document.body.appendChild(modal);
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => modal.classList.add("activo"));
 
     let autorSeleccionado = autorDefault;
-
     modal.querySelectorAll(".subida-autor-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         modal.querySelectorAll(".subida-autor-btn").forEach(b => b.classList.remove("activo"));
@@ -632,7 +626,6 @@
       document.body.style.overflow = "";
       setTimeout(() => modal.remove(), 500);
     };
-
     modal.querySelector(".subida-cerrar").addEventListener("click", cerrar);
     modal.querySelector("#btnCancelarSubida").addEventListener("click", cerrar);
     modal.addEventListener("click", (e) => { if (e.target === modal) cerrar(); });
@@ -648,42 +641,30 @@
 
       const esVideo = archivo.type.startsWith("video/");
       const limiteMB = esVideo ? 100 : 32;
-      if (archivo.size > limiteMB * 1024 * 1024) {
-        return alert(`El archivo es muy grande (máx ${limiteMB} MB) 💜`);
-      }
+      if (archivo.size > limiteMB * 1024 * 1024) return alert(`El archivo es muy grande (máx ${limiteMB} MB) 💜`);
 
       const progreso = modal.querySelector("#subidaProgreso");
       const mensaje = modal.querySelector("#subidaMensaje");
       progreso.style.display = "block";
 
       try {
-        mensaje.textContent = esVideo ? "Subiendo video a Cloudinary..." : "Subiendo foto a ImgBB...";
-
+        mensaje.textContent = esVideo ? "Subiendo video..." : "Subiendo foto...";
         let resultado;
-        if (esVideo) {
-          resultado = await subirACloudinary(archivo);
-        } else {
-          resultado = await subirAImgBB(archivo);
-        }
+        if (esVideo) resultado = await subirACloudinary(archivo);
+        else resultado = await subirAImgBB(archivo);
 
         mensaje.textContent = "Guardando...";
         const item = {
           id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-          titulo: tituloVal,
-          descripcion: descripcion,
-          url: resultado.url,
-          thumb: resultado.thumb,
+          titulo: tituloVal, descripcion,
+          url: resultado.url, thumb: resultado.thumb,
           tipo: esVideo ? "video" : "imagen",
           autor: autorSeleccionado,
           albumId: albumId || null,
           fecha: new Date().toISOString()
         };
-
         await guardarEnBin(tipo, item);
-
-        if (tipo === "recuerdos") {
-          todosLosRecuerdos.push(item);
-        }
+        if (tipo === "recuerdos") todosLosRecuerdos.push(item);
 
         mensaje.textContent = "✅ ¡Subido!";
         if (window.lanzarConfeti) window.lanzarConfeti(1500);
@@ -694,7 +675,6 @@
           renderizarRecuerdos();
           if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
         }, 1000);
-
       } catch (err) {
         console.error(err);
         mensaje.textContent = "❌ Error: " + err.message;
@@ -705,48 +685,30 @@
 
   // ========== API GLOBAL ==========
   window.galeriaUsuario = {
-    crearModalSubida,
-    crearAlbum,
-    eliminarAlbum,
-    abrirModalAlbum,
-    renderizarFiltros,
-    renderizarRecuerdos,
-    cargarDatos,
-    filtrarRecuerdos,
+    crearModalSubida, crearAlbum, eliminarAlbum, abrirModalAlbum,
+    renderizarFiltros, renderizarRecuerdos, cargarDatos, filtrarRecuerdos,
     getRecuerdos: () => todosLosRecuerdos,
+    getOriginales: () => recuerdosOriginales,
     getAlbums: () => albumsDisponibles,
     getFiltros: () => filtrosActivos
   };
 
-  // ========== AUTO-INICIALIZACIÓN ==========
   document.addEventListener("DOMContentLoaded", async () => {
     if (document.getElementById("galeriaUsuarioRecuerdos")) {
       try {
         await cargarDatos();
         renderizarFiltros();
         renderizarRecuerdos();
-      } catch (err) {
-        console.error("Error inicial:", err);
-      }
+      } catch (err) { console.error("Error inicial:", err); }
     }
-
     const btnAgregar = document.getElementById("btnAgregarRecuerdo");
-    if (btnAgregar) {
-      btnAgregar.addEventListener("click", () => {
-        if (window.galeriaUsuario) {
-          window.galeriaUsuario.crearModalSubida("recuerdos", "imagen");
-        }
-      });
-    }
-
+    if (btnAgregar) btnAgregar.addEventListener("click", () => {
+      if (window.galeriaUsuario) window.galeriaUsuario.crearModalSubida("recuerdos", "imagen");
+    });
     const btnVideo = document.getElementById("btnAgregarVideo");
-    if (btnVideo) {
-      btnVideo.addEventListener("click", () => {
-        if (window.galeriaUsuario) {
-          window.galeriaUsuario.crearModalSubida("recuerdos", "video");
-        }
-      });
-    }
+    if (btnVideo) btnVideo.addEventListener("click", () => {
+      if (window.galeriaUsuario) window.galeriaUsuario.crearModalSubida("recuerdos", "video");
+    });
   });
 
 })();
