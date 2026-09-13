@@ -668,137 +668,276 @@
   <script src="../js/galeria-usuario.js"></script>
 
   <!-- SCRIPT DE BURBUJAS -->
-  <script>
-    (function () {
-      "use strict";
+<script>
+  (function () {
+    "use strict";
 
-      const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
-      const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
-      const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
+    const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
+    const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
+    const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
-      function crearMiniBurbujas(contenedor) {
-        for (let i = 0; i < 6; i++) {
-          const b = document.createElement("div");
-          b.className = "mini-b";
-          const size = Math.random() * 30 + 10;
-          b.style.cssText = `position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(242,140,166,0.15) 40%, transparent 70%);border:1px solid rgba(242,140,166,0.25);box-shadow:inset 0 0 15px rgba(242,140,166,0.3);animation:flotarMini 5s ease-in-out infinite;opacity:0.7;`;
-          b.style.width = size + "px";
-          b.style.height = size + "px";
-          const angulo = (Math.PI * 2 * i) / 6 + Math.random() * 0.5;
-          const radio = 52 + Math.random() * 15;
-          b.style.left = (50 + Math.cos(angulo) * radio) + "%";
-          b.style.top = (50 + Math.sin(angulo) * (radio * 0.7)) + "%";
-          b.style.transform = "translate(-50%, -50%)";
-          b.style.animationDelay = (Math.random() * 4) + "s";
-          contenedor.appendChild(b);
-        }
+    function crearMiniBurbujas(contenedor) {
+      for (let i = 0; i < 6; i++) {
+        const b = document.createElement("div");
+        b.className = "mini-b";
+        const size = Math.random() * 30 + 10;
+        b.style.cssText = `position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(242,140,166,0.15) 40%, transparent 70%);border:1px solid rgba(242,140,166,0.25);box-shadow:inset 0 0 15px rgba(242,140,166,0.3);animation:flotarMini 5s ease-in-out infinite;opacity:0.7;`;
+        b.style.width = size + "px";
+        b.style.height = size + "px";
+        const angulo = (Math.PI * 2 * i) / 6 + Math.random() * 0.5;
+        const radio = 52 + Math.random() * 15;
+        b.style.left = (50 + Math.cos(angulo) * radio) + "%";
+        b.style.top = (50 + Math.sin(angulo) * (radio * 0.7)) + "%";
+        b.style.transform = "translate(-50%, -50%)";
+        b.style.animationDelay = (Math.random() * 4) + "s";
+        contenedor.appendChild(b);
       }
+    }
 
-      function explosion(canvas) {
-        const ctx = canvas.getContext("2d");
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * devicePixelRatio;
-        canvas.height = rect.height * devicePixelRatio;
-        ctx.scale(devicePixelRatio, devicePixelRatio);
-        const w = rect.width, h = rect.height;
-        const particles = [];
-        for (let i = 0; i < 70; i++) {
-          const angle = (Math.PI * 2 * i) / 70 + Math.random() * 0.4;
-          const speed = Math.random() * 6 + 3;
-          particles.push({
-            x: w/2, y: h/2,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            r: Math.random() * 3.5 + 1,
-            vida: 1,
-            hue: Math.random() < 0.6 ? "242, 140, 166" : "255, 255, 255"
-          });
-        }
-        const start = performance.now();
-        function animate(now) {
-          const t = (now - start) / 1500;
-          ctx.clearRect(0, 0, w, h);
-          if (t >= 1) { canvas.style.opacity = "0"; return; }
-          particles.forEach(p => {
-            p.x += p.vx; p.y += p.vy;
-            p.vx *= 0.95; p.vy *= 0.95;
-            p.vida = 1 - t;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r * p.vida, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${p.hue}, ${p.vida})`;
-            ctx.shadowBlur = 18;
-            ctx.shadowColor = `rgba(${p.hue}, ${p.vida})`;
-            ctx.fill();
-          });
-          requestAnimationFrame(animate);
-        }
+    function explosion(canvas) {
+      const ctx = canvas.getContext("2d");
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * devicePixelRatio;
+      canvas.height = rect.height * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+      const w = rect.width, h = rect.height;
+      const particles = [];
+      for (let i = 0; i < 70; i++) {
+        const angle = (Math.PI * 2 * i) / 70 + Math.random() * 0.4;
+        const speed = Math.random() * 6 + 3;
+        particles.push({
+          x: w/2, y: h/2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          r: Math.random() * 3.5 + 1,
+          vida: 1,
+          hue: Math.random() < 0.6 ? "242, 140, 166" : "255, 255, 255"
+        });
+      }
+      const start = performance.now();
+      function animate(now) {
+        const t = (now - start) / 1500;
+        ctx.clearRect(0, 0, w, h);
+        if (t >= 1) { canvas.style.opacity = "0"; return; }
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          p.vx *= 0.95; p.vy *= 0.95;
+          p.vida = 1 - t;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * p.vida, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.hue}, ${p.vida})`;
+          ctx.shadowBlur = 18;
+          ctx.shadowColor = `rgba(${p.hue}, ${p.vida})`;
+          ctx.fill();
+        });
         requestAnimationFrame(animate);
       }
+      requestAnimationFrame(animate);
+    }
 
-      const modal = document.getElementById("videoModal");
-      const modalInner = document.getElementById("videoModalInner");
-      const modalCerrar = document.getElementById("videoModalCerrar");
-      let burbujaActiva = null;
-      let playerActivo = null;
+    const modal = document.getElementById("videoModal");
+    const modalInner = document.getElementById("videoModalInner");
+    const modalCerrar = document.getElementById("videoModalCerrar");
+    let burbujaActiva = null;
+    let playerActivo = null;
 
-      function abrirModal(item, burbuja) {
-        burbujaActiva = burbuja;
-        modalInner.innerHTML = "";
-        if (item.tipo === "video") {
-          playerActivo = document.createElement("video");
-          playerActivo.src = item.url;
-          playerActivo.controls = true;
-          playerActivo.playsInline = true;
-        } else {
-          playerActivo = document.createElement("img");
-          playerActivo.src = item.url;
-        }
-        modalInner.appendChild(playerActivo);
-        modal.classList.add("activo");
-        document.body.style.overflow = "hidden";
-        setTimeout(() => {
-          if (item.tipo === "video" && playerActivo.play) playerActivo.play().catch(() => {});
-        }, 500);
+    function abrirModal(item, burbuja) {
+      burbujaActiva = burbuja;
+      modalInner.innerHTML = "";
+      if (item.tipo === "video") {
+        playerActivo = document.createElement("video");
+        playerActivo.src = item.url;
+        playerActivo.controls = true;
+        playerActivo.playsInline = true;
+      } else {
+        playerActivo = document.createElement("img");
+        playerActivo.src = item.url;
       }
+      modalInner.appendChild(playerActivo);
+      modal.classList.add("activo");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        if (item.tipo === "video" && playerActivo.play) playerActivo.play().catch(() => {});
+      }, 500);
+    }
 
-      function cerrarModal() {
-        if (!modal.classList.contains("activo")) return;
-        if (playerActivo && playerActivo.pause) playerActivo.pause();
-        if (burbujaActiva) {
-          setTimeout(() => {
-            burbujaActiva.classList.add("absorbiendo");
-            burbujaActiva.scrollIntoView({ behavior: "smooth", block: "center" });
-          }, 400);
-          setTimeout(() => burbujaActiva.classList.remove("absorbiendo"), 1800);
-        }
+    function cerrarModal() {
+      if (!modal.classList.contains("activo")) return;
+      if (playerActivo && playerActivo.pause) playerActivo.pause();
+      if (burbujaActiva) {
         setTimeout(() => {
-          modal.classList.remove("activo");
-          document.body.style.overflow = "";
-          setTimeout(() => { modalInner.innerHTML = ""; playerActivo = null; }, 600);
-        }, 900);
-        burbujaActiva = null;
+          burbujaActiva.classList.add("absorbiendo");
+          burbujaActiva.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 400);
+        setTimeout(() => burbujaActiva.classList.remove("absorbiendo"), 1800);
       }
+      setTimeout(() => {
+        modal.classList.remove("activo");
+        document.body.style.overflow = "";
+        setTimeout(() => { modalInner.innerHTML = ""; playerActivo = null; }, 600);
+      }, 900);
+      burbujaActiva = null;
+    }
 
-      modalCerrar.addEventListener("click", cerrarModal);
-      modal.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modal.classList.contains("activo")) cerrarModal();
-      });
+    modalCerrar.addEventListener("click", cerrarModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("activo")) cerrarModal();
+    });
 
-      async function renderizarBurbujas() {
-        const escenario = document.getElementById("burbujasEscenario");
-        if (!escenario) return;
+    async function renderizarBurbujas() {
+      const escenario = document.getElementById("burbujasEscenario");
+      if (!escenario) return;
 
-        try {
-          const res = await fetch(JSONBIN_URL + "/latest", {
-            headers: {
-              "X-Master-Key": JSONBIN_MASTER_KEY,
-              "X-Bin-Meta": "false"
+      try {
+        const res = await fetch(JSONBIN_URL + "/latest", {
+          headers: {
+            "X-Master-Key": JSONBIN_MASTER_KEY,
+            "X-Bin-Meta": "false"
+          }
+        });
+        if (!res.ok) throw new Error("Error");
+        const data = await res.json();
+        let videos = (data.recuerdos || []).filter(r => r.tipo === "video");
+
+        // Aplicar los MISMOS filtros que la galería
+        if (window.galeriaUsuario && window.galeriaUsuario.getFiltros) {
+          const filtros = window.galeriaUsuario.getFiltros();
+          
+          if (filtros.album === "sin-album") {
+            videos = videos.filter(v => !v.albumId);
+          } else if (filtros.album !== "todos") {
+            videos = videos.filter(v => v.albumId === filtros.album);
+          }
+          
+          if (filtros.fecha !== "todas") {
+            videos = videos.filter(v => {
+              const fecha = new Date(v.fecha);
+              const key = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
+              return key === filtros.fecha;
+            });
+          }
+          
+          if (filtros.autor !== "todos") {
+            videos = videos.filter(v => v.autor === filtros.autor);
+          }
+          
+          if (filtros.busqueda) {
+            videos = videos.filter(v =>
+              (v.titulo || "").toLowerCase().includes(filtros.busqueda) ||
+              (v.descripcion || "").toLowerCase().includes(filtros.busqueda)
+            );
+          }
+        }
+
+        // VIDEOS ORIGINALES: solo se muestran si NO hay filtros activos
+        const filtrosActuales = window.galeriaUsuario ? window.galeriaUsuario.getFiltros() : { album: "todos", fecha: "todas", autor: "todos", busqueda: "" };
+        const sinFiltros = 
+          filtrosActuales.album === "todos" && 
+          filtrosActuales.fecha === "todas" && 
+          filtrosActuales.autor === "todos" && 
+          !filtrosActuales.busqueda;
+
+        if (sinFiltros) {
+          const videosOriginales = [
+            { id: "orig1", titulo: "Recuerdo 1", url: "../assets/videos/recuerdo.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
+            { id: "orig2", titulo: "Recuerdo 2", url: "../assets/videos/recuerdo2.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
+            { id: "orig3", titulo: "Recuerdo 3", url: "../assets/videos/recuerdo3.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true }
+          ];
+          videos = [...videos, ...videosOriginales];
+        }
+
+        if (videos.length === 0) {
+          escenario.innerHTML = `
+            <div style="text-align:center;padding:60px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;">
+              <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">No hay videos con estos filtros</strong>
+              Probá con otros filtros o subí un video 💜
+            </div>
+          `;
+          return;
+        }
+
+        escenario.innerHTML = videos.map((video) => {
+          return `
+            <div class="burbuja-video" data-video data-id="${video.id}">
+              <div class="mini-burbujas"></div>
+              <div class="burbuja-inner">
+                <video preload="metadata" playsinline muted>
+                  <source src="${video.url}" type="video/mp4">
+                </video>
+                <div class="burbuja-portada">
+                  <div class="burbuja-contenido">
+                    <div class="burbuja-simbolo">
+                      <div class="anillo-b"></div>
+                      <div class="anillo-b"></div>
+                      <div class="anillo-b"></div>
+                      <div class="nucleo-b"></div>
+                    </div>
+                    <div class="burbuja-texto">Toca para revelar</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ripple-absorcion"></div>
+              <canvas class="explosion-canvas"></canvas>
+              <div class="flash-revelado"></div>
+            </div>
+          `;
+        }).join("");
+
+        const burbujas = escenario.querySelectorAll("[data-video]");
+        burbujas.forEach(burbuja => {
+          const miniCont = burbuja.querySelector(".mini-burbujas");
+          if (miniCont) crearMiniBurbujas(miniCont);
+          const video = burbuja.querySelector("video");
+          const explosionCanvas = burbuja.querySelector(".explosion-canvas");
+          const id = burbuja.dataset.id;
+          const item = videos.find(v => v.id === id);
+          if (!video || !item) return;
+
+          video.removeAttribute("controls");
+          video.pause();
+
+          burbuja.addEventListener("click", () => {
+            if (burbuja.classList.contains("revelando") || burbuja.classList.contains("revelado")) {
+              abrirModal(item, burbuja);
+              return;
             }
+            burbuja.classList.add("revelando");
+            if (explosionCanvas) explosion(explosionCanvas);
+            video.muted = true;
+            video.play().catch(() => {});
+            setTimeout(() => {
+              burbuja.classList.remove("revelando");
+              burbuja.classList.add("revelado");
+              video.pause();
+              video.currentTime = 0;
+              video.muted = false;
+              abrirModal(item, burbuja);
+            }, 900);
           });
-          if (!res.ok) throw new Error("Error");
-          const data = await res.json();
-          let videos = (data.recuerdos || []).filter(r => r.tipo === "video");
+        });
+
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
+        }, { threshold: 0.15 });
+        burbujas.forEach(b => io.observe(b));
+
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    }
+
+    window.renderizarBurbujasVideos = renderizarBurbujas;
+
+    window.addEventListener("filtrosCambiados", () => {
+      renderizarBurbujas();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => renderizarBurbujas(), 1200);
+    });
+  })();
+</script>
 
           // Aplicar filtros
           const filtros = window.__filtrosRecuerdos || {};

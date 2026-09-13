@@ -3,15 +3,16 @@
    - Fotos: ImgBB
    - Videos: Cloudinary
    - Guardar en JSONBin
+   - Filtros que afectan fotos Y videos
    ============================================ */
 
 (function () {
   "use strict";
 
-  // ✅ Tu API Key de ImgBB (fotos)
+  // ✅ Tu API Key de ImgBB
   const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
 
-  // ⚠️ REEMPLAZÁ ESTOS DATOS CON LOS DE TU CUENTA CLOUDINARY (videos)
+  // ✅ Cloudinary
   const CLOUDINARY_CLOUD_NAME = "sjjtdwr";
   const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
 
@@ -29,7 +30,6 @@
   };
 
   // ========== UTILIDADES ==========
-  // Ya no pregunta autor - se elige en el formulario
   function getUltimoAutor() {
     return localStorage.getItem("diario_autor_actual") || "Gael";
   }
@@ -73,7 +73,6 @@
     if (!res.ok) throw new Error("Error subiendo a Cloudinary");
     const data = await res.json();
 
-    // Generar thumbnail para videos
     let thumb = data.secure_url;
     if (resourceType === "video") {
       thumb = data.secure_url.replace(/\.(mp4|mov|avi|webm)$/i, ".jpg");
@@ -177,8 +176,51 @@
   }
 
   function sincronizarFiltrosGlobales() {
-    window.__filtrosRecuerdos = filtrosActivos;
+    window.__filtrosRecuerdos = { ...filtrosActivos };
     window.dispatchEvent(new Event("filtrosCambiados"));
+  }
+
+  // ========== FILTRAR RECUERDOS (función central) ==========
+  function filtrarRecuerdos(lista, esVideo = null) {
+    let filtrados = [...lista];
+
+    // Filtro por tipo (si se especifica)
+    if (esVideo === true) {
+      filtrados = filtrados.filter(r => r.tipo === "video");
+    } else if (esVideo === false) {
+      filtrados = filtrados.filter(r => r.tipo !== "video");
+    }
+
+    // Filtro por ÁLBUM
+    if (filtrosActivos.album === "sin-album") {
+      filtrados = filtrados.filter(r => !r.albumId);
+    } else if (filtrosActivos.album !== "todos") {
+      filtrados = filtrados.filter(r => r.albumId === filtrosActivos.album);
+    }
+
+    // Filtro por FECHA
+    if (filtrosActivos.fecha !== "todas") {
+      filtrados = filtrados.filter(r => {
+        const fecha = new Date(r.fecha);
+        const key = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
+        return key === filtrosActivos.fecha;
+      });
+    }
+
+    // Filtro por AUTOR
+    if (filtrosActivos.autor !== "todos") {
+      filtrados = filtrados.filter(r => r.autor === filtrosActivos.autor);
+    }
+
+    // Filtro por BÚSQUEDA
+    if (filtrosActivos.busqueda) {
+      filtrados = filtrados.filter(r =>
+        (r.titulo || "").toLowerCase().includes(filtrosActivos.busqueda) ||
+        (r.descripcion || "").toLowerCase().includes(filtrosActivos.busqueda)
+      );
+    }
+
+    return filtrados;
   }
 
   // ========== CREAR ÁLBUM ==========
@@ -204,6 +246,7 @@
       if (window.lanzarConfeti) window.lanzarConfeti(1000);
       renderizarFiltros();
       renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       alert("✅ Álbum creado: " + album.nombre);
     } catch (err) {
       alert("❌ Error: " + err.message);
@@ -217,7 +260,6 @@
 
     if (!confirm(`¿Eliminar el álbum "${album.nombre}"?\n\nLos recuerdos NO se borran, solo se quitan del álbum.`)) return;
 
-    // Quitar el álbum de los recuerdos
     for (const recuerdo of todosLosRecuerdos) {
       if (recuerdo.albumId === albumId) {
         recuerdo.albumId = null;
@@ -225,7 +267,6 @@
       }
     }
 
-    // Eliminar el álbum
     const res = await fetch(JSONBIN_URL + "/latest", {
       headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
     });
@@ -257,7 +298,7 @@
     if (!album) return;
 
     const yaEnAlbum = album.recuerdos || [];
-    const disponibles = todosLosRecuerdos.filter(r => !yaEnAlbum.includes(r.id));
+    const disponibles = todosLosRecuerdos.filter(r => !yaEnAlbum.includes(r.id) && r.albumId !== albumId);
 
     const modal = document.createElement("div");
     modal.className = "subida-modal";
@@ -284,8 +325,12 @@
                   border: 3px solid transparent;
                   transition: all 0.3s ease;
                 ">
-                  <img src="${r.thumb || r.url}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  ${r.tipo === "video" 
+                    ? `<img src="${r.thumb || ''}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+                    : `<img src="${r.thumb || r.url}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+                  }
                   <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:6px 8px;color:#fff;font-size:0.7rem;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.titulo}</div>
+                  ${r.albumId ? `<div style="position:absolute;top:6px;left:6px;background:#a874e8;color:#fff;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:50px;">Ya en otro</div>` : ""}
                   <div class="check-overlay" style="
                     position: absolute;
                     top: 8px;
@@ -433,7 +478,10 @@
         </div>
 
         <button class="btn-nuevo-album" id="btnNuevoAlbum">➕ Nuevo álbum</button>
-        ${albumActual ? `<button class="btn-nuevo-album" id="btnAgregarAAlbum" style="background: linear-gradient(135deg, #f28ca6, #a874e8);">📸 Agregar al álbum</button>` : ""}
+        ${albumActual ? `
+          <button class="btn-nuevo-album" id="btnAgregarAAlbum" style="background: linear-gradient(135deg, #f28ca6, #a874e8);">📸 Agregar al álbum</button>
+          <button class="btn-nuevo-album" id="btnEliminarAlbum" style="background: linear-gradient(135deg, #d96666, #e85a8a);">🗑️ Eliminar álbum</button>
+        ` : ""}
       </div>
 
       ${albumsDisponibles.length > 0 ? `
@@ -453,24 +501,28 @@
     document.getElementById("filtroAlbum").addEventListener("change", (e) => {
       filtrosActivos.album = e.target.value;
       renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
     });
 
     document.getElementById("filtroFecha").addEventListener("change", (e) => {
       filtrosActivos.fecha = e.target.value;
       renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
     });
 
     document.getElementById("filtroAutor").addEventListener("change", (e) => {
       filtrosActivos.autor = e.target.value;
       renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
     });
 
     document.getElementById("filtroBusqueda").addEventListener("input", (e) => {
       filtrosActivos.busqueda = e.target.value.toLowerCase();
       renderizarRecuerdos();
+      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
     });
 
@@ -481,11 +533,17 @@
       btnAgregar.addEventListener("click", () => abrirModalAlbum(filtrosActivos.album));
     }
 
+    const btnEliminar = document.getElementById("btnEliminarAlbum");
+    if (btnEliminar) {
+      btnEliminar.addEventListener("click", () => eliminarAlbum(filtrosActivos.album));
+    }
+
     contenedor.querySelectorAll(".album-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         filtrosActivos.album = chip.dataset.album;
         renderizarFiltros();
         renderizarRecuerdos();
+        if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
         sincronizarFiltrosGlobales();
       });
     });
@@ -497,69 +555,34 @@
     const contenedorOriginal = document.getElementById("galeria");
     if (!contenedor) return;
 
-    let filtrados = [...todosLosRecuerdos];
+    // Usar la función central de filtrado
+    let filtrados = filtrarRecuerdos(todosLosRecuerdos, false); // solo fotos
 
-    // Filtro álbum
-    if (filtrosActivos.album === "sin-album") {
-      filtrados = filtrados.filter(r => !r.albumId);
-    } else if (filtrosActivos.album !== "todos") {
-      filtrados = filtrados.filter(r => r.albumId === filtrosActivos.album);
-    }
-
-    // Filtro fecha
-    if (filtrosActivos.fecha !== "todas") {
-      filtrados = filtrados.filter(r => {
-        const fecha = new Date(r.fecha);
-        const key = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
-        return key === filtrosActivos.fecha;
-      });
-    }
-
-    // Filtro autor
-    if (filtrosActivos.autor !== "todos") {
-      filtrados = filtrados.filter(r => r.autor === filtrosActivos.autor);
-    }
-
-    // Filtro búsqueda
-    if (filtrosActivos.busqueda) {
-      filtrados = filtrados.filter(r =>
-        (r.titulo || "").toLowerCase().includes(filtrosActivos.busqueda) ||
-        (r.descripcion || "").toLowerCase().includes(filtrosActivos.busqueda)
-      );
-    }
-
-    // Solo fotos (videos van a burbujas)
-    const soloFotos = filtrados.filter(r => r.tipo !== "video");
-    soloFotos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    // Ordenar
+    filtrados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     // Contador
     const contador = document.getElementById("contadorRecuerdos");
     if (contador) {
-      contador.textContent = `${soloFotos.length} ${soloFotos.length === 1 ? 'recuerdo' : 'recuerdos'}`;
+      contador.textContent = `${filtrados.length} ${filtrados.length === 1 ? 'recuerdo' : 'recuerdos'}`;
     }
 
-    // Ocultar/mostrar galería de originales según filtros
+    // Los recuerdos originales (hardcodeados) solo se ven si NO hay filtros activos
     if (contenedorOriginal) {
-      const mostrarOriginales = 
+      const sinFiltros = 
         filtrosActivos.album === "todos" && 
         filtrosActivos.fecha === "todas" && 
         filtrosActivos.autor === "todos" && 
         !filtrosActivos.busqueda;
-      contenedorOriginal.style.display = mostrarOriginales ? "grid" : "none";
+      contenedorOriginal.style.display = sinFiltros ? "grid" : "none";
     }
 
-    if (soloFotos.length === 0) {
-      contenedor.innerHTML = `
-        <div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;">
-          ${filtrosActivos.album !== "todos" || filtrosActivos.fecha !== "todas" || filtrosActivos.autor !== "todos" || filtrosActivos.busqueda
-            ? "No hay fotos subidas con estos filtros"
-            : ""}
-        </div>
-      `;
+    if (filtrados.length === 0) {
+      contenedor.innerHTML = "";
       return;
     }
 
-    contenedor.innerHTML = soloFotos.map(item => `
+    contenedor.innerHTML = filtrados.map(item => `
       <figure class="galeria-item reveal visible" data-id="${item.id}">
         <img src="${item.url}" alt="${item.titulo || ''}" loading="lazy" 
              onclick="abrirLightboxGaleria('${item.url}', '${(item.descripcion || item.titulo || '').replace(/'/g, "\\'")}')">
@@ -645,7 +668,7 @@
           <label class="subida-label">Archivo</label>
           <input type="file" id="archivoSubida" accept="${accept}" />
           <small style="font-size:0.75rem;color:#8a6a4a;margin-top:6px;display:block;">
-            Máx 32 MB para imágenes, 100 MB para videos.
+            Máx 32 MB imágenes / 100 MB videos.
           </small>
         </div>
 
@@ -730,8 +753,8 @@
       progreso.style.display = "block";
 
       try {
-        mensaje.textContent = esVideo ? "Subiendo video a Cloudinary..." : "Subiendo foto a ImgBB...";
-        
+        mensaje.textContent = esVideo ? "Subiendo video..." : "Subiendo foto...";
+
         let resultado;
         if (esVideo) {
           resultado = await subirACloudinary(archivo);
@@ -787,8 +810,10 @@
     renderizarFiltros,
     renderizarRecuerdos,
     cargarDatos,
+    filtrarRecuerdos,
     getRecuerdos: () => todosLosRecuerdos,
-    getAlbums: () => albumsDisponibles
+    getAlbums: () => albumsDisponibles,
+    getFiltros: () => filtrosActivos
   };
 
   // ========== AUTO-INICIALIZACIÓN ==========
