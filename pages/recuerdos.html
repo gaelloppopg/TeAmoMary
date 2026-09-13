@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Recuerdos 📸</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/animations.css" />
@@ -249,26 +249,36 @@
     .burbuja-video.revelando .flash-revelado { animation: flashAnimB 1s ease-out; }
     @keyframes flashAnimB { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
 
-    /* MODAL VIDEOS */
+    /* MODAL VIDEOS — CORREGIDO: CENTRADO Y AJUSTADO AL TAMAÑO DE PANTALLA */
     .video-modal {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
       z-index: 9999;
       background: rgba(3, 1, 5, 0.98);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 30px;
+      padding: 0;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.6s ease;
       backdrop-filter: blur(20px);
+      overflow: hidden;
+      touch-action: none;
+      overscroll-behavior: none;
     }
     .video-modal.activo { opacity: 1; pointer-events: auto; }
     .video-modal-inner {
-      max-width: 90vw;
-      max-height: 88vh;
-      border-radius: 20px;
+      max-width: 100vw;
+      max-height: 100vh;
+      max-height: 100dvh;
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
       overflow: hidden;
       background: #000;
       transform: scale(0.7) rotateX(15deg);
@@ -280,11 +290,26 @@
     }
     .video-modal.activo .video-modal-inner { transform: scale(1) rotateX(0); opacity: 1; }
     .video-modal-inner video,
-    .video-modal-inner img { max-width: 90vw; max-height: 85vh; display: block; object-fit: contain; }
+    .video-modal-inner img {
+      max-width: 100vw;
+      max-height: 100vh;
+      max-height: 100dvh;
+      width: auto;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      margin: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
+      pointer-events: auto;
+    }
     .video-modal-cerrar {
       position: absolute;
-      top: 24px; right: 24px;
-      width: 52px; height: 52px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      right: 16px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       border: 1px solid rgba(242, 140, 166, 0.4);
       background: rgba(10, 5, 10, 0.7);
@@ -296,7 +321,8 @@
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
-      z-index: 5;
+      z-index: 10;
+      -webkit-tap-highlight-color: transparent;
     }
     .video-modal-cerrar:hover { background: #f28ca6; color: #0a050a; transform: rotate(90deg) scale(1.05); }
 
@@ -456,27 +482,73 @@
     .album-chip:hover { border-color: #a874e8; transform: translateY(-2px); }
     .album-chip.activo { background: linear-gradient(135deg, #a874e8, #d4a373); color: #fff; border-color: transparent; box-shadow: 0 8px 20px rgba(168, 116, 232, 0.35); }
 
-    /* LIGHTBOX */
+    /* LIGHTBOX — CORREGIDO: CENTRADO Y AJUSTADO AL TAMAÑO DE PANTALLA */
     .lightbox-galeria {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
       z-index: 9999;
-      background: rgba(0, 0, 0, 0.94);
+      background: rgba(0, 0, 0, 0.96);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 0;
       opacity: 0;
       animation: fadeInLightbox 0.4s ease forwards;
       cursor: zoom-out;
+      overflow: hidden;
+      touch-action: none;
+      overscroll-behavior: none;
     }
     @keyframes fadeInLightbox { to { opacity: 1; } }
-    .lightbox-contenido { max-width: 95vw; max-height: 90vh; position: relative; display: flex; flex-direction: column; align-items: center; }
-    .lightbox-contenido img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 12px; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); }
-    .lightbox-caption { margin-top: 20px; color: #fff; font-family: 'Poppins', sans-serif; font-size: 1rem; text-align: center; max-width: 600px; line-height: 1.5; opacity: 0.9; }
+    .lightbox-contenido {
+      max-width: 100vw;
+      max-height: 100vh;
+      max-height: 100dvh;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-contenido img {
+      max-width: 100vw;
+      max-height: 100vh;
+      max-height: 100dvh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 0;
+      box-shadow: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
+      pointer-events: auto;
+      margin: auto;
+    }
+    .lightbox-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      text-align: center;
+      line-height: 1.5;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      pointer-events: none;
+    }
     .lightbox-cerrar {
       position: absolute;
-      top: 20px; right: 20px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      right: 16px;
       width: 48px; height: 48px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.15);
@@ -489,12 +561,13 @@
       justify-content: center;
       transition: all 0.3s ease;
       z-index: 10;
+      -webkit-tap-highlight-color: transparent;
     }
     .lightbox-cerrar:hover { background: rgba(255, 255, 255, 0.3); transform: rotate(90deg); }
     .lightbox-eliminar {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      left: 16px;
       padding: 12px 20px;
       border-radius: 50px;
       background: rgba(217, 102, 102, 0.9);
@@ -506,6 +579,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       z-index: 10;
+      -webkit-tap-highlight-color: transparent;
     }
     .lightbox-eliminar:hover { background: #d96666; transform: scale(1.05); }
 
@@ -523,6 +597,7 @@
       pointer-events: none;
       transition: opacity 0.4s ease;
       backdrop-filter: blur(14px);
+      overflow-y: auto;
     }
     .subida-modal.activo { opacity: 1; pointer-events: auto; }
     .subida-papel {
@@ -537,6 +612,7 @@
       position: relative;
       transform: scale(0.9);
       transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      margin: auto;
     }
     .subida-modal.activo .subida-papel { transform: scale(1); }
     .subida-cerrar {
@@ -627,6 +703,7 @@
       .filtros-barra { padding: 18px; gap: 12px; }
       .filtro-grupo, .filtro-busqueda { min-width: 100%; }
       .btn-nuevo-album { width: 100%; }
+      .lightbox-caption { font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -814,6 +891,13 @@
       modal.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && modal.classList.contains("activo")) cerrarModal();
+      });
+
+      // Prevenir gestos que muevan el modal
+      ["touchmove", "gesturestart", "gesturechange", "gestureend"].forEach(evt => {
+        modal.addEventListener(evt, (e) => {
+          if (e.target === modal) e.preventDefault();
+        }, { passive: false });
       });
 
       // Eliminar video
