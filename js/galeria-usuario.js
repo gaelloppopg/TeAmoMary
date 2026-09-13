@@ -1,18 +1,15 @@
 /* ============================================
-   GALERÍA DE USUARIO con ÁLBUMES y FILTROS
-   - Fotos: ImgBB
-   - Videos: Cloudinary
+   GALERÍA DE USUARIO con ÁLBUMES
+   - Fotos: ImgBB | Videos: Cloudinary
    - Guardar en JSONBin
-   - Filtros que afectan fotos Y videos
+   - Álbumes aislados (no se mezclan)
+   - Búsqueda global en TODOS
    ============================================ */
 
 (function () {
   "use strict";
 
-  // ✅ Tu API Key de ImgBB
   const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
-
-  // ✅ Cloudinary
   const CLOUDINARY_CLOUD_NAME = "sjjtdwr";
   const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
 
@@ -23,9 +20,7 @@
   let todosLosRecuerdos = [];
   let albumsDisponibles = [];
   let filtrosActivos = {
-    album: "todos",
-    fecha: "todas",
-    autor: "todos",
+    album: "sin-album",  // Por defecto mostramos "Sin álbum"
     busqueda: ""
   };
 
@@ -33,7 +28,6 @@
   function getUltimoAutor() {
     return localStorage.getItem("diario_autor_actual") || "Gael";
   }
-
   function setUltimoAutor(autor) {
     localStorage.setItem("diario_autor_actual", autor);
   }
@@ -41,20 +35,14 @@
   async function subirAImgBB(archivo) {
     const formData = new FormData();
     formData.append("image", archivo);
-
     const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
       method: "POST",
       body: formData
     });
-
     if (!res.ok) throw new Error("Error subiendo a ImgBB");
     const data = await res.json();
     if (!data.success) throw new Error(data.error?.message || "Error de ImgBB");
-
-    return {
-      url: data.data.url,
-      thumb: data.data.thumb?.url || data.data.url
-    };
+    return { url: data.data.url, thumb: data.data.thumb?.url || data.data.url };
   }
 
   async function subirACloudinary(archivo) {
@@ -65,11 +53,7 @@
     const resourceType = archivo.type.startsWith("video/") ? "video" : "image";
     const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
 
-    const res = await fetch(url, {
-      method: "POST",
-      body: formData
-    });
-
+    const res = await fetch(url, { method: "POST", body: formData });
     if (!res.ok) throw new Error("Error subiendo a Cloudinary");
     const data = await res.json();
 
@@ -77,22 +61,14 @@
     if (resourceType === "video") {
       thumb = data.secure_url.replace(/\.(mp4|mov|avi|webm)$/i, ".jpg");
     }
-
-    return {
-      url: data.secure_url,
-      thumb: thumb
-    };
+    return { url: data.secure_url, thumb: thumb };
   }
 
   async function guardarEnBin(tipo, item) {
     const res = await fetch(JSONBIN_URL + "/latest", {
-      headers: {
-        "X-Master-Key": JSONBIN_MASTER_KEY,
-        "X-Bin-Meta": "false"
-      }
+      headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
     });
     if (!res.ok) throw new Error("Error leyendo JSONBin");
-
     const data = await res.json();
     const nuevoContenido = {
       entradas: data.entradas || [],
@@ -101,31 +77,21 @@
       razones: data.razones || [],
       albums: data.albums || []
     };
-
     nuevoContenido[tipo].push(item);
-
     const putRes = await fetch(JSONBIN_URL, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Master-Key": JSONBIN_MASTER_KEY
-      },
+      headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
       body: JSON.stringify(nuevoContenido)
     });
-
     if (!putRes.ok) throw new Error("Error guardando en JSONBin");
     return true;
   }
 
   async function actualizarEnBin(tipo, item) {
     const res = await fetch(JSONBIN_URL + "/latest", {
-      headers: {
-        "X-Master-Key": JSONBIN_MASTER_KEY,
-        "X-Bin-Meta": "false"
-      }
+      headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
     });
     if (!res.ok) throw new Error("Error leyendo JSONBin");
-
     const data = await res.json();
     const nuevoContenido = {
       entradas: data.entradas || [],
@@ -134,30 +100,21 @@
       razones: data.razones || [],
       albums: data.albums || []
     };
-
     const lista = nuevoContenido[tipo];
     const idx = lista.findIndex(x => x.id === item.id);
     if (idx >= 0) lista[idx] = item;
-
     const putRes = await fetch(JSONBIN_URL, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Master-Key": JSONBIN_MASTER_KEY
-      },
+      headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
       body: JSON.stringify(nuevoContenido)
     });
-
     if (!putRes.ok) throw new Error("Error guardando en JSONBin");
     return true;
   }
 
   async function cargarDatos() {
     const res = await fetch(JSONBIN_URL + "/latest", {
-      headers: {
-        "X-Master-Key": JSONBIN_MASTER_KEY,
-        "X-Bin-Meta": "false"
-      }
+      headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
     });
     if (!res.ok) throw new Error("Error cargando");
     const data = await res.json();
@@ -169,9 +126,7 @@
   function formatearFecha(iso) {
     const fecha = new Date(iso);
     return fecha.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric"
+      day: "2-digit", month: "2-digit", year: "numeric"
     });
   }
 
@@ -180,44 +135,37 @@
     window.dispatchEvent(new Event("filtrosCambiados"));
   }
 
-  // ========== FILTRAR RECUERDOS (función central) ==========
+  // ========== LÓGICA DE FILTROS ==========
+  // Reglas:
+  //  1. Si hay búsqueda → busca en TODOS (incluyendo álbumes)
+  //  2. Si NO hay búsqueda → filtra por el álbum seleccionado
+  //  3. "sin-album" → solo recuerdos sin álbum
+  //  4. Álbum específico → solo recuerdos de ESE álbum
   function filtrarRecuerdos(lista, esVideo = null) {
     let filtrados = [...lista];
 
-    // Filtro por tipo (si se especifica)
+    // Filtrar por tipo si se especifica
     if (esVideo === true) {
       filtrados = filtrados.filter(r => r.tipo === "video");
     } else if (esVideo === false) {
       filtrados = filtrados.filter(r => r.tipo !== "video");
     }
 
-    // Filtro por ÁLBUM
+    // Búsqueda: tiene prioridad sobre el filtro de álbum
+    if (filtrosActivos.busqueda && filtrosActivos.busqueda.trim()) {
+      const q = filtrosActivos.busqueda.trim().toLowerCase();
+      filtrados = filtrados.filter(r =>
+        (r.titulo || "").toLowerCase().includes(q) ||
+        (r.descripcion || "").toLowerCase().includes(q)
+      );
+      return filtrados;
+    }
+
+    // Filtro por álbum
     if (filtrosActivos.album === "sin-album") {
       filtrados = filtrados.filter(r => !r.albumId);
-    } else if (filtrosActivos.album !== "todos") {
+    } else if (filtrosActivos.album && filtrosActivos.album !== "") {
       filtrados = filtrados.filter(r => r.albumId === filtrosActivos.album);
-    }
-
-    // Filtro por FECHA
-    if (filtrosActivos.fecha !== "todas") {
-      filtrados = filtrados.filter(r => {
-        const fecha = new Date(r.fecha);
-        const key = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
-        return key === filtrosActivos.fecha;
-      });
-    }
-
-    // Filtro por AUTOR
-    if (filtrosActivos.autor !== "todos") {
-      filtrados = filtrados.filter(r => r.autor === filtrosActivos.autor);
-    }
-
-    // Filtro por BÚSQUEDA
-    if (filtrosActivos.busqueda) {
-      filtrados = filtrados.filter(r =>
-        (r.titulo || "").toLowerCase().includes(filtrosActivos.busqueda) ||
-        (r.descripcion || "").toLowerCase().includes(filtrosActivos.busqueda)
-      );
     }
 
     return filtrados;
@@ -285,7 +233,7 @@
     });
 
     albumsDisponibles = albumsDisponibles.filter(a => a.id !== albumId);
-    if (filtrosActivos.album === albumId) filtrosActivos.album = "todos";
+    if (filtrosActivos.album === albumId) filtrosActivos.album = "sin-album";
     renderizarFiltros();
     renderizarRecuerdos();
     if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
@@ -297,8 +245,8 @@
     const album = albumsDisponibles.find(a => a.id === albumId);
     if (!album) return;
 
-    const yaEnAlbum = album.recuerdos || [];
-    const disponibles = todosLosRecuerdos.filter(r => !yaEnAlbum.includes(r.id) && r.albumId !== albumId);
+    // Solo mostrar los que NO están en ningún álbum
+    const disponibles = todosLosRecuerdos.filter(r => !r.albumId);
 
     const modal = document.createElement("div");
     modal.className = "subida-modal";
@@ -306,12 +254,12 @@
       <div class="subida-papel" style="max-width: 700px;">
         <button class="subida-cerrar" aria-label="Cerrar">✕</button>
         <h2 class="subida-titulo">${album.emoji} ${album.nombre}</h2>
-        <p class="subida-sub">Seleccioná los recuerdos que querés agregar al álbum.</p>
+        <p class="subida-sub">Seleccioná los recuerdos sin álbum que querés agregar.</p>
 
         <div style="max-height: 400px; overflow-y: auto; padding: 10px 0;">
           ${disponibles.length === 0 ? `
             <p style="text-align:center;color:#a08bb8;font-style:italic;padding:40px;">
-              No hay recuerdos disponibles para agregar.
+              No hay recuerdos sin álbum disponibles.
             </p>
           ` : `
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
@@ -325,12 +273,8 @@
                   border: 3px solid transparent;
                   transition: all 0.3s ease;
                 ">
-                  ${r.tipo === "video" 
-                    ? `<img src="${r.thumb || ''}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">`
-                    : `<img src="${r.thumb || r.url}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">`
-                  }
+                  <img src="${r.thumb || r.url}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">
                   <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:6px 8px;color:#fff;font-size:0.7rem;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.titulo}</div>
-                  ${r.albumId ? `<div style="position:absolute;top:6px;left:6px;background:#a874e8;color:#fff;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:50px;">Ya en otro</div>` : ""}
                   <div class="check-overlay" style="
                     position: absolute;
                     top: 8px;
@@ -390,9 +334,7 @@
 
     modal.querySelector(".subida-cerrar").addEventListener("click", cerrar);
     modal.querySelector("#btnCancelarAlbum").addEventListener("click", cerrar);
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) cerrar();
-    });
+    modal.addEventListener("click", (e) => { if (e.target === modal) cerrar(); });
 
     modal.querySelector("#btnGuardarAlbum").addEventListener("click", async () => {
       if (seleccionados.size === 0) {
@@ -426,68 +368,35 @@
     const contenedor = document.getElementById("recuerdosFiltros");
     if (!contenedor) return;
 
-    const meses = new Set();
-    todosLosRecuerdos.forEach(r => {
-      const fecha = new Date(r.fecha);
-      const key = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
-      meses.add(key);
-    });
-    const mesesOrdenados = [...meses].sort().reverse();
-
     const albumActual = albumsDisponibles.find(a => a.id === filtrosActivos.album);
 
     contenedor.innerHTML = `
       <div class="filtros-barra">
-        <div class="filtro-grupo">
+        <div class="filtro-grupo" style="flex: 2; min-width: 250px;">
           <label class="filtro-label">📁 Álbum</label>
           <select id="filtroAlbum" class="filtro-select">
-            <option value="todos">Todos los álbumes</option>
-            <option value="sin-album">Sin álbum</option>
+            <option value="sin-album" ${filtrosActivos.album === "sin-album" ? 'selected' : ''}>📷 Sin álbum</option>
             ${albumsDisponibles.map(a => `
               <option value="${a.id}" ${filtrosActivos.album === a.id ? 'selected' : ''}>${a.emoji} ${a.nombre}</option>
             `).join("")}
           </select>
         </div>
 
-        <div class="filtro-grupo">
-          <label class="filtro-label">📅 Fecha</label>
-          <select id="filtroFecha" class="filtro-select">
-            <option value="todas">Todas las fechas</option>
-            ${mesesOrdenados.map(m => {
-              const [year, month] = m.split("-");
-              const nombreMes = new Date(year, month - 1).toLocaleDateString("es-ES", {
-                month: "long", year: "numeric"
-              });
-              return `<option value="${m}" ${filtrosActivos.fecha === m ? 'selected' : ''}>${nombreMes}</option>`;
-            }).join("")}
-          </select>
-        </div>
-
-        <div class="filtro-grupo">
-          <label class="filtro-label">👤 Autor</label>
-          <select id="filtroAutor" class="filtro-select">
-            <option value="todos" ${filtrosActivos.autor === "todos" ? 'selected' : ''}>Todos</option>
-            <option value="Gael" ${filtrosActivos.autor === "Gael" ? 'selected' : ''}>✎ Gael</option>
-            <option value="Mary" ${filtrosActivos.autor === "Mary" ? 'selected' : ''}>✿ Mary</option>
-          </select>
-        </div>
-
-        <div class="filtro-grupo filtro-busqueda">
-          <label class="filtro-label">🔍 Buscar</label>
+        <div class="filtro-grupo filtro-busqueda" style="flex: 2; min-width: 250px;">
+          <label class="filtro-label">🔍 Buscar (en todos)</label>
           <input type="text" id="filtroBusqueda" class="filtro-input" value="${filtrosActivos.busqueda}" placeholder="Buscar por título o descripción...">
         </div>
 
         <button class="btn-nuevo-album" id="btnNuevoAlbum">➕ Nuevo álbum</button>
         ${albumActual ? `
-          <button class="btn-nuevo-album" id="btnAgregarAAlbum" style="background: linear-gradient(135deg, #f28ca6, #a874e8);">📸 Agregar al álbum</button>
+          <button class="btn-nuevo-album" id="btnAgregarAAlbum" style="background: linear-gradient(135deg, #f28ca6, #a874e8);">📸 Agregar recuerdos</button>
           <button class="btn-nuevo-album" id="btnEliminarAlbum" style="background: linear-gradient(135deg, #d96666, #e85a8a);">🗑️ Eliminar álbum</button>
         ` : ""}
       </div>
 
       ${albumsDisponibles.length > 0 ? `
         <div class="albums-chips">
-          <button class="album-chip ${filtrosActivos.album === "todos" ? "activo" : ""}" data-album="todos">Todos</button>
-          <button class="album-chip ${filtrosActivos.album === "sin-album" ? "activo" : ""}" data-album="sin-album">Sin álbum</button>
+          <button class="album-chip ${filtrosActivos.album === "sin-album" ? "activo" : ""}" data-album="sin-album">📷 Sin álbum</button>
           ${albumsDisponibles.map(a => `
             <button class="album-chip ${filtrosActivos.album === a.id ? "activo" : ""}" data-album="${a.id}">
               ${a.emoji} ${a.nombre}
@@ -500,20 +409,7 @@
     // Eventos
     document.getElementById("filtroAlbum").addEventListener("change", (e) => {
       filtrosActivos.album = e.target.value;
-      renderizarRecuerdos();
-      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
-      sincronizarFiltrosGlobales();
-    });
-
-    document.getElementById("filtroFecha").addEventListener("change", (e) => {
-      filtrosActivos.fecha = e.target.value;
-      renderizarRecuerdos();
-      if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
-      sincronizarFiltrosGlobales();
-    });
-
-    document.getElementById("filtroAutor").addEventListener("change", (e) => {
-      filtrosActivos.autor = e.target.value;
+      renderizarFiltros();
       renderizarRecuerdos();
       if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
       sincronizarFiltrosGlobales();
@@ -555,26 +451,21 @@
     const contenedorOriginal = document.getElementById("galeria");
     if (!contenedor) return;
 
-    // Usar la función central de filtrado
-    let filtrados = filtrarRecuerdos(todosLosRecuerdos, false); // solo fotos
-
-    // Ordenar
+    let filtrados = filtrarRecuerdos(todosLosRecuerdos, false);
     filtrados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
-    // Contador
     const contador = document.getElementById("contadorRecuerdos");
     if (contador) {
       contador.textContent = `${filtrados.length} ${filtrados.length === 1 ? 'recuerdo' : 'recuerdos'}`;
     }
 
-    // Los recuerdos originales (hardcodeados) solo se ven si NO hay filtros activos
+    // Los originales solo se muestran si estamos en "sin-album" y sin búsqueda
+    const mostrarOriginales = 
+      filtrosActivos.album === "sin-album" && 
+      (!filtrosActivos.busqueda || !filtrosActivos.busqueda.trim());
+
     if (contenedorOriginal) {
-      const sinFiltros = 
-        filtrosActivos.album === "todos" && 
-        filtrosActivos.fecha === "todas" && 
-        filtrosActivos.autor === "todos" && 
-        !filtrosActivos.busqueda;
-      contenedorOriginal.style.display = sinFiltros ? "grid" : "none";
+      contenedorOriginal.style.display = mostrarOriginales ? "grid" : "none";
     }
 
     if (filtrados.length === 0) {
@@ -610,24 +501,13 @@
 
     const cerrar = () => {
       lb.style.opacity = "0";
-      setTimeout(() => {
-        lb.remove();
-        document.body.style.overflow = "";
-      }, 300);
+      setTimeout(() => { lb.remove(); document.body.style.overflow = ""; }, 300);
     };
 
-    lb.querySelector(".lightbox-cerrar").addEventListener("click", (e) => {
-      e.stopPropagation();
-      cerrar();
-    });
-    lb.addEventListener("click", (e) => {
-      if (e.target === lb) cerrar();
-    });
+    lb.querySelector(".lightbox-cerrar").addEventListener("click", (e) => { e.stopPropagation(); cerrar(); });
+    lb.addEventListener("click", (e) => { if (e.target === lb) cerrar(); });
     document.addEventListener("keydown", function onKey(e) {
-      if (e.key === "Escape") {
-        cerrar();
-        document.removeEventListener("keydown", onKey);
-      }
+      if (e.key === "Escape") { cerrar(); document.removeEventListener("keydown", onKey); }
     });
   };
 
@@ -729,9 +609,7 @@
 
     modal.querySelector(".subida-cerrar").addEventListener("click", cerrar);
     modal.querySelector("#btnCancelarSubida").addEventListener("click", cerrar);
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) cerrar();
-    });
+    modal.addEventListener("click", (e) => { if (e.target === modal) cerrar(); });
 
     modal.querySelector("#btnConfirmarSubida").addEventListener("click", async () => {
       const archivo = document.getElementById("archivoSubida").files[0];
@@ -788,9 +666,7 @@
           cerrar();
           renderizarFiltros();
           renderizarRecuerdos();
-          if (window.renderizarBurbujasVideos) {
-            window.renderizarBurbujasVideos();
-          }
+          if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
         }, 1000);
 
       } catch (err) {
