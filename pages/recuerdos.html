@@ -25,8 +25,18 @@
     /* ============================================
        VIDEOS EN BURBUJAS
        ============================================ */
-    .sec-videos-nueva { max-width: 1300px; margin: 100px auto 140px; padding: 0 24px; position: relative; }
-    .videos-titulo { text-align: center; margin-bottom: 80px; position: relative; z-index: 2; }
+    .sec-videos-nueva {
+      max-width: 1300px;
+      margin: 100px auto 140px;
+      padding: 0 24px;
+      position: relative;
+    }
+    .videos-titulo {
+      text-align: center;
+      margin-bottom: 80px;
+      position: relative;
+      z-index: 2;
+    }
     .videos-titulo .kicker {
       display: inline-block;
       font-family: 'Poppins', sans-serif;
@@ -42,8 +52,13 @@
     }
     .videos-titulo .kicker::before,
     .videos-titulo .kicker::after {
-      content: ""; position: absolute; top: 50%; width: 22px; height: 1px;
-      background: #d4a373; opacity: 0.5;
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 22px;
+      height: 1px;
+      background: #d4a373;
+      opacity: 0.5;
     }
     .videos-titulo .kicker::before { left: -14px; }
     .videos-titulo .kicker::after { right: -14px; }
@@ -66,7 +81,14 @@
       margin: 0 auto;
       line-height: 1.6;
     }
-    .burbujas-escenario { display: grid; grid-template-columns: 1fr; gap: 90px; position: relative; padding: 40px 0; }
+
+    .burbujas-escenario {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 90px;
+      position: relative;
+      padding: 40px 0;
+    }
     .burbuja-video {
       position: relative;
       width: 100%;
@@ -134,6 +156,7 @@
       filter: blur(0) brightness(1) saturate(1);
       transform: scale(1);
     }
+
     .burbuja-portada {
       position: absolute;
       inset: 0;
@@ -160,7 +183,14 @@
       align-items: center;
       gap: 24px;
     }
-    .burbuja-simbolo { position: relative; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
+    .burbuja-simbolo {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     .anillo-b {
       position: absolute;
       border-radius: 50%;
@@ -200,7 +230,9 @@
     .ripple-absorcion { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
     .ripple-absorcion::before,
     .ripple-absorcion::after {
-      content: ""; position: absolute; top: 50%; left: 50%;
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0);
       width: 100%; height: 100%;
       border-radius: 50% / 45%;
@@ -226,7 +258,7 @@
     .burbuja-video.revelando .flash-revelado { animation: flashAnimB 1s ease-out; }
     @keyframes flashAnimB { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
 
-    /* MODAL */
+    /* MODAL VIDEOS */
     .video-modal {
       position: fixed;
       inset: 0;
@@ -277,10 +309,10 @@
     }
     .video-modal-cerrar:hover { background: #f28ca6; color: #0a050a; transform: rotate(90deg) scale(1.05); }
 
-    /* GALERÍA - Diseño tarjeta */
+    /* GALERÍA */
     .galeria {
       max-width: 1200px;
-      margin: 0 auto 60px;
+      margin: 0 auto 40px;
       padding: 0 24px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -331,7 +363,7 @@
       font-weight: 300;
     }
 
-    /* Botones */
+    /* BOTONES */
     .btn-agregar-galeria {
       display: inline-flex;
       align-items: center;
@@ -351,7 +383,7 @@
     }
     .btn-agregar-galeria:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 34px rgba(242, 140, 166, 0.6); }
 
-    /* Filtros */
+    /* FILTROS */
     .filtros-barra {
       display: flex;
       flex-wrap: wrap;
@@ -364,8 +396,8 @@
       border: 1px solid rgba(242, 140, 166, 0.15);
       margin-bottom: 20px;
     }
-    .filtro-grupo { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
-    .filtro-busqueda { flex: 2; min-width: 220px; }
+    .filtro-grupo { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 180px; }
+    .filtro-busqueda { flex: 2; min-width: 240px; }
     .filtro-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8a7aa8; }
     .filtro-select, .filtro-input {
       padding: 10px 14px;
@@ -394,6 +426,7 @@
       height: fit-content;
     }
     .btn-nuevo-album:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(168, 116, 232, 0.4); }
+
     .albums-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; padding: 0 4px; }
     .album-chip {
       padding: 8px 18px;
@@ -408,9 +441,9 @@
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .album-chip:hover { border-color: #a874e8; transform: translateY(-2px); }
-    .album-chip.activo { background: linear-gradient(135deg, #a874e8, #d4a373); color: #fff; border-color: transparent; }
+    .album-chip.activo { background: linear-gradient(135deg, #a874e8, #d4a373); color: #fff; border-color: transparent; box-shadow: 0 8px 20px rgba(168, 116, 232, 0.35); }
 
-    /* Lightbox */
+    /* LIGHTBOX */
     .lightbox-galeria {
       position: fixed;
       inset: 0;
@@ -446,7 +479,7 @@
     }
     .lightbox-cerrar:hover { background: rgba(255, 255, 255, 0.3); transform: rotate(90deg); }
 
-    /* Modal subida */
+    /* MODAL SUBIDA */
     .subida-modal {
       position: fixed;
       inset: 0;
@@ -592,10 +625,7 @@
   <!-- Filtros -->
   <section id="recuerdosFiltros" style="max-width: 1200px; margin: 0 auto 30px; padding: 0 24px;"></section>
 
-  <!-- Galería: recuerdos subidos -->
-  <section class="galeria" id="galeriaUsuarioRecuerdos"></section>
-
-  <!-- Galería: recuerdos originales -->
+  <!-- Galería: recuerdos originales (solo se ven en "Sin álbum" sin búsqueda) -->
   <section class="galeria" id="galeria">
     <figure class="galeria-item reveal">
       <img src="../assets/images/nosotros/recuerdos/recuerdo1.jpg" alt="Recuerdo 1" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect fill=%22%23f7c7d4%22 width=%22600%22 height=%22400%22/><text x=%22300%22 y=%22210%22 font-size=%2260%22 text-anchor=%22middle%22>📸</text></svg>'">
@@ -641,6 +671,9 @@
     </figure>
   </section>
 
+  <!-- Galería: recuerdos subidos (fotos) -->
+  <section class="galeria" id="galeriaUsuarioRecuerdos"></section>
+
   <!-- Videos en burbujas -->
   <section class="sec-videos-nueva">
     <div class="videos-titulo">
@@ -667,198 +700,187 @@
   <script src="../js/pwa.js"></script>
   <script src="../js/galeria-usuario.js"></script>
 
-  <!-- SCRIPT DE BURBUJAS -->
-<script>
-  (function () {
-    "use strict";
+  <!-- ============================================
+       SCRIPT DE BURBUJAS DE VIDEO
+       ============================================ -->
+  <script>
+    (function () {
+      "use strict";
 
-    const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
-    const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
-    const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
+      const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
+      const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
+      const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
-    function crearMiniBurbujas(contenedor) {
-      for (let i = 0; i < 6; i++) {
-        const b = document.createElement("div");
-        b.className = "mini-b";
-        const size = Math.random() * 30 + 10;
-        b.style.cssText = `position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(242,140,166,0.15) 40%, transparent 70%);border:1px solid rgba(242,140,166,0.25);box-shadow:inset 0 0 15px rgba(242,140,166,0.3);animation:flotarMini 5s ease-in-out infinite;opacity:0.7;`;
-        b.style.width = size + "px";
-        b.style.height = size + "px";
-        const angulo = (Math.PI * 2 * i) / 6 + Math.random() * 0.5;
-        const radio = 52 + Math.random() * 15;
-        b.style.left = (50 + Math.cos(angulo) * radio) + "%";
-        b.style.top = (50 + Math.sin(angulo) * (radio * 0.7)) + "%";
-        b.style.transform = "translate(-50%, -50%)";
-        b.style.animationDelay = (Math.random() * 4) + "s";
-        contenedor.appendChild(b);
+      function crearMiniBurbujas(contenedor) {
+        for (let i = 0; i < 6; i++) {
+          const b = document.createElement("div");
+          b.className = "mini-b";
+          const size = Math.random() * 30 + 10;
+          b.style.cssText = `position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(242,140,166,0.15) 40%, transparent 70%);border:1px solid rgba(242,140,166,0.25);box-shadow:inset 0 0 15px rgba(242,140,166,0.3);animation:flotarMini 5s ease-in-out infinite;opacity:0.7;`;
+          b.style.width = size + "px";
+          b.style.height = size + "px";
+          const angulo = (Math.PI * 2 * i) / 6 + Math.random() * 0.5;
+          const radio = 52 + Math.random() * 15;
+          b.style.left = (50 + Math.cos(angulo) * radio) + "%";
+          b.style.top = (50 + Math.sin(angulo) * (radio * 0.7)) + "%";
+          b.style.transform = "translate(-50%, -50%)";
+          b.style.animationDelay = (Math.random() * 4) + "s";
+          contenedor.appendChild(b);
+        }
       }
-    }
 
-    function explosion(canvas) {
-      const ctx = canvas.getContext("2d");
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * devicePixelRatio;
-      canvas.height = rect.height * devicePixelRatio;
-      ctx.scale(devicePixelRatio, devicePixelRatio);
-      const w = rect.width, h = rect.height;
-      const particles = [];
-      for (let i = 0; i < 70; i++) {
-        const angle = (Math.PI * 2 * i) / 70 + Math.random() * 0.4;
-        const speed = Math.random() * 6 + 3;
-        particles.push({
-          x: w/2, y: h/2,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          r: Math.random() * 3.5 + 1,
-          vida: 1,
-          hue: Math.random() < 0.6 ? "242, 140, 166" : "255, 255, 255"
-        });
-      }
-      const start = performance.now();
-      function animate(now) {
-        const t = (now - start) / 1500;
-        ctx.clearRect(0, 0, w, h);
-        if (t >= 1) { canvas.style.opacity = "0"; return; }
-        particles.forEach(p => {
-          p.x += p.vx; p.y += p.vy;
-          p.vx *= 0.95; p.vy *= 0.95;
-          p.vida = 1 - t;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * p.vida, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${p.hue}, ${p.vida})`;
-          ctx.shadowBlur = 18;
-          ctx.shadowColor = `rgba(${p.hue}, ${p.vida})`;
-          ctx.fill();
-        });
+      function explosion(canvas) {
+        const ctx = canvas.getContext("2d");
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * devicePixelRatio;
+        canvas.height = rect.height * devicePixelRatio;
+        ctx.scale(devicePixelRatio, devicePixelRatio);
+        const w = rect.width, h = rect.height;
+        const particles = [];
+        for (let i = 0; i < 70; i++) {
+          const angle = (Math.PI * 2 * i) / 70 + Math.random() * 0.4;
+          const speed = Math.random() * 6 + 3;
+          particles.push({
+            x: w / 2, y: h / 2,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            r: Math.random() * 3.5 + 1,
+            vida: 1,
+            hue: Math.random() < 0.6 ? "242, 140, 166" : "255, 255, 255"
+          });
+        }
+        const start = performance.now();
+        function animate(now) {
+          const t = (now - start) / 1500;
+          ctx.clearRect(0, 0, w, h);
+          if (t >= 1) { canvas.style.opacity = "0"; return; }
+          particles.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            p.vx *= 0.95; p.vy *= 0.95;
+            p.vida = 1 - t;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r * p.vida, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${p.hue}, ${p.vida})`;
+            ctx.shadowBlur = 18;
+            ctx.shadowColor = `rgba(${p.hue}, ${p.vida})`;
+            ctx.fill();
+          });
+          requestAnimationFrame(animate);
+        }
         requestAnimationFrame(animate);
       }
-      requestAnimationFrame(animate);
-    }
 
-    const modal = document.getElementById("videoModal");
-    const modalInner = document.getElementById("videoModalInner");
-    const modalCerrar = document.getElementById("videoModalCerrar");
-    let burbujaActiva = null;
-    let playerActivo = null;
+      const modal = document.getElementById("videoModal");
+      const modalInner = document.getElementById("videoModalInner");
+      const modalCerrar = document.getElementById("videoModalCerrar");
+      let burbujaActiva = null;
+      let playerActivo = null;
 
-    function abrirModal(item, burbuja) {
-      burbujaActiva = burbuja;
-      modalInner.innerHTML = "";
-      if (item.tipo === "video") {
-        playerActivo = document.createElement("video");
-        playerActivo.src = item.url;
-        playerActivo.controls = true;
-        playerActivo.playsInline = true;
-      } else {
-        playerActivo = document.createElement("img");
-        playerActivo.src = item.url;
-      }
-      modalInner.appendChild(playerActivo);
-      modal.classList.add("activo");
-      document.body.style.overflow = "hidden";
-      setTimeout(() => {
-        if (item.tipo === "video" && playerActivo.play) playerActivo.play().catch(() => {});
-      }, 500);
-    }
-
-    function cerrarModal() {
-      if (!modal.classList.contains("activo")) return;
-      if (playerActivo && playerActivo.pause) playerActivo.pause();
-      if (burbujaActiva) {
+      function abrirModal(item, burbuja) {
+        burbujaActiva = burbuja;
+        modalInner.innerHTML = "";
+        if (item.tipo === "video") {
+          playerActivo = document.createElement("video");
+          playerActivo.src = item.url;
+          playerActivo.controls = true;
+          playerActivo.playsInline = true;
+        } else {
+          playerActivo = document.createElement("img");
+          playerActivo.src = item.url;
+        }
+        modalInner.appendChild(playerActivo);
+        modal.classList.add("activo");
+        document.body.style.overflow = "hidden";
         setTimeout(() => {
-          burbujaActiva.classList.add("absorbiendo");
-          burbujaActiva.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 400);
-        setTimeout(() => burbujaActiva.classList.remove("absorbiendo"), 1800);
+          if (item.tipo === "video" && playerActivo.play) playerActivo.play().catch(() => {});
+        }, 500);
       }
-      setTimeout(() => {
-        modal.classList.remove("activo");
-        document.body.style.overflow = "";
-        setTimeout(() => { modalInner.innerHTML = ""; playerActivo = null; }, 600);
-      }, 900);
-      burbujaActiva = null;
-    }
 
-    modalCerrar.addEventListener("click", cerrarModal);
-    modal.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("activo")) cerrarModal();
-    });
+      function cerrarModal() {
+        if (!modal.classList.contains("activo")) return;
+        if (playerActivo && playerActivo.pause) playerActivo.pause();
+        if (burbujaActiva) {
+          setTimeout(() => {
+            burbujaActiva.classList.add("absorbiendo");
+            burbujaActiva.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 400);
+          setTimeout(() => burbujaActiva.classList.remove("absorbiendo"), 1800);
+        }
+        setTimeout(() => {
+          modal.classList.remove("activo");
+          document.body.style.overflow = "";
+          setTimeout(() => { modalInner.innerHTML = ""; playerActivo = null; }, 600);
+        }, 900);
+        burbujaActiva = null;
+      }
 
-    async function renderizarBurbujas() {
-      const escenario = document.getElementById("burbujasEscenario");
-      if (!escenario) return;
+      modalCerrar.addEventListener("click", cerrarModal);
+      modal.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("activo")) cerrarModal();
+      });
 
-      try {
-        const res = await fetch(JSONBIN_URL + "/latest", {
-          headers: {
-            "X-Master-Key": JSONBIN_MASTER_KEY,
-            "X-Bin-Meta": "false"
-          }
-        });
-        if (!res.ok) throw new Error("Error");
-        const data = await res.json();
-        let videos = (data.recuerdos || []).filter(r => r.tipo === "video");
+      async function renderizarBurbujas() {
+        const escenario = document.getElementById("burbujasEscenario");
+        if (!escenario) return;
 
-        // Aplicar los MISMOS filtros que la galería
-        if (window.galeriaUsuario && window.galeriaUsuario.getFiltros) {
-          const filtros = window.galeriaUsuario.getFiltros();
-          
-          if (filtros.album === "sin-album") {
-            videos = videos.filter(v => !v.albumId);
-          } else if (filtros.album !== "todos") {
-            videos = videos.filter(v => v.albumId === filtros.album);
-          }
-          
-          if (filtros.fecha !== "todas") {
-            videos = videos.filter(v => {
-              const fecha = new Date(v.fecha);
-              const key = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
-              return key === filtros.fecha;
-            });
-          }
-          
-          if (filtros.autor !== "todos") {
-            videos = videos.filter(v => v.autor === filtros.autor);
-          }
-          
-          if (filtros.busqueda) {
+        try {
+          const res = await fetch(JSONBIN_URL + "/latest", {
+            headers: {
+              "X-Master-Key": JSONBIN_MASTER_KEY,
+              "X-Bin-Meta": "false"
+            }
+          });
+          if (!res.ok) throw new Error("Error cargando");
+          const data = await res.json();
+
+          // Videos subidos (con Cloudinary)
+          let videos = (data.recuerdos || []).filter(r => r.tipo === "video");
+
+          // Aplicar filtros
+          const filtros = window.galeriaUsuario ? window.galeriaUsuario.getFiltros() : { album: "sin-album", busqueda: "" };
+
+          // Si hay búsqueda, buscar en TODOS
+          if (filtros.busqueda && filtros.busqueda.trim()) {
+            const q = filtros.busqueda.trim().toLowerCase();
             videos = videos.filter(v =>
-              (v.titulo || "").toLowerCase().includes(filtros.busqueda) ||
-              (v.descripcion || "").toLowerCase().includes(filtros.busqueda)
+              (v.titulo || "").toLowerCase().includes(q) ||
+              (v.descripcion || "").toLowerCase().includes(q)
             );
+          } else {
+            // Filtrar por álbum
+            if (filtros.album === "sin-album") {
+              videos = videos.filter(v => !v.albumId);
+            } else if (filtros.album && filtros.album !== "") {
+              videos = videos.filter(v => v.albumId === filtros.album);
+            }
           }
-        }
 
-        // VIDEOS ORIGINALES: solo se muestran si NO hay filtros activos
-        const filtrosActuales = window.galeriaUsuario ? window.galeriaUsuario.getFiltros() : { album: "todos", fecha: "todas", autor: "todos", busqueda: "" };
-        const sinFiltros = 
-          filtrosActuales.album === "todos" && 
-          filtrosActuales.fecha === "todas" && 
-          filtrosActuales.autor === "todos" && 
-          !filtrosActuales.busqueda;
+          // Videos ORIGINALES: solo cuando estamos en "sin-album" y sin búsqueda
+          const sinFiltros = 
+            filtros.album === "sin-album" && 
+            (!filtros.busqueda || !filtros.busqueda.trim());
 
-        if (sinFiltros) {
-          const videosOriginales = [
-            { id: "orig1", titulo: "Recuerdo 1", url: "../assets/videos/recuerdo.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
-            { id: "orig2", titulo: "Recuerdo 2", url: "../assets/videos/recuerdo2.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
-            { id: "orig3", titulo: "Recuerdo 3", url: "../assets/videos/recuerdo3.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true }
-          ];
-          videos = [...videos, ...videosOriginales];
-        }
+          if (sinFiltros) {
+            const videosOriginales = [
+              { id: "orig1", titulo: "Recuerdo 1", url: "../assets/videos/recuerdo.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
+              { id: "orig2", titulo: "Recuerdo 2", url: "../assets/videos/recuerdo2.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
+              { id: "orig3", titulo: "Recuerdo 3", url: "../assets/videos/recuerdo3.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true }
+            ];
+            videos = [...videos, ...videosOriginales];
+          }
 
-        if (videos.length === 0) {
-          escenario.innerHTML = `
-            <div style="text-align:center;padding:60px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;">
-              <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">No hay videos con estos filtros</strong>
-              Probá con otros filtros o subí un video 💜
-            </div>
-          `;
-          return;
-        }
+          if (videos.length === 0) {
+            escenario.innerHTML = `
+              <div style="text-align:center;padding:60px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;">
+                <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">No hay videos con estos filtros</strong>
+                Probá con otros filtros o subí un video 💜
+              </div>
+            `;
+            return;
+          }
 
-        escenario.innerHTML = videos.map((video) => {
-          return `
+          escenario.innerHTML = videos.map((video) => `
             <div class="burbuja-video" data-video data-id="${video.id}">
               <div class="mini-burbujas"></div>
               <div class="burbuja-inner">
@@ -881,144 +903,7 @@
               <canvas class="explosion-canvas"></canvas>
               <div class="flash-revelado"></div>
             </div>
-          `;
-        }).join("");
-
-        const burbujas = escenario.querySelectorAll("[data-video]");
-        burbujas.forEach(burbuja => {
-          const miniCont = burbuja.querySelector(".mini-burbujas");
-          if (miniCont) crearMiniBurbujas(miniCont);
-          const video = burbuja.querySelector("video");
-          const explosionCanvas = burbuja.querySelector(".explosion-canvas");
-          const id = burbuja.dataset.id;
-          const item = videos.find(v => v.id === id);
-          if (!video || !item) return;
-
-          video.removeAttribute("controls");
-          video.pause();
-
-          burbuja.addEventListener("click", () => {
-            if (burbuja.classList.contains("revelando") || burbuja.classList.contains("revelado")) {
-              abrirModal(item, burbuja);
-              return;
-            }
-            burbuja.classList.add("revelando");
-            if (explosionCanvas) explosion(explosionCanvas);
-            video.muted = true;
-            video.play().catch(() => {});
-            setTimeout(() => {
-              burbuja.classList.remove("revelando");
-              burbuja.classList.add("revelado");
-              video.pause();
-              video.currentTime = 0;
-              video.muted = false;
-              abrirModal(item, burbuja);
-            }, 900);
-          });
-        });
-
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
-        }, { threshold: 0.15 });
-        burbujas.forEach(b => io.observe(b));
-
-      } catch (err) {
-        console.error("Error:", err);
-      }
-    }
-
-    window.renderizarBurbujasVideos = renderizarBurbujas;
-
-    window.addEventListener("filtrosCambiados", () => {
-      renderizarBurbujas();
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(() => renderizarBurbujas(), 1200);
-    });
-  })();
-</script>
-
-          // Aplicar filtros
-          const filtros = window.__filtrosRecuerdos || {};
-          if (filtros.album && filtros.album !== "todos" && filtros.album !== "sin-album") {
-            videos = videos.filter(v => v.albumId === filtros.album);
-          } else if (filtros.album === "sin-album") {
-            videos = videos.filter(v => !v.albumId);
-          }
-          if (filtros.fecha && filtros.fecha !== "todas") {
-            videos = videos.filter(v => {
-              const fecha = new Date(v.fecha);
-              const key = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0");
-              return key === filtros.fecha;
-            });
-          }
-          if (filtros.autor && filtros.autor !== "todos") {
-            videos = videos.filter(v => v.autor === filtros.autor);
-          }
-          if (filtros.busqueda) {
-            videos = videos.filter(v =>
-              (v.titulo || "").toLowerCase().includes(filtros.busqueda) ||
-              (v.descripcion || "").toLowerCase().includes(filtros.busqueda)
-            );
-          }
-
-          // VIDEOS ORIGINALES (hardcodeados)
-          const videosOriginales = [
-            { id: "orig1", titulo: "Recuerdo 1", url: "../assets/videos/recuerdo.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
-            { id: "orig2", titulo: "Recuerdo 2", url: "../assets/videos/recuerdo2.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true },
-            { id: "orig3", titulo: "Recuerdo 3", url: "../assets/videos/recuerdo3.mp4", tipo: "video", fecha: "2026-09-11T00:00:00.000Z", autor: "Gael", esOriginal: true }
-          ];
-
-          // Si no hay filtros aplicados, agregar los originales
-          let todos = [...videos];
-          if (filtros.album === "todos" || !filtros.album) {
-            // Agregar originales al final si no hay filtros de álbum
-            if (!filtros.fecha || filtros.fecha === "todas") {
-              if (!filtros.autor || filtros.autor === "todos" || filtros.autor === "Gael") {
-                if (!filtros.busqueda) {
-                  todos = [...todos, ...videosOriginales];
-                }
-              }
-            }
-          }
-
-          if (todos.length === 0) {
-            escenario.innerHTML = `
-              <div style="text-align:center;padding:60px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;">
-                <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">No hay videos con estos filtros</strong>
-                Probá con otros filtros o subí un video 💜
-              </div>
-            `;
-            return;
-          }
-
-          escenario.innerHTML = todos.map((video) => {
-            return `
-              <div class="burbuja-video" data-video data-id="${video.id}">
-                <div class="mini-burbujas"></div>
-                <div class="burbuja-inner">
-                  <video preload="metadata" playsinline muted>
-                    <source src="${video.url}" type="video/mp4">
-                  </video>
-                  <div class="burbuja-portada">
-                    <div class="burbuja-contenido">
-                      <div class="burbuja-simbolo">
-                        <div class="anillo-b"></div>
-                        <div class="anillo-b"></div>
-                        <div class="anillo-b"></div>
-                        <div class="nucleo-b"></div>
-                      </div>
-                      <div class="burbuja-texto">Toca para revelar</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="ripple-absorcion"></div>
-                <canvas class="explosion-canvas"></canvas>
-                <div class="flash-revelado"></div>
-              </div>
-            `;
-          }).join("");
+          `).join("");
 
           const burbujas = escenario.querySelectorAll("[data-video]");
           burbujas.forEach(burbuja => {
@@ -1027,7 +912,7 @@
             const video = burbuja.querySelector("video");
             const explosionCanvas = burbuja.querySelector(".explosion-canvas");
             const id = burbuja.dataset.id;
-            const item = todos.find(v => v.id === id);
+            const item = videos.find(v => v.id === id);
             if (!video || !item) return;
 
             video.removeAttribute("controls");
@@ -1070,7 +955,7 @@
       });
 
       document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(() => renderizarBurbujas(), 1000);
+        setTimeout(() => renderizarBurbujas(), 1200);
       });
     })();
   </script>
