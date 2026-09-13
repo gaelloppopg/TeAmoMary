@@ -1,16 +1,19 @@
 /* ============================================
    GALERÍA DE USUARIO con ÁLBUMES y FILTROS
-   - Subir fotos/videos a ImgBB
+   - Fotos: ImgBB
+   - Videos: Cloudinary
    - Guardar en JSONBin
-   - Filtrar por álbum, fecha, autor, búsqueda
-   - Afecta fotos Y videos (burbujas)
    ============================================ */
 
 (function () {
   "use strict";
 
-  // ✅ Tu API Key de ImgBB
+  // ✅ Tu API Key de ImgBB (fotos)
   const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
+
+  // ⚠️ REEMPLAZÁ ESTOS DATOS CON LOS DE TU CUENTA CLOUDINARY (videos)
+  const CLOUDINARY_CLOUD_NAME = "sjjtdwr";
+  const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
 
   const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
   const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
@@ -26,13 +29,13 @@
   };
 
   // ========== UTILIDADES ==========
-  function detectarAutor() {
-    let autor = localStorage.getItem("diario_autor_actual");
-    if (!autor) {
-      autor = confirm("¿Sos Gael? (Cancelar = Mary)") ? "Gael" : "Mary";
-      localStorage.setItem("diario_autor_actual", autor);
-    }
-    return autor;
+  // Ya no pregunta autor - se elige en el formulario
+  function getUltimoAutor() {
+    return localStorage.getItem("diario_autor_actual") || "Gael";
+  }
+
+  function setUltimoAutor(autor) {
+    localStorage.setItem("diario_autor_actual", autor);
   }
 
   async function subirAImgBB(archivo) {
@@ -51,6 +54,34 @@
     return {
       url: data.data.url,
       thumb: data.data.thumb?.url || data.data.url
+    };
+  }
+
+  async function subirACloudinary(archivo) {
+    const formData = new FormData();
+    formData.append("file", archivo);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    const resourceType = archivo.type.startsWith("video/") ? "video" : "image";
+    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
+
+    const res = await fetch(url, {
+      method: "POST",
+      body: formData
+    });
+
+    if (!res.ok) throw new Error("Error subiendo a Cloudinary");
+    const data = await res.json();
+
+    // Generar thumbnail para videos
+    let thumb = data.secure_url;
+    if (resourceType === "video") {
+      thumb = data.secure_url.replace(/\.(mp4|mov|avi|webm)$/i, ".jpg");
+    }
+
+    return {
+      url: data.secure_url,
+      thumb: thumb
     };
   }
 
@@ -156,14 +187,14 @@
     if (!nombre || !nombre.trim()) return;
 
     const emoji = prompt("Un emoji para el álbum (opcional):", "📸") || "📸";
-    const autor = detectarAutor();
+    const autor = getUltimoAutor();
 
     const album = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       nombre: nombre.trim(),
       emoji: emoji,
       autor: autor,
-      recuerdos: [], // IDs de recuerdos que pertenecen a este álbum
+      recuerdos: [],
       fecha: new Date().toISOString()
     };
 
@@ -179,32 +210,45 @@
     }
   }
 
-  // ========== AGREGAR RECUERDO A ÁLBUM ==========
-  async function agregarAAlbum(recuerdoId, albumId) {
+  // ========== ELIMINAR ÁLBUM ==========
+  async function eliminarAlbum(albumId) {
     const album = albumsDisponibles.find(a => a.id === albumId);
     if (!album) return;
 
-    if (!album.recuerdos) album.recuerdos = [];
-    if (album.recuerdos.includes(recuerdoId)) {
-      alert("Este recuerdo ya está en el álbum");
-      return;
+    if (!confirm(`¿Eliminar el álbum "${album.nombre}"?\n\nLos recuerdos NO se borran, solo se quitan del álbum.`)) return;
+
+    // Quitar el álbum de los recuerdos
+    for (const recuerdo of todosLosRecuerdos) {
+      if (recuerdo.albumId === albumId) {
+        recuerdo.albumId = null;
+        await actualizarEnBin("recuerdos", recuerdo);
+      }
     }
 
-    album.recuerdos.push(recuerdoId);
+    // Eliminar el álbum
+    const res = await fetch(JSONBIN_URL + "/latest", {
+      headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+    });
+    const data = await res.json();
+    const nuevo = {
+      entradas: data.entradas || [],
+      suscripciones: data.suscripciones || [],
+      recuerdos: data.recuerdos || [],
+      razones: data.razones || [],
+      albums: (data.albums || []).filter(a => a.id !== albumId)
+    };
+    await fetch(JSONBIN_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Master-Key": JSONBIN_MASTER_KEY },
+      body: JSON.stringify(nuevo)
+    });
 
-    // Actualizar el recuerdo con el albumId
-    const recuerdo = todosLosRecuerdos.find(r => r.id === recuerdoId);
-    if (recuerdo) {
-      recuerdo.albumId = albumId;
-      await actualizarEnBin("recuerdos", recuerdo);
-    }
-
-    await actualizarEnBin("albums", album);
-
-    if (window.lanzarConfeti) window.lanzarConfeti(1000);
+    albumsDisponibles = albumsDisponibles.filter(a => a.id !== albumId);
+    if (filtrosActivos.album === albumId) filtrosActivos.album = "todos";
     renderizarFiltros();
     renderizarRecuerdos();
     if (window.renderizarBurbujasVideos) window.renderizarBurbujasVideos();
+    alert("✅ Álbum eliminado");
   }
 
   // ========== MODAL PARA AGREGAR RECUERDOS A ÁLBUM ==========
@@ -240,7 +284,7 @@
                   border: 3px solid transparent;
                   transition: all 0.3s ease;
                 ">
-                  <img src="${r.url}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  <img src="${r.thumb || r.url}" alt="${r.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;">
                   <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:6px 8px;color:#fff;font-size:0.7rem;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.titulo}</div>
                   <div class="check-overlay" style="
                     position: absolute;
@@ -337,7 +381,6 @@
     const contenedor = document.getElementById("recuerdosFiltros");
     if (!contenedor) return;
 
-    // Obtener meses únicos (de fotos Y videos)
     const meses = new Set();
     todosLosRecuerdos.forEach(r => {
       const fecha = new Date(r.fecha);
@@ -345,6 +388,8 @@
       meses.add(key);
     });
     const mesesOrdenados = [...meses].sort().reverse();
+
+    const albumActual = albumsDisponibles.find(a => a.id === filtrosActivos.album);
 
     contenedor.innerHTML = `
       <div class="filtros-barra">
@@ -354,7 +399,7 @@
             <option value="todos">Todos los álbumes</option>
             <option value="sin-album">Sin álbum</option>
             ${albumsDisponibles.map(a => `
-              <option value="${a.id}">${a.emoji} ${a.nombre}</option>
+              <option value="${a.id}" ${filtrosActivos.album === a.id ? 'selected' : ''}>${a.emoji} ${a.nombre}</option>
             `).join("")}
           </select>
         </div>
@@ -368,7 +413,7 @@
               const nombreMes = new Date(year, month - 1).toLocaleDateString("es-ES", {
                 month: "long", year: "numeric"
               });
-              return `<option value="${m}">${nombreMes}</option>`;
+              return `<option value="${m}" ${filtrosActivos.fecha === m ? 'selected' : ''}>${nombreMes}</option>`;
             }).join("")}
           </select>
         </div>
@@ -376,23 +421,25 @@
         <div class="filtro-grupo">
           <label class="filtro-label">👤 Autor</label>
           <select id="filtroAutor" class="filtro-select">
-            <option value="todos">Todos</option>
-            <option value="Gael">✎ Gael</option>
-            <option value="Mary">✿ Mary</option>
+            <option value="todos" ${filtrosActivos.autor === "todos" ? 'selected' : ''}>Todos</option>
+            <option value="Gael" ${filtrosActivos.autor === "Gael" ? 'selected' : ''}>✎ Gael</option>
+            <option value="Mary" ${filtrosActivos.autor === "Mary" ? 'selected' : ''}>✿ Mary</option>
           </select>
         </div>
 
         <div class="filtro-grupo filtro-busqueda">
           <label class="filtro-label">🔍 Buscar</label>
-          <input type="text" id="filtroBusqueda" class="filtro-input" placeholder="Buscar por título o descripción...">
+          <input type="text" id="filtroBusqueda" class="filtro-input" value="${filtrosActivos.busqueda}" placeholder="Buscar por título o descripción...">
         </div>
 
         <button class="btn-nuevo-album" id="btnNuevoAlbum">➕ Nuevo álbum</button>
+        ${albumActual ? `<button class="btn-nuevo-album" id="btnAgregarAAlbum" style="background: linear-gradient(135deg, #f28ca6, #a874e8);">📸 Agregar al álbum</button>` : ""}
       </div>
 
       ${albumsDisponibles.length > 0 ? `
         <div class="albums-chips">
           <button class="album-chip ${filtrosActivos.album === "todos" ? "activo" : ""}" data-album="todos">Todos</button>
+          <button class="album-chip ${filtrosActivos.album === "sin-album" ? "activo" : ""}" data-album="sin-album">Sin álbum</button>
           ${albumsDisponibles.map(a => `
             <button class="album-chip ${filtrosActivos.album === a.id ? "activo" : ""}" data-album="${a.id}">
               ${a.emoji} ${a.nombre}
@@ -401,12 +448,6 @@
         </div>
       ` : ""}
     `;
-
-    // Restaurar valores guardados
-    document.getElementById("filtroAlbum").value = filtrosActivos.album;
-    document.getElementById("filtroFecha").value = filtrosActivos.fecha;
-    document.getElementById("filtroAutor").value = filtrosActivos.autor;
-    document.getElementById("filtroBusqueda").value = filtrosActivos.busqueda;
 
     // Eventos
     document.getElementById("filtroAlbum").addEventListener("change", (e) => {
@@ -435,7 +476,11 @@
 
     document.getElementById("btnNuevoAlbum").addEventListener("click", crearAlbum);
 
-    // Chips
+    const btnAgregar = document.getElementById("btnAgregarAAlbum");
+    if (btnAgregar) {
+      btnAgregar.addEventListener("click", () => abrirModalAlbum(filtrosActivos.album));
+    }
+
     contenedor.querySelectorAll(".album-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         filtrosActivos.album = chip.dataset.album;
@@ -449,6 +494,7 @@
   // ========== RENDERIZAR RECUERDOS (FOTOS) ==========
   function renderizarRecuerdos() {
     const contenedor = document.getElementById("galeriaUsuarioRecuerdos");
+    const contenedorOriginal = document.getElementById("galeria");
     if (!contenedor) return;
 
     let filtrados = [...todosLosRecuerdos];
@@ -482,10 +528,8 @@
       );
     }
 
-    // Excluir videos (esos van a las burbujas)
+    // Solo fotos (videos van a burbujas)
     const soloFotos = filtrados.filter(r => r.tipo !== "video");
-
-    // Ordenar más recientes primero
     soloFotos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     // Contador
@@ -494,8 +538,24 @@
       contador.textContent = `${soloFotos.length} ${soloFotos.length === 1 ? 'recuerdo' : 'recuerdos'}`;
     }
 
+    // Ocultar/mostrar galería de originales según filtros
+    if (contenedorOriginal) {
+      const mostrarOriginales = 
+        filtrosActivos.album === "todos" && 
+        filtrosActivos.fecha === "todas" && 
+        filtrosActivos.autor === "todos" && 
+        !filtrosActivos.busqueda;
+      contenedorOriginal.style.display = mostrarOriginales ? "grid" : "none";
+    }
+
     if (soloFotos.length === 0) {
-      contenedor.innerHTML = "";
+      contenedor.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;">
+          ${filtrosActivos.album !== "todos" || filtrosActivos.fecha !== "todas" || filtrosActivos.autor !== "todos" || filtrosActivos.busqueda
+            ? "No hay fotos subidas con estos filtros"
+            : ""}
+        </div>
+      `;
       return;
     }
 
@@ -550,7 +610,7 @@
 
   // ========== MODAL DE SUBIDA ==========
   function crearModalSubida(tipo, tipoForzado = null) {
-    const autor = detectarAutor();
+    const autorDefault = getUltimoAutor();
 
     let titulo;
     if (tipo === "recuerdos") {
@@ -571,13 +631,13 @@
       <div class="subida-papel">
         <button class="subida-cerrar" aria-label="Cerrar">✕</button>
         <h2 class="subida-titulo">${titulo}</h2>
-        <p class="subida-sub">Subí tu archivo y agregá una descripción.</p>
+        <p class="subida-sub">Completá los datos y subí tu archivo.</p>
 
         <div class="subida-campo">
           <label class="subida-label">¿Quién lo sube?</label>
           <div class="subida-autores">
-            <button type="button" class="subida-autor-btn ${autor === "Gael" ? "activo" : ""}" data-autor="Gael">✎ Gael</button>
-            <button type="button" class="subida-autor-btn ${autor === "Mary" ? "activo" : ""}" data-autor="Mary">✿ Mary</button>
+            <button type="button" class="subida-autor-btn ${autorDefault === "Gael" ? "activo" : ""}" data-autor="Gael">✎ Gael</button>
+            <button type="button" class="subida-autor-btn ${autorDefault === "Mary" ? "activo" : ""}" data-autor="Mary">✿ Mary</button>
           </div>
         </div>
 
@@ -585,7 +645,7 @@
           <label class="subida-label">Archivo</label>
           <input type="file" id="archivoSubida" accept="${accept}" />
           <small style="font-size:0.75rem;color:#8a6a4a;margin-top:6px;display:block;">
-            Máximo 32 MB.
+            Máx 32 MB para imágenes, 100 MB para videos.
           </small>
         </div>
 
@@ -605,7 +665,7 @@
             <select id="albumSubida" class="subida-input">
               <option value="">— Sin álbum —</option>
               ${albumsDisponibles.map(a => `
-                <option value="${a.id}">${a.emoji} ${a.nombre}</option>
+                <option value="${a.id}" ${filtrosActivos.album === a.id ? 'selected' : ''}>${a.emoji} ${a.nombre}</option>
               `).join("")}
             </select>
           </div>
@@ -627,14 +687,14 @@
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => modal.classList.add("activo"));
 
-    let autorSeleccionado = autor;
+    let autorSeleccionado = autorDefault;
 
     modal.querySelectorAll(".subida-autor-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         modal.querySelectorAll(".subida-autor-btn").forEach(b => b.classList.remove("activo"));
         btn.classList.add("activo");
         autorSeleccionado = btn.dataset.autor;
-        localStorage.setItem("diario_autor_actual", autorSeleccionado);
+        setUltimoAutor(autorSeleccionado);
       });
     });
 
@@ -658,18 +718,28 @@
 
       if (!archivo) return alert("Seleccioná un archivo 💜");
       if (!tituloVal) return alert("Escribí un título 💜");
-      if (archivo.size > 32 * 1024 * 1024) return alert("El archivo es muy grande (máx 32 MB) 💜");
+
+      const esVideo = archivo.type.startsWith("video/");
+      const limiteMB = esVideo ? 100 : 32;
+      if (archivo.size > limiteMB * 1024 * 1024) {
+        return alert(`El archivo es muy grande (máx ${limiteMB} MB) 💜`);
+      }
 
       const progreso = modal.querySelector("#subidaProgreso");
       const mensaje = modal.querySelector("#subidaMensaje");
       progreso.style.display = "block";
 
       try {
-        mensaje.textContent = "Subiendo archivo...";
-        const resultado = await subirAImgBB(archivo);
+        mensaje.textContent = esVideo ? "Subiendo video a Cloudinary..." : "Subiendo foto a ImgBB...";
+        
+        let resultado;
+        if (esVideo) {
+          resultado = await subirACloudinary(archivo);
+        } else {
+          resultado = await subirAImgBB(archivo);
+        }
 
         mensaje.textContent = "Guardando...";
-        const esVideo = archivo.type.startsWith("video/");
         const item = {
           id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
           titulo: tituloVal,
@@ -712,7 +782,7 @@
   window.galeriaUsuario = {
     crearModalSubida,
     crearAlbum,
-    agregarAAlbum,
+    eliminarAlbum,
     abrirModalAlbum,
     renderizarFiltros,
     renderizarRecuerdos,
