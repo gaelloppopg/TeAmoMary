@@ -229,32 +229,87 @@
     });
   }
 
-  // ========== RENDERIZAR GALERÍA ==========
-  async function renderizarGaleria(tipo, contenedorId) {
-    const contenedor = document.getElementById(contenedorId);
-    if (!contenedor) return;
+// ========== RENDERIZAR GALERÍA ==========
+async function renderizarGaleria(tipo, contenedorId) {
+  const contenedor = document.getElementById(contenedorId);
+  if (!contenedor) return;
 
-    try {
-      const res = await fetch(JSONBIN_URL + "/latest", {
-        headers: {
-          "X-Master-Key": JSONBIN_MASTER_KEY,
-          "X-Bin-Meta": "false"
-        }
-      });
-      if (!res.ok) throw new Error("Error cargando");
+  try {
+    const res = await fetch(JSONBIN_URL + "/latest", {
+      headers: {
+        "X-Master-Key": JSONBIN_MASTER_KEY,
+        "X-Bin-Meta": "false"
+      }
+    });
+    if (!res.ok) throw new Error("Error cargando");
 
-      const data = await res.json();
-      const items = data[tipo] || [];
+    const data = await res.json();
+    const items = data[tipo] || [];
 
-      if (items.length === 0) {
-        contenedor.innerHTML = `
-          <div class="galeria-vacia">
-            <strong>Todavía no hay nada acá</strong>
-            Presioná "Agregar" para subir el primero 💜
+    if (items.length === 0) {
+      contenedor.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;">
+          <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">Todavía no hay nada acá</strong>
+          Presioná "Agregar" para subir el primero 💜
+        </div>
+      `;
+      return;
+    }
+
+    // Ordenar más recientes primero
+    items.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    // ============ RENDERIZADO SEGÚN EL TIPO ============
+    if (tipo === "recuerdos") {
+      // Estilo galería ORIGINAL
+      contenedor.innerHTML = items.map(item => {
+        const esVideo = item.tipo === "video";
+        return `
+          <figure class="galeria-item reveal visible">
+            ${esVideo 
+              ? `<video controls preload="metadata" poster="${item.thumb || ""}" style="width:100%;height:220px;object-fit:cover;display:block;">
+                   <source src="${item.url}" type="video/mp4">
+                 </video>`
+              : `<img src="${item.url}" alt="${item.titulo}" loading="lazy">`
+            }
+            <figcaption>
+              <h3>${item.titulo}</h3>
+              <p>${item.descripcion || `Subido por ${item.autor}`}</p>
+            </figcaption>
+          </figure>
+        `;
+      }).join("");
+      
+    } else if (tipo === "razones") {
+      // Estilo razones ORIGINAL (tarjetas lavanda)
+      contenedor.innerHTML = items.map(item => {
+        const esVideo = item.tipo === "video";
+        const numero = Math.floor(Math.random() * 900) + 100; // número aleatorio de 3 dígitos
+        return `
+          <div class="razon-card reveal visible" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
+            ${item.url ? (
+              esVideo 
+                ? `<video controls preload="metadata" style="width:100%;height:200px;object-fit:cover;display:block;">
+                     <source src="${item.url}" type="video/mp4">
+                   </video>`
+                : `<img src="${item.url}" alt="${item.titulo}" loading="lazy" style="width:100%;height:200px;object-fit:cover;display:block;">
+              `
+            ) : ""}
+            <div style="padding:22px;flex:1;display:flex;flex-direction:column;">
+              <span class="razon-num">RAZÓN ${numero}</span>
+              <p style="flex:1;">${item.titulo}</p>
+              ${item.descripcion ? `<p style="font-size:0.85rem;color:#a08bb8;margin-top:10px;font-style:italic;">${item.descripcion}</p>` : ""}
+            </div>
           </div>
         `;
-        return;
-      }
+      }).join("");
+    }
+
+  } catch (err) {
+    console.error("Error renderizando galería:", err);
+    contenedor.innerHTML = `<p style="color:#d96666;grid-column:1/-1;text-align:center;">Error cargando. Intentá recargar.</p>`;
+  }
+}
 
       // Ordenar más recientes primero
       items.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));

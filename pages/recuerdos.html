@@ -748,18 +748,15 @@
 
   <footer class="footer"><p>Sigue con <a href="cartas.html">Cartas →</a></p></footer>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.getElementById("btnAgregarRecuerdo");
-    if (btn) {
-      btn.addEventListener("click", () => {
-        if (window.galeriaUsuario) {
-          window.galeriaUsuario.crearModalSubida("recuerdos");
-        }
-      });
-    }
-  });
-</script>
+  <!-- Botón agregar -->
+<section style="max-width: 1200px; margin: 40px auto 20px; padding: 0 24px; text-align: center;">
+  <button class="btn-agregar-galeria" id="btnAgregarRecuerdo">
+    ➕ Agregar un recuerdo
+  </button>
+</section>
+
+<!-- Galería con el MISMO estilo que ya tenías -->
+<section class="galeria" id="galeriaUsuarioRecuerdos"></section>
 
   <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
   <script src="../js/script.js"></script>
