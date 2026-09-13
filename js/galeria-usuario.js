@@ -3,6 +3,7 @@
    - Subir fotos/videos a ImgBB
    - Guardar en JSONBin
    - Filtrar por álbum, fecha, autor, búsqueda
+   - Afecta fotos Y videos (burbujas)
    ============================================ */
 
 (function () {
@@ -109,6 +110,11 @@
     });
   }
 
+  function sincronizarFiltrosGlobales() {
+    window.__filtrosRecuerdos = filtrosActivos;
+    window.dispatchEvent(new Event("filtrosCambiados"));
+  }
+
   // ========== CREAR ÁLBUM ==========
   async function crearAlbum() {
     const nombre = prompt("Nombre del álbum (ej: Playa, Cumpleaños):");
@@ -142,7 +148,7 @@
     const contenedor = document.getElementById("recuerdosFiltros");
     if (!contenedor) return;
 
-    // Obtener meses únicos
+    // Obtener meses únicos (de fotos Y videos)
     const meses = new Set();
     todosLosRecuerdos.forEach(r => {
       const fecha = new Date(r.fecha);
@@ -195,7 +201,6 @@
         <button class="btn-nuevo-album" id="btnNuevoAlbum">➕ Nuevo álbum</button>
       </div>
 
-      <!-- Chips de álbumes rápidos -->
       ${albumsDisponibles.length > 0 ? `
         <div class="albums-chips">
           <button class="album-chip ${filtrosActivos.album === "todos" ? "activo" : ""}" data-album="todos">Todos</button>
@@ -208,25 +213,29 @@
       ` : ""}
     `;
 
-    // Eventos
+    // Eventos de filtros
     document.getElementById("filtroAlbum").addEventListener("change", (e) => {
       filtrosActivos.album = e.target.value;
       renderizarRecuerdos();
+      sincronizarFiltrosGlobales();
     });
 
     document.getElementById("filtroFecha").addEventListener("change", (e) => {
       filtrosActivos.fecha = e.target.value;
       renderizarRecuerdos();
+      sincronizarFiltrosGlobales();
     });
 
     document.getElementById("filtroAutor").addEventListener("change", (e) => {
       filtrosActivos.autor = e.target.value;
       renderizarRecuerdos();
+      sincronizarFiltrosGlobales();
     });
 
     document.getElementById("filtroBusqueda").addEventListener("input", (e) => {
       filtrosActivos.busqueda = e.target.value.toLowerCase();
       renderizarRecuerdos();
+      sincronizarFiltrosGlobales();
     });
 
     document.getElementById("btnNuevoAlbum").addEventListener("click", crearAlbum);
@@ -238,11 +247,12 @@
         document.getElementById("filtroAlbum").value = chip.dataset.album;
         renderizarFiltros();
         renderizarRecuerdos();
+        sincronizarFiltrosGlobales();
       });
     });
   }
 
-  // ========== RENDERIZAR RECUERDOS ==========
+  // ========== RENDERIZAR RECUERDOS (FOTOS) ==========
   function renderizarRecuerdos() {
     const contenedor = document.getElementById("galeriaUsuarioRecuerdos");
     if (!contenedor) return;
@@ -278,37 +288,34 @@
       );
     }
 
+    // Excluir videos (esos se muestran en las burbujas)
+    const soloFotos = filtrados.filter(r => r.tipo !== "video");
+
     // Ordenar más recientes primero
-    filtrados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    soloFotos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     // Contador
     const contador = document.getElementById("contadorRecuerdos");
     if (contador) {
-      contador.textContent = `${filtrados.length} ${filtrados.length === 1 ? 'recuerdo' : 'recuerdos'}`;
+      contador.textContent = `${soloFotos.length} ${soloFotos.length === 1 ? 'recuerdo' : 'recuerdos'}`;
     }
 
-    if (filtrados.length === 0) {
+    if (soloFotos.length === 0) {
       contenedor.innerHTML = `
         <div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:#a08bb8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;">
-          <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">No hay recuerdos con estos filtros</strong>
-          Probá con otros filtros o agregá un recuerdo nuevo 💜
+          <strong style="display:block;font-family:'Playfair Display',serif;font-style:normal;font-size:1.5rem;color:#a874e8;margin-bottom:10px;">No hay fotos con estos filtros</strong>
+          Probá con otros filtros o agregá una foto nueva 💜
         </div>
       `;
       return;
     }
 
     // Render
-    contenedor.innerHTML = filtrados.map(item => {
-      const esVideo = item.tipo === "video";
-
+    contenedor.innerHTML = soloFotos.map(item => {
       return `
         <figure class="galeria-item reveal visible" data-id="${item.id}">
-          ${esVideo 
-            ? `<video controls preload="metadata" poster="${item.thumb || ""}" style="width:100%;height:220px;object-fit:cover;display:block;">
-                 <source src="${item.url}" type="video/mp4">
-               </video>`
-            : `<img src="${item.url}" alt="${item.titulo}" loading="lazy" onclick="abrirLightboxGaleria('${item.url}', '${(item.descripcion || item.titulo || '').replace(/'/g, "\\'")}')">`
-          }
+          <img src="${item.url}" alt="${item.titulo || ''}" loading="lazy" 
+               onclick="abrirLightboxGaleria('${item.url}', '${(item.descripcion || item.titulo || '').replace(/'/g, "\\'")}')">
           <figcaption>
             <div class="recuerdo-fecha">${formatearFecha(item.fecha)}</div>
             <p class="recuerdo-texto">${item.descripcion || item.titulo || "Sin descripción"}</p>
@@ -316,30 +323,63 @@
         </figure>
       `;
     }).join("");
+  }
 
   // Lightbox
   window.abrirLightboxGaleria = function(url, titulo) {
     const lb = document.createElement("div");
-    lb.className = "diario-modal";
-    lb.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;";
+    lb.className = "lightbox-galeria";
     lb.innerHTML = `
-      <div style="max-width:90vw;max-height:90vh;position:relative;">
-        <img src="${url}" alt="${titulo}" style="max-width:100%;max-height:85vh;object-fit:contain;border-radius:12px;box-shadow:0 40px 100px rgba(0,0,0,0.8);">
-        <div style="position:absolute;bottom:-40px;left:0;right:0;text-align:center;color:#fff;font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;">${titulo}</div>
+      <button class="lightbox-cerrar" aria-label="Cerrar">✕</button>
+      <div class="lightbox-contenido">
+        <img src="${url}" alt="${titulo}">
+        ${titulo ? `<div class="lightbox-caption">${titulo}</div>` : ""}
       </div>
     `;
     document.body.appendChild(lb);
     document.body.style.overflow = "hidden";
-    lb.addEventListener("click", () => {
-      lb.remove();
-      document.body.style.overflow = "";
+
+    const cerrar = () => {
+      lb.style.opacity = "0";
+      setTimeout(() => {
+        lb.remove();
+        document.body.style.overflow = "";
+      }, 300);
+    };
+
+    lb.querySelector(".lightbox-cerrar").addEventListener("click", (e) => {
+      e.stopPropagation();
+      cerrar();
+    });
+    lb.addEventListener("click", (e) => {
+      if (e.target === lb) cerrar();
+    });
+    document.addEventListener("keydown", function onKey(e) {
+      if (e.key === "Escape") {
+        cerrar();
+        document.removeEventListener("keydown", onKey);
+      }
     });
   };
 
   // ========== MODAL DE SUBIDA ==========
-  function crearModalSubida(tipo) {
+  function crearModalSubida(tipo, tipoForzado = null) {
     const autor = detectarAutor();
-    const titulo = tipo === "recuerdos" ? "Nuevo recuerdo" : "Nueva razón";
+
+    // Título dinámico
+    let titulo;
+    if (tipo === "recuerdos") {
+      if (tipoForzado === "video") titulo = "Nuevo video";
+      else if (tipoForzado === "imagen") titulo = "Nueva foto";
+      else titulo = "Nuevo recuerdo";
+    } else {
+      titulo = "Nueva razón";
+    }
+
+    // Tipo de archivo aceptado
+    let accept = "image/*,video/*";
+    if (tipoForzado === "video") accept = "video/*";
+    else if (tipoForzado === "imagen") accept = "image/*";
 
     const modal = document.createElement("div");
     modal.className = "subida-modal";
@@ -347,7 +387,7 @@
       <div class="subida-papel">
         <button class="subida-cerrar" aria-label="Cerrar">✕</button>
         <h2 class="subida-titulo">${titulo}</h2>
-        <p class="subida-sub">Subí una foto o video y agregá una descripción.</p>
+        <p class="subida-sub">Subí tu archivo y agregá una descripción.</p>
 
         <div class="subida-campo">
           <label class="subida-label">¿Quién lo sube?</label>
@@ -358,8 +398,8 @@
         </div>
 
         <div class="subida-campo">
-          <label class="subida-label">Archivo (foto o video)</label>
-          <input type="file" id="archivoSubida" accept="image/*,video/*" />
+          <label class="subida-label">Archivo</label>
+          <input type="file" id="archivoSubida" accept="${accept}" />
           <small style="font-size:0.75rem;color:#8a6a4a;margin-top:6px;display:block;">
             Máximo 32 MB.
           </small>
@@ -433,7 +473,7 @@
       const descripcion = document.getElementById("descripcionSubida").value.trim();
       const albumId = tipo === "recuerdos" ? (document.getElementById("albumSubida")?.value || "") : "";
 
-      if (!archivo) return alert("Seleccioná una foto o video 💜");
+      if (!archivo) return alert("Seleccioná un archivo 💜");
       if (!tituloVal) return alert("Escribí un título 💜");
       if (archivo.size > 32 * 1024 * 1024) return alert("El archivo es muy grande (máx 32 MB) 💜");
 
@@ -473,6 +513,11 @@
           cerrar();
           renderizarFiltros();
           renderizarRecuerdos();
+
+          // 🆕 Recargar burbujas de videos
+          if (window.renderizarBurbujasVideos) {
+            window.renderizarBurbujasVideos();
+          }
         }, 1000);
 
       } catch (err) {
@@ -489,7 +534,9 @@
     crearAlbum,
     renderizarFiltros,
     renderizarRecuerdos,
-    cargarDatos
+    cargarDatos,
+    getRecuerdos: () => todosLosRecuerdos,
+    getAlbums: () => albumsDisponibles
   };
 
   // ========== AUTO-INICIALIZACIÓN ==========
@@ -504,12 +551,22 @@
       }
     }
 
-    // Botón agregar recuerdo
+    // Botón agregar recuerdo (foto)
     const btnAgregar = document.getElementById("btnAgregarRecuerdo");
     if (btnAgregar) {
       btnAgregar.addEventListener("click", () => {
         if (window.galeriaUsuario) {
-          window.galeriaUsuario.crearModalSubida("recuerdos");
+          window.galeriaUsuario.crearModalSubida("recuerdos", "imagen");
+        }
+      });
+    }
+
+    // Botón agregar video (definido en el HTML)
+    const btnVideo = document.getElementById("btnAgregarVideo");
+    if (btnVideo) {
+      btnVideo.addEventListener("click", () => {
+        if (window.galeriaUsuario) {
+          window.galeriaUsuario.crearModalSubida("recuerdos", "video");
         }
       });
     }
