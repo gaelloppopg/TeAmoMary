@@ -10,7 +10,7 @@
   "use strict";
 
   const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
-  const CLOUDINARY_CLOUD_NAME = "sjjtdwr";
+  const CLOUDINARY_CLOUD_NAME = "sjlitdwr";
   const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
 
   const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
