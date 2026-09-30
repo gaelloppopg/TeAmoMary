@@ -1,19 +1,21 @@
 /* =========================================
-   TALLER DE ARTE
-   - Canvas apilados: fondo + dibujo
-   - Fondo: color / opacidad / imagen
-   - Guardado en localStorage
-   - Descarga como PNG fusionado
-   - Galería minimalista moderna
+   TALLER DE ARTE - con sincronización JSONBin
+   - Guarda en localStorage Y en JSONBin
+   - Sincroniza entre todos los dispositivos
    ========================================= */
 
 const STORAGE_OBRAS = "obras_arte";
 let obras = [];
 
-// Config subida (igual que tu galería)
+// Config subida de imágenes
 const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
 const CLOUDINARY_CLOUD_NAME = "sjlitdwr";
 const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
+
+// Config JSONBin (los mismos que tu galería)
+const JSONBIN_MASTER_KEY = "$2a$10$o5/KkktxRiEfoxN33ZQQieN0iUvv/pkvIG8riNohEo5N4I7NCGU2q";
+const JSONBIN_BIN_ID = "6aa58aecffd5d16053fef5c0";
+const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
 // Canvas
 let canvasFondo, ctxFondo;
@@ -36,19 +38,88 @@ let fondoColor = "#ffffff";
 let fondoOpacidad = 100;
 
 // =========================================
-// CARGAR / GUARDAR OBRAS
+// JSONBIN - Lectura y escritura
 // =========================================
-function cargarObras() {
+async function leerBin() {
+  const res = await fetch(JSONBIN_URL + "/latest", {
+    headers: { "X-Master-Key": JSONBIN_MASTER_KEY, "X-Bin-Meta": "false" }
+  });
+  if (!res.ok) throw new Error("Error leyendo JSONBin");
+  return await res.json();
+}
+
+async function escribirBin(contenido) {
+  const jsonString = JSON.stringify(contenido);
+  const tamañoKB = (jsonString.length / 1024).toFixed(1);
+  console.log(`📊 Tamaño del bin: ${tamañoKB} KB (límite: 100 KB)`);
+
+  const res = await fetch(JSONBIN_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Master-Key": JSONBIN_MASTER_KEY
+    },
+    body: jsonString
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("❌ Error JSONBin:", res.status, errText);
+
+    if (res.status === 413) {
+      throw new Error("El bin está lleno. Borra algunas obras o actualiza a plan pago.");
+    }
+    if (res.status === 401) throw new Error("Master Key inválida.");
+    if (res.status === 404) throw new Error("Bin no encontrado.");
+    throw new Error(`Error ${res.status}: ${errText.slice(0, 100)}`);
+  }
+  console.log(`✅ Guardado exitoso (${tamañoKB} KB)`);
+  return true;
+}
+
+// =========================================
+// CARGAR OBRAS (localStorage + JSONBin)
+// =========================================
+function cargarObrasLocal() {
   try {
     obras = JSON.parse(localStorage.getItem(STORAGE_OBRAS) || "[]");
   } catch { obras = []; }
 }
 
-function guardarObras() {
+function guardarObrasLocal() {
   try {
     localStorage.setItem(STORAGE_OBRAS, JSON.stringify(obras));
   } catch (e) {
-    alert("No se pudo guardar (espacio lleno). Intenta descargar y borrar algunas obras.");
+    console.warn("localStorage lleno, solo se guardará en JSONBin");
+  }
+}
+
+async function cargarObrasDesdeBin() {
+  try {
+    const data = await leerBin();
+    const obrasBin = data.obras_arte || [];
+    // Fusionar: usar las del bin como fuente de verdad
+    // pero mantener las locales que no estén en el bin (por si aún no se subieron)
+    const idsBin = new Set(obrasBin.map(o => o.id));
+    const soloLocales = obras.filter(o => !idsBin.has(o.id));
+
+    // Si hay obras locales nuevas, subirlas al bin
+    if (soloLocales.length > 0 && obrasBin.length >= 0) {
+      console.log(`📤 Subiendo ${soloLocales.length} obras locales al bin...`);
+      const todas = [...obrasBin, ...soloLocales];
+      const dataActual = await leerBin();
+      dataActual.obras_arte = todas;
+      await escribirBin(dataActual);
+      obras = todas;
+    } else {
+      obras = obrasBin;
+    }
+
+    guardarObrasLocal();
+    return true;
+  } catch (err) {
+    console.error("Error cargando del bin:", err);
+    return false;
   }
 }
 
@@ -136,11 +207,23 @@ function descargarObra(idx) {
   a.remove();
 }
 
-function borrarObra(idx) {
+async function borrarObra(idx) {
   if (!confirm("¿Borrar esta obra para siempre?")) return;
+  const obraBorrada = obras[idx];
   obras.splice(idx, 1);
-  guardarObras();
+  guardarObrasLocal();
   renderGaleria();
+
+  // Sincronizar con el bin
+  try {
+    const data = await leerBin();
+    data.obras_arte = (data.obras_arte || []).filter(o => o.id !== obraBorrada.id);
+    await escribirBin(data);
+    console.log("✅ Borrado sincronizado");
+  } catch (err) {
+    console.error("No se pudo sincronizar el borrado:", err);
+    alert("Se borró localmente pero no se pudo sincronizar con el servidor.");
+  }
 }
 
 // =========================================
@@ -170,10 +253,7 @@ function abrirEstudio(idx = null) {
   document.getElementById("fondoOpacidad").value = 100;
   document.getElementById("fondoOpacidadValor").textContent = 100;
 
-  // Limpiar capa de dibujo
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Pintar fondo inicial
   dibujarFondo();
 
   if (idx !== null) {
@@ -199,19 +279,15 @@ function cerrarEstudio() {
 }
 
 // =========================================
-// FONDO (CORREGIDO)
+// FONDO
 // =========================================
 function dibujarFondo() {
   if (!ctxFondo || !canvasFondo) return;
-
-  // Limpiar todo el canvas de fondo
   ctxFondo.clearRect(0, 0, canvasFondo.width, canvasFondo.height);
 
-  // Si hay imagen, dibujarla con opacidad
   if (fondoImagen && fondoImagen.complete && fondoImagen.naturalWidth > 0) {
     ctxFondo.save();
     ctxFondo.globalAlpha = fondoOpacidad / 100;
-    // Ajustar la imagen al tamaño del canvas (cover)
     const escala = Math.max(
       canvasFondo.width / fondoImagen.width,
       canvasFondo.height / fondoImagen.height
@@ -223,14 +299,13 @@ function dibujarFondo() {
     ctxFondo.drawImage(fondoImagen, x, y, w, h);
     ctxFondo.restore();
   } else {
-    // Color plano
     ctxFondo.fillStyle = fondoColor;
     ctxFondo.fillRect(0, 0, canvasFondo.width, canvasFondo.height);
   }
 }
 
 // =========================================
-// HISTORIAL (capa de dibujo)
+// HISTORIAL
 // =========================================
 function guardarHistorial() {
   if (!ctx || !canvas) return;
@@ -338,7 +413,6 @@ function terminarDibujo() {
 }
 
 function conectarEventosCanvas() {
-  // Clonar el canvas para remover listeners viejos
   const nuevo = canvas.cloneNode(true);
   canvas.parentNode.replaceChild(nuevo, canvas);
   canvas = nuevo;
@@ -355,22 +429,20 @@ function conectarEventosCanvas() {
 }
 
 // =========================================
-// FUSIONAR FONDO + DIBUJO
+// FUSIONAR CAPAS
 // =========================================
 function fusionarCapas() {
   const temp = document.createElement("canvas");
   temp.width = canvas.width;
   temp.height = canvas.height;
   const tctx = temp.getContext("2d");
-  // Fondo primero
   tctx.drawImage(canvasFondo, 0, 0);
-  // Dibujo encima
   tctx.drawImage(canvas, 0, 0);
   return temp;
 }
 
 // =========================================
-// SUBIR IMAGEN DE FONDO (ImgBB + Cloudinary)
+// SUBIR IMAGEN DE FONDO
 // =========================================
 async function subirImagenAImgBB(archivo) {
   const formData = new FormData();
@@ -396,7 +468,6 @@ async function subirImagenACloudinary(archivo) {
 }
 
 async function subirImagenFondo(archivo) {
-  // Intentar ImgBB primero, si falla Cloudinary
   try {
     return await subirImagenAImgBB(archivo);
   } catch (e) {
@@ -418,38 +489,100 @@ function cargarImagenFondoDesdeURL(url) {
 }
 
 // =========================================
-// GUARDAR OBRA
+// GUARDAR OBRA (local + JSONBin)
 // =========================================
-function guardarObra() {
+async function guardarObra() {
   const titulo = document.getElementById("tituloObra").value.trim();
   const fusionado = fusionarCapas();
   const imagen = fusionado.toDataURL("image/png");
 
+  const estado = document.getElementById("estadoSync");
+  if (estado) estado.textContent = "💾 Guardando...";
+
+  let obraGuardada;
   if (editandoIdx !== null) {
-    obras[editandoIdx].titulo = titulo || "Sin título";
-    obras[editandoIdx].imagen = imagen;
-    obras[editandoIdx].fecha = Date.now();
+    obraGuardada = { ...obras[editandoIdx], titulo: titulo || "Sin título", imagen, fecha: Date.now() };
+    obras[editandoIdx] = obraGuardada;
   } else {
-    obras.unshift({
+    obraGuardada = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       titulo: titulo || "Sin título",
       imagen,
       fecha: Date.now()
-    });
+    };
+    obras.unshift(obraGuardada);
   }
-  guardarObras();
+
+  guardarObrasLocal();
   renderGaleria();
   document.getElementById("estudioOverlay").classList.remove("activo");
   editandoIdx = null;
 
   if (window.lanzarConfeti) window.lanzarConfeti(1500);
+
+  // Sincronizar con JSONBin
+  try {
+    if (estado) estado.textContent = "☁️ Sincronizando con la nube...";
+    const data = await leerBin();
+    const lista = data.obras_arte || [];
+
+    if (editandoIdx !== null) {
+      const idx = lista.findIndex(o => o.id === obraGuardada.id);
+      if (idx >= 0) lista[idx] = obraGuardada;
+      else lista.unshift(obraGuardada);
+    } else {
+      lista.unshift(obraGuardada);
+    }
+
+    data.obras_arte = lista;
+    await escribirBin(data);
+
+    if (estado) estado.textContent = "✅ Guardado y sincronizado";
+    setTimeout(() => { if (estado) estado.textContent = ""; }, 3000);
+  } catch (err) {
+    console.error("Error sincronizando:", err);
+    if (estado) {
+      estado.textContent = "⚠️ Guardado local, pero falló la nube: " + err.message;
+      estado.style.color = "#d96666";
+    }
+  }
 }
 
 // =========================================
 // EVENTOS
 // =========================================
-document.addEventListener("DOMContentLoaded", () => {
-  cargarObras();
+document.addEventListener("DOMContentLoaded", async () => {
+  // 1. Cargar localStorage primero (rápido)
+  cargarObrasLocal();
   renderGaleria();
+
+  // 2. Sincronizar con JSONBin
+  const estado = document.getElementById("estadoSync");
+  if (estado) estado.textContent = "☁️ Cargando desde la nube...";
+
+  const ok = await cargarObrasDesdeBin();
+  renderGaleria();
+
+  if (estado) {
+    if (ok) {
+      estado.textContent = `✅ ${obras.length} obra${obras.length === 1 ? '' : 's'} sincronizada${obras.length === 1 ? '' : 's'}`;
+      setTimeout(() => { estado.textContent = ""; }, 3000);
+    } else {
+      estado.textContent = "⚠️ No se pudo conectar con la nube. Mostrando copia local.";
+      estado.style.color = "#d96666";
+    }
+  }
+
+  // Botón recargar
+  document.getElementById("btnRecargar").addEventListener("click", async () => {
+    if (estado) estado.textContent = "🔄 Recargando...";
+    const ok = await cargarObrasDesdeBin();
+    renderGaleria();
+    if (estado) {
+      estado.textContent = ok ? `✅ ${obras.length} obras cargadas` : "⚠️ Error al recargar";
+      setTimeout(() => { estado.textContent = ""; }, 3000);
+    }
+  });
 
   document.getElementById("btnNuevaObra").addEventListener("click", () => abrirEstudio(null));
   document.getElementById("cerrarEstudio").addEventListener("click", cerrarEstudio);
@@ -483,7 +616,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("active"));
   });
 
-  // ====== FONDO - Color ======
+  // FONDO - Color
   document.getElementById("fondoColor").addEventListener("input", (e) => {
     fondoColor = e.target.value;
     fondoImagen = null;
@@ -491,7 +624,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dibujarFondo();
   });
 
-  // ====== FONDO - Subir imagen ======
+  // FONDO - Subir imagen
   const btnSubirFondo = document.getElementById("btnSubirFondo");
   const inputFondo = document.getElementById("inputFondo");
   btnSubirFondo.addEventListener("click", () => inputFondo.click());
@@ -524,14 +657,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ====== FONDO - Opacidad ======
+  // FONDO - Opacidad
   document.getElementById("fondoOpacidad").addEventListener("input", (e) => {
     fondoOpacidad = parseInt(e.target.value, 10);
     document.getElementById("fondoOpacidadValor").textContent = fondoOpacidad;
     dibujarFondo();
   });
 
-  // ====== FONDO - Quitar ======
+  // FONDO - Quitar
   document.getElementById("btnQuitarFondo").addEventListener("click", () => {
     fondoImagen = null;
     fondoImagenURL = "";

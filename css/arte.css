@@ -279,7 +279,6 @@
   transform: rotate(90deg);
 }
 
-/* Toolbar */
 .estudio-toolbar {
   display: flex;
   gap: 20px;
@@ -339,7 +338,6 @@
   text-align: center;
 }
 
-/* Colores */
 .colores { flex-wrap: wrap; }
 .color-btn {
   width: 30px;
@@ -369,7 +367,6 @@
   box-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 
-/* Fondo */
 .fondo-group {
   background: linear-gradient(135deg, #fef9f3, #f7f5f2);
   padding: 6px 12px;
@@ -401,9 +398,7 @@
   text-align: center;
 }
 
-/* =========================================
-   CANVAS APILADOS (CORREGIDO)
-   ========================================= */
+/* Canvas apilados */
 .estudio-canvas-wrapper {
   background: #fafafa;
   border-radius: 12px;
@@ -436,13 +431,11 @@
   display: block;
 }
 
-/* Fondo: SIN background blanco, debe ser transparente */
 #lienzoFondo {
   z-index: 1;
   background: transparent;
 }
 
-/* Dibujo: TRANSPARENTE para que se vea el fondo debajo */
 #lienzo {
   z-index: 2;
   background: transparent;
@@ -458,7 +451,6 @@
   margin-top: 18px;
 }
 
-/* Modal */
 .modal-carta .modal-content img {
   box-shadow:
     0 4px 16px rgba(0,0,0,.1),
@@ -466,9 +458,6 @@
   border-radius: 8px;
 }
 
-/* =========================================
-   RESPONSIVE
-   ========================================= */
 @media (max-width: 768px) {
   .galeria-arte {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

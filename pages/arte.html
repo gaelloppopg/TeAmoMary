@@ -37,12 +37,16 @@
   <section class="galeria-arte-section">
     <div class="galeria-arte-header">
       <h2 class="section-title">Mis Obras</h2>
-      <button class="btn btn-primary" id="btnNuevaObra">+ Crear nuevo dibujo</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-outline" id="btnRecargar">🔄 Recargar</button>
+        <button class="btn btn-primary" id="btnNuevaObra">+ Crear nuevo dibujo</button>
+      </div>
     </div>
     <div class="galeria-arte" id="galeriaArte"></div>
     <p class="galeria-vacia" id="galeriaVacia">
       Aún no hay obras... ¡Crea tu primer dibujo!
     </p>
+    <p id="estadoSync" style="text-align:center;color:#999;font-size:.85rem;font-style:italic;margin-top:20px;"></p>
   </section>
 
   <!-- ESTUDIO / LIENZO -->
@@ -54,7 +58,6 @@
       </div>
 
       <div class="estudio-toolbar">
-        <!-- Herramientas -->
         <div class="tool-group">
           <span class="tool-label">Pincel</span>
           <button class="tool-btn active" data-tool="pincel" title="Pincel">🖌️</button>
@@ -64,14 +67,12 @@
           <button class="tool-btn" data-tool="borrador" title="Borrador">🧽</button>
         </div>
 
-        <!-- Grosor -->
         <div class="tool-group">
           <span class="tool-label">Grosor</span>
           <input type="range" id="grosor" min="1" max="50" value="8" />
           <span id="grosorValor">8</span>
         </div>
 
-        <!-- Colores -->
         <div class="tool-group colores">
           <span class="tool-label">Color</span>
           <button class="color-btn active" data-color="#1a1a1a" style="--c:#1a1a1a"></button>
@@ -85,7 +86,6 @@
           <input type="color" id="colorPicker" value="#1a1a1a" title="Color personalizado" />
         </div>
 
-        <!-- Fondo -->
         <div class="tool-group fondo-group">
           <span class="tool-label">Fondo</span>
           <input type="color" id="fondoColor" value="#ffffff" title="Color de fondo" />
