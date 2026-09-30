@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taller de Arte 🎨</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+  <link rel="stylesheet" href="../css/arte.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#f28ca6" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
+
+  <script>
+    (function() {
+      const ok = localStorage.getItem("auth_novia_ok");
+      const t = parseInt(localStorage.getItem("auth_novia_time") || "0", 10);
+      const valido = ok === "true" && (Date.now() - t) < 60 * 60 * 1000;
+      if (!valido) {
+        location.replace("../login.html");
+      }
+    })();
+  </script>
+</head>
+<body class="page-inner">
+
+  <nav class="nav-back"><a href="../index.html">← Volver</a></nav>
+
+  <header class="page-header">
+    <h1>Taller de Arte</h1>
+    <p>Dibuja lo que sientas, guárdalo y descárgalo 🖌️</p>
+  </header>
+
+  <!-- GALERÍA DE OBRAS -->
+  <section class="galeria-arte-section">
+    <div class="galeria-arte-header">
+      <h2 class="section-title">Mis Obras</h2>
+      <button class="btn btn-primary" id="btnNuevaObra">+ Crear nuevo dibujo</button>
+    </div>
+    <div class="galeria-arte" id="galeriaArte"></div>
+    <p class="galeria-vacia" id="galeriaVacia">
+      Aún no hay obras... ¡Crea tu primer dibujo! 🎨
+    </p>
+  </section>
+
+  <!-- ESTUDIO / LIENZO -->
+  <div class="estudio-overlay" id="estudioOverlay">
+    <div class="estudio">
+      <div class="estudio-header">
+        <input type="text" id="tituloObra" placeholder="Título de tu obra..." maxlength="40" />
+        <button class="estudio-cerrar" id="cerrarEstudio" title="Cerrar">✕</button>
+      </div>
+
+      <div class="estudio-toolbar">
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="pincel" title="Pincel">🖌️</button>
+          <button class="tool-btn" data-tool="lapiz" title="Lápiz">✏️</button>
+          <button class="tool-btn" data-tool="neon" title="Neón">✨</button>
+          <button class="tool-btn" data-tool="spray" title="Spray">💨</button>
+          <button class="tool-btn" data-tool="borrador" title="Borrador">🧽</button>
+        </div>
+
+        <div class="tool-group">
+          <label class="tool-label">Grosor</label>
+          <input type="range" id="grosor" min="1" max="50" value="8" />
+          <span id="grosorValor">8</span>
+        </div>
+
+        <div class="tool-group colores">
+          <button class="color-btn active" data-color="#f28ca6" style="--c:#f28ca6"></button>
+          <button class="color-btn" data-color="#d4a373" style="--c:#d4a373"></button>
+          <button class="color-btn" data-color="#e63946" style="--c:#e63946"></button>
+          <button class="color-btn" data-color="#f4a261" style="--c:#f4a261"></button>
+          <button class="color-btn" data-color="#2a9d8f" style="--c:#2a9d8f"></button>
+          <button class="color-btn" data-color="#457b9d" style="--c:#457b9d"></button>
+          <button class="color-btn" data-color="#9d4edd" style="--c:#9d4edd"></button>
+          <button class="color-btn" data-color="#000000" style="--c:#000000"></button>
+          <button class="color-btn" data-color="#ffffff" style="--c:#ffffff"></button>
+          <input type="color" id="colorPicker" value="#f28ca6" title="Color personalizado" />
+        </div>
+      </div>
+
+      <div class="estudio-canvas-wrapper">
+        <canvas id="lienzo" width="900" height="600"></canvas>
+      </div>
+
+      <div class="estudio-footer">
+        <button class="btn btn-outline" id="btnDeshacer">↶ Deshacer</button>
+        <button class="btn btn-outline" id="btnLimpiar">🗑️ Limpiar</button>
+        <button class="btn btn-outline" id="btnDescargar">⬇️ Descargar PNG</button>
+        <button class="btn btn-primary" id="btnGuardar">💾 Guardar en galería</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer"><p>Hecho con 💖 para ti</p></footer>
+
+  <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
+
+  <script src="../js/confeti.js"></script>
+  <script src="../js/arte.js"></script>
+</body>
+</html>
