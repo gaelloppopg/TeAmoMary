@@ -1,5 +1,5 @@
 /* =========================================
-   TALLER DE ARTE
+   TALLER DE ARTE - Estilo Galería de Arte
    ========================================= */
 
 .galeria-arte-section {
@@ -7,103 +7,259 @@
   margin: 0 auto;
   padding: 20px 20px 80px;
 }
+
 .galeria-arte-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 15px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 .galeria-arte-header .section-title { margin: 0; }
 
+/* =========================================
+   PARED DE GALERÍA
+   ========================================= */
 .galeria-arte {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 50px 35px;
+  padding: 40px 20px 60px;
+  position: relative;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,.4), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(255,255,255,.3), transparent 40%),
+    linear-gradient(180deg, #f5e6d3 0%, #ecd8bf 100%);
+  border-radius: 24px;
+  box-shadow: inset 0 0 60px rgba(120, 80, 40, .15);
 }
 
+/* Textura sutil de pared */
+.galeria-arte::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 40px, rgba(120,80,40,.03) 40px 41px),
+    repeating-linear-gradient(90deg, transparent 0 40px, rgba(120,80,40,.03) 40px 41px);
+  pointer-events: none;
+}
+
+/* =========================================
+   LIENZO COLGADO
+   ========================================= */
 .obra-card {
-  background: #fff;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--sombra);
-  transition: transform .3s ease, box-shadow .3s ease;
   position: relative;
-}
-.obra-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(242,140,166,.3);
+  text-align: center;
+  animation: colgar 0.8s cubic-bezier(.34,1.56,.64,1) backwards;
+  transition: transform .4s ease;
+  z-index: 1;
 }
 
-.obra-marco {
-  background: linear-gradient(135deg, #f7e7c4, #e6c98f);
-  padding: 12px;
-  position: relative;
+/* Animación de "colgarse" en la pared */
+@keyframes colgar {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) rotate(-3deg);
+  }
+  60% {
+    transform: translateY(4px) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
 }
+
+/* Cuerda y clavo */
+.obra-card::before {
+  content: "";
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 32px;
+  background: linear-gradient(180deg, #8b5a2b, #6b3f1d);
+  z-index: 2;
+}
+
+/* Clavo en la pared */
+.obra-card::after {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 30% 30%, #d4a373, #8b5a2b 70%, #4a2810);
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0,0,0,.4), inset 0 -2px 3px rgba(0,0,0,.5);
+  z-index: 3;
+}
+
+/* Sombra proyectada en la pared */
+.obra-card {
+  filter: drop-shadow(0 10px 15px rgba(80, 40, 10, .25));
+}
+
+.obra-card:hover {
+  transform: translateY(-6px) rotate(-1deg);
+  filter: drop-shadow(0 18px 25px rgba(80, 40, 10, .35));
+}
+
+/* =========================================
+   MARCO DEL LIENZO
+   ========================================= */
+.obra-marco {
+  background:
+    linear-gradient(135deg, #c9a06a 0%, #a87e4a 25%, #8b5a2b 50%, #a87e4a 75%, #c9a06a 100%);
+  padding: 14px;
+  border-radius: 4px;
+  position: relative;
+  box-shadow:
+    inset 0 0 0 2px #6b3f1d,
+    inset 0 0 0 3px #d4a373,
+    inset 0 0 0 8px rgba(107, 63, 29, .3),
+    0 4px 10px rgba(0,0,0,.3);
+}
+
+/* Esquinas del marco */
+.obra-marco::before,
 .obra-marco::after {
   content: "";
   position: absolute;
-  inset: 6px;
-  border: 2px solid rgba(212,163,115,.5);
-  pointer-events: none;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 30% 30%, #e6c98f, #8b5a2b);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,.5);
 }
+.obra-marco::before { top: 5px; left: 5px; }
+.obra-marco::after { bottom: 5px; right: 5px; }
+
+/* Lienzo blanco dentro del marco */
 .obra-marco img {
   display: block;
   width: 100%;
   height: 200px;
   object-fit: cover;
   background: #fff;
-  border-radius: 4px;
+  border-radius: 2px;
   cursor: pointer;
   transition: transform .3s ease;
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,.15),
+    0 0 0 3px #fff,
+    0 0 0 4px rgba(107, 63, 29, .4);
+  padding: 4px;
 }
-.obra-card:hover .obra-marco img { transform: scale(1.03); }
 
+.obra-card:hover .obra-marco img {
+  transform: scale(1.02);
+}
+
+/* =========================================
+   ETIQUETA / PLACA CON EL TÍTULO
+   ========================================= */
 .obra-info {
-  padding: 15px 18px 5px;
-  text-align: center;
+  margin-top: 15px;
+  padding: 8px 14px;
+  background: linear-gradient(180deg, #fefcf7, #f5ead5);
+  border: 1px solid #d4a373;
+  border-radius: 6px;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.15),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  position: relative;
+  max-width: 220px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.obra-info h3 {
-  font-size: 1.05rem;
-  color: var(--rosa);
-  margin-bottom: 4px;
-}
-.obra-info small { color: var(--texto-suave); font-size: .8rem; }
 
+.obra-info::before {
+  content: "✦";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #d4a373;
+  font-size: .8rem;
+}
+
+.obra-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: .95rem;
+  color: #5a3a1f;
+  margin-bottom: 2px;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.obra-info small {
+  color: #8b6b4a;
+  font-size: .7rem;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   ACCIONES (botones circulares flotantes)
+   ========================================= */
 .obra-acciones {
   display: flex;
   justify-content: center;
   gap: 8px;
-  padding: 12px;
+  margin-top: 12px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all .3s ease;
 }
+.obra-card:hover .obra-acciones {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .btn-obra {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 2px solid var(--rosa-suave);
   background: #fff;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: .95rem;
   transition: all .25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,.15);
 }
 .btn-obra:hover {
   background: var(--rosa-claro);
   border-color: var(--rosa);
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(-8deg);
 }
 
+/* =========================================
+   GALERÍA VACÍA
+   ========================================= */
 .galeria-vacia {
   text-align: center;
-  color: var(--texto-suave);
-  padding: 60px 20px;
+  color: #8b6b4a;
+  padding: 80px 20px;
   font-size: 1.1rem;
+  font-style: italic;
+  background: linear-gradient(180deg, #f5e6d3, #ecd8bf);
+  border-radius: 24px;
+  box-shadow: inset 0 0 60px rgba(120, 80, 40, .15);
 }
 
-/* --- Estudio --- */
+/* =========================================
+   ESTUDIO (sin cambios grandes)
+   ========================================= */
 .estudio-overlay {
   position: fixed;
   inset: 0;
@@ -265,7 +421,29 @@
   margin-top: 15px;
 }
 
+/* =========================================
+   MODAL VER OBRA (más elegante)
+   ========================================= */
+.modal-carta .modal-content img {
+  box-shadow:
+    0 0 0 8px #c9a06a,
+    0 0 0 10px #8b5a2b,
+    0 20px 50px rgba(0,0,0,.4);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
+  .galeria-arte {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 45px 20px;
+    padding: 30px 15px;
+  }
+  .obra-marco img { height: 160px; }
+  .obra-info h3 { font-size: .85rem; }
+  .obra-acciones { opacity: 1; transform: none; }
+
   .estudio { padding: 15px; }
   .estudio-toolbar { gap: 10px; padding: 10px; }
   .tool-btn { width: 36px; height: 36px; font-size: 1rem; }
@@ -274,4 +452,12 @@
   .estudio-footer .btn { flex: 1; min-width: 120px; padding: 12px 16px; font-size: .85rem; }
   .galeria-arte-header { flex-direction: column; align-items: stretch; }
   .galeria-arte-header .btn { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .galeria-arte {
+    grid-template-columns: 1fr;
+    gap: 55px 20px;
+  }
+  .obra-marco img { height: 200px; }
 }

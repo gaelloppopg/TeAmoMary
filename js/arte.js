@@ -3,6 +3,7 @@
    - Dibujo en canvas con varios pinceles
    - Guardado en localStorage
    - Descarga como PNG
+   - Galería estilo lienzos colgados
    ========================================= */
 
 const STORAGE_OBRAS = "obras_arte";
@@ -36,7 +37,7 @@ function guardarObras() {
 }
 
 // =========================================
-// GALERÍA
+// GALERÍA (Lienzos colgados)
 // =========================================
 function renderGaleria() {
   const cont = document.getElementById("galeriaArte");
@@ -51,7 +52,7 @@ function renderGaleria() {
   vacia.style.display = "none";
 
   cont.innerHTML = obras.map((o, i) => `
-    <div class="obra-card reveal" data-index="${i}">
+    <div class="obra-card" data-index="${i}" style="animation-delay: ${i * 0.12}s">
       <div class="obra-marco">
         <img src="${o.imagen}" alt="${o.titulo || 'Obra'}" />
       </div>
