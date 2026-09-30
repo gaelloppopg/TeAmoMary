@@ -1,7 +1,7 @@
 /* =========================================
    TALLER DE ARTE
    - Canvas apilados: fondo + dibujo
-   - Fondo: color / opacidad / imagen (subida)
+   - Fondo: color / opacidad / imagen
    - Guardado en localStorage
    - Descarga como PNG fusionado
    - Galería minimalista moderna
@@ -170,11 +170,11 @@ function abrirEstudio(idx = null) {
   document.getElementById("fondoOpacidad").value = 100;
   document.getElementById("fondoOpacidadValor").textContent = 100;
 
-  // Pintar fondo inicial
-  dibujarFondo();
-
   // Limpiar capa de dibujo
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Pintar fondo inicial
+  dibujarFondo();
 
   if (idx !== null) {
     titulo.value = obras[idx].titulo || "";
@@ -199,16 +199,19 @@ function cerrarEstudio() {
 }
 
 // =========================================
-// FONDO
+// FONDO (CORREGIDO)
 // =========================================
 function dibujarFondo() {
   if (!ctxFondo || !canvasFondo) return;
 
+  // Limpiar todo el canvas de fondo
   ctxFondo.clearRect(0, 0, canvasFondo.width, canvasFondo.height);
 
-  if (fondoImagen && fondoImagen.complete) {
+  // Si hay imagen, dibujarla con opacidad
+  if (fondoImagen && fondoImagen.complete && fondoImagen.naturalWidth > 0) {
     ctxFondo.save();
     ctxFondo.globalAlpha = fondoOpacidad / 100;
+    // Ajustar la imagen al tamaño del canvas (cover)
     const escala = Math.max(
       canvasFondo.width / fondoImagen.width,
       canvasFondo.height / fondoImagen.height
@@ -220,15 +223,17 @@ function dibujarFondo() {
     ctxFondo.drawImage(fondoImagen, x, y, w, h);
     ctxFondo.restore();
   } else {
+    // Color plano
     ctxFondo.fillStyle = fondoColor;
     ctxFondo.fillRect(0, 0, canvasFondo.width, canvasFondo.height);
   }
 }
 
 // =========================================
-// HISTORIAL
+// HISTORIAL (capa de dibujo)
 // =========================================
 function guardarHistorial() {
+  if (!ctx || !canvas) return;
   if (historial.length > 30) historial.shift();
   historial.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
 }
@@ -333,6 +338,12 @@ function terminarDibujo() {
 }
 
 function conectarEventosCanvas() {
+  // Clonar el canvas para remover listeners viejos
+  const nuevo = canvas.cloneNode(true);
+  canvas.parentNode.replaceChild(nuevo, canvas);
+  canvas = nuevo;
+  ctx = canvas.getContext("2d", { willReadFrequently: true });
+
   canvas.addEventListener("mousedown", empezarDibujo);
   canvas.addEventListener("mousemove", dibujar);
   canvas.addEventListener("mouseup", terminarDibujo);
@@ -351,13 +362,15 @@ function fusionarCapas() {
   temp.width = canvas.width;
   temp.height = canvas.height;
   const tctx = temp.getContext("2d");
+  // Fondo primero
   tctx.drawImage(canvasFondo, 0, 0);
+  // Dibujo encima
   tctx.drawImage(canvas, 0, 0);
   return temp;
 }
 
 // =========================================
-// SUBIR IMAGEN DE FONDO
+// SUBIR IMAGEN DE FONDO (ImgBB + Cloudinary)
 // =========================================
 async function subirImagenAImgBB(archivo) {
   const formData = new FormData();
@@ -383,7 +396,7 @@ async function subirImagenACloudinary(archivo) {
 }
 
 async function subirImagenFondo(archivo) {
-  // Intentar primero ImgBB, si falla usar Cloudinary
+  // Intentar ImgBB primero, si falla Cloudinary
   try {
     return await subirImagenAImgBB(archivo);
   } catch (e) {
@@ -470,7 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("active"));
   });
 
-  // FONDO - Color
+  // ====== FONDO - Color ======
   document.getElementById("fondoColor").addEventListener("input", (e) => {
     fondoColor = e.target.value;
     fondoImagen = null;
@@ -478,7 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dibujarFondo();
   });
 
-  // FONDO - Subir imagen
+  // ====== FONDO - Subir imagen ======
   const btnSubirFondo = document.getElementById("btnSubirFondo");
   const inputFondo = document.getElementById("inputFondo");
   btnSubirFondo.addEventListener("click", () => inputFondo.click());
@@ -486,7 +499,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const archivo = e.target.files[0];
     if (!archivo) return;
 
-    // Validaciones
     if (!archivo.type.startsWith("image/")) {
       alert("Solo se permiten imágenes 💜");
       return;
@@ -512,14 +524,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // FONDO - Opacidad
+  // ====== FONDO - Opacidad ======
   document.getElementById("fondoOpacidad").addEventListener("input", (e) => {
     fondoOpacidad = parseInt(e.target.value, 10);
     document.getElementById("fondoOpacidadValor").textContent = fondoOpacidad;
     dibujarFondo();
   });
 
-  // FONDO - Quitar
+  // ====== FONDO - Quitar ======
   document.getElementById("btnQuitarFondo").addEventListener("click", () => {
     fondoImagen = null;
     fondoImagenURL = "";
