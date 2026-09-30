@@ -1,6 +1,5 @@
 /* =========================================
    TALLER DE ARTE - Estilo Minimalista Moderno
-   Galería de arte contemporáneo
    ========================================= */
 
 .galeria-arte-section {
@@ -26,8 +25,7 @@
 }
 
 /* =========================================
-   PARED DE GALERÍA MODERNA
-   Fondo claro, limpio, minimalista
+   PARED DE GALERÍA
    ========================================= */
 .galeria-arte {
   display: grid;
@@ -40,7 +38,6 @@
   box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
 
-/* Puntos sutiles tipo "papel de pared" moderno */
 .galeria-arte::before {
   content: "";
   position: absolute;
@@ -52,7 +49,7 @@
 }
 
 /* =========================================
-   LIENZO MODERNO
+   LIENZO
    ========================================= */
 .obra-card {
   position: relative;
@@ -60,28 +57,17 @@
   animation: aparecer 0.8s cubic-bezier(.2, .9, .3, 1) backwards;
   transition: transform .5s cubic-bezier(.2, .9, .3, 1);
   z-index: 1;
-  cursor: pointer;
 }
 
 @keyframes aparecer {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .obra-card:hover {
   transform: translateY(-8px);
 }
 
-/* =========================================
-   MARCO MINIMALISTA
-   Sombra suave, sin decoración
-   ========================================= */
 .obra-marco {
   background: #fff;
   padding: 16px;
@@ -102,7 +88,6 @@
     0 32px 80px rgba(0,0,0,.08);
 }
 
-/* Línea sutil dentro del marco (estilo galería) */
 .obra-marco::before {
   content: "";
   position: absolute;
@@ -113,7 +98,6 @@
   z-index: 2;
 }
 
-/* Lienzo dentro del marco */
 .obra-marco img {
   display: block;
   width: 100%;
@@ -130,10 +114,7 @@
   transform: scale(1.04);
 }
 
-/* =========================================
-   PLACA MINIMALISTA
-   Solo texto, sin decoración
-   ========================================= */
+/* Info / Título */
 .obra-info {
   margin-top: 20px;
   padding: 0 4px;
@@ -163,10 +144,7 @@
   font-weight: 400;
 }
 
-/* =========================================
-   ACCIONES MODERNAS
-   Botones flotantes suaves
-   ========================================= */
+/* Acciones */
 .obra-acciones {
   display: flex;
   justify-content: center;
@@ -189,7 +167,7 @@
   border: none;
   background: #fff;
   cursor: pointer;
-  font-size: .9rem;
+  font-size: 1rem;
   transition: all .3s cubic-bezier(.2, .9, .3, 1);
   display: flex;
   align-items: center;
@@ -205,9 +183,7 @@
   box-shadow: 0 6px 16px rgba(0,0,0,.15);
 }
 
-/* =========================================
-   GALERÍA VACÍA
-   ========================================= */
+/* Galería vacía */
 .galeria-vacia {
   text-align: center;
   color: #999;
@@ -219,7 +195,6 @@
   background: #f7f5f2;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,.04);
-  position: relative;
 }
 
 .galeria-vacia::before {
@@ -231,7 +206,7 @@
 }
 
 /* =========================================
-   ESTUDIO (mantengo tu diseño original)
+   ESTUDIO
    ========================================= */
 .estudio-overlay {
   position: fixed;
@@ -251,7 +226,7 @@
   background: #fff;
   border-radius: 16px;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
   padding: 24px;
   box-shadow: 0 30px 80px rgba(0,0,0,.5);
   animation: fadeInUp .4s ease;
@@ -263,8 +238,9 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
+
 #tituloObra {
   flex: 1;
   padding: 12px 20px;
@@ -303,10 +279,10 @@
   transform: rotate(90deg);
 }
 
-/* Toolbar minimalista */
+/* Toolbar */
 .estudio-toolbar {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   flex-wrap: wrap;
   align-items: center;
   background: #fafafa;
@@ -315,18 +291,21 @@
   margin-bottom: 18px;
   border: 1px solid #f0f0f0;
 }
+
 .tool-group {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .tool-label {
-  font-size: .75rem;
+  font-size: .7rem;
   color: #999;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+
 .tool-btn {
   width: 40px;
   height: 40px;
@@ -360,6 +339,7 @@
   text-align: center;
 }
 
+/* Colores */
 .colores { flex-wrap: wrap; }
 .color-btn {
   width: 30px;
@@ -372,9 +352,7 @@
   transition: all .25s ease;
   padding: 0;
 }
-.color-btn:hover {
-  transform: scale(1.15);
-}
+.color-btn:hover { transform: scale(1.15); }
 .color-btn.active {
   border-color: #1a1a1a;
   transform: scale(1.2);
@@ -391,6 +369,39 @@
   box-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 
+/* Fondo */
+.fondo-group {
+  background: linear-gradient(135deg, #fef9f3, #f7f5f2);
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid #f0e6dc;
+}
+
+#fondoColor {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,.15);
+}
+
+#fondoOpacidad {
+  width: 80px;
+  accent-color: #d4a373;
+}
+
+#fondoOpacidadValor {
+  font-size: .75rem;
+  color: #d4a373;
+  font-weight: 600;
+  min-width: 26px;
+  text-align: center;
+}
+
+/* Canvas */
 .estudio-canvas-wrapper {
   background: #fafafa;
   border-radius: 12px;
@@ -400,6 +411,7 @@
   justify-content: center;
   overflow: hidden;
 }
+
 #lienzo {
   border-radius: 8px;
   background: #fff;
@@ -418,9 +430,7 @@
   margin-top: 18px;
 }
 
-/* =========================================
-   MODAL VER OBRA
-   ========================================= */
+/* Modal */
 .modal-carta .modal-content img {
   box-shadow:
     0 4px 16px rgba(0,0,0,.1),
@@ -446,7 +456,7 @@
   .estudio-toolbar { gap: 14px; padding: 12px; }
   .tool-btn { width: 36px; height: 36px; font-size: 1rem; }
   .color-btn { width: 26px; height: 26px; }
-  #grosor { width: 80px; }
+  #grosor, #fondoOpacidad { width: 70px; }
   .estudio-footer .btn { flex: 1; min-width: 120px; padding: 12px 16px; font-size: .85rem; }
   .galeria-arte-header { flex-direction: column; align-items: stretch; }
   .galeria-arte-header .btn { width: 100%; }

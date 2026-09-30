@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="../css/animations.css" />
   <link rel="stylesheet" href="../css/responsive.css" />
   <link rel="stylesheet" href="../css/arte.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="manifest" href="../manifest.json" />
-  <meta name="theme-color" content="#f28ca6" />
+  <meta name="theme-color" content="#f7f5f2" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
 
   <script>
@@ -41,7 +41,7 @@
     </div>
     <div class="galeria-arte" id="galeriaArte"></div>
     <p class="galeria-vacia" id="galeriaVacia">
-      Aún no hay obras... ¡Crea tu primer dibujo! 🎨
+      Aún no hay obras... ¡Crea tu primer dibujo!
     </p>
   </section>
 
@@ -54,7 +54,9 @@
       </div>
 
       <div class="estudio-toolbar">
+        <!-- Herramientas -->
         <div class="tool-group">
+          <span class="tool-label">Pincel</span>
           <button class="tool-btn active" data-tool="pincel" title="Pincel">🖌️</button>
           <button class="tool-btn" data-tool="lapiz" title="Lápiz">✏️</button>
           <button class="tool-btn" data-tool="neon" title="Neón">✨</button>
@@ -62,23 +64,37 @@
           <button class="tool-btn" data-tool="borrador" title="Borrador">🧽</button>
         </div>
 
+        <!-- Grosor -->
         <div class="tool-group">
-          <label class="tool-label">Grosor</label>
+          <span class="tool-label">Grosor</span>
           <input type="range" id="grosor" min="1" max="50" value="8" />
           <span id="grosorValor">8</span>
         </div>
 
+        <!-- Colores -->
         <div class="tool-group colores">
-          <button class="color-btn active" data-color="#f28ca6" style="--c:#f28ca6"></button>
-          <button class="color-btn" data-color="#d4a373" style="--c:#d4a373"></button>
+          <span class="tool-label">Color</span>
+          <button class="color-btn active" data-color="#1a1a1a" style="--c:#1a1a1a"></button>
           <button class="color-btn" data-color="#e63946" style="--c:#e63946"></button>
           <button class="color-btn" data-color="#f4a261" style="--c:#f4a261"></button>
           <button class="color-btn" data-color="#2a9d8f" style="--c:#2a9d8f"></button>
           <button class="color-btn" data-color="#457b9d" style="--c:#457b9d"></button>
           <button class="color-btn" data-color="#9d4edd" style="--c:#9d4edd"></button>
-          <button class="color-btn" data-color="#000000" style="--c:#000000"></button>
-          <button class="color-btn" data-color="#ffffff" style="--c:#ffffff"></button>
-          <input type="color" id="colorPicker" value="#f28ca6" title="Color personalizado" />
+          <button class="color-btn" data-color="#f28ca6" style="--c:#f28ca6"></button>
+          <button class="color-btn" data-color="#d4a373" style="--c:#d4a373"></button>
+          <input type="color" id="colorPicker" value="#1a1a1a" title="Color personalizado" />
+        </div>
+
+        <!-- Fondo -->
+        <div class="tool-group fondo-group">
+          <span class="tool-label">Fondo</span>
+          <input type="color" id="fondoColor" value="#ffffff" title="Color de fondo" />
+          <button class="tool-btn" id="btnSubirFondo" title="Subir imagen de fondo">🖼️</button>
+          <input type="file" id="inputFondo" accept="image/*" hidden />
+          <span class="tool-label">Opac.</span>
+          <input type="range" id="fondoOpacidad" min="0" max="100" value="100" />
+          <span id="fondoOpacidadValor">100</span>
+          <button class="tool-btn" id="btnQuitarFondo" title="Quitar fondo">🚫</button>
         </div>
       </div>
 

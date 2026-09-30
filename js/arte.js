@@ -1,23 +1,36 @@
 /* =========================================
    TALLER DE ARTE
    - Dibujo en canvas con varios pinceles
+   - Fondo: color / opacidad / imagen
    - Guardado en localStorage
    - Descarga como PNG
-   - Galería estilo lienzos colgados
+   - Galería minimalista moderna
    ========================================= */
 
 const STORAGE_OBRAS = "obras_arte";
 let obras = [];
 
+// Configuración de subida de imágenes
+const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
+const CLOUDINARY_CLOUD_NAME = "sjlitdwr";
+const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
+
+// Estado del dibujo
 let canvas, ctx;
 let dibujando = false;
 let herramienta = "pincel";
-let color = "#f28ca6";
+let color = "#1a1a1a";
 let grosor = 8;
 let ultimoX = 0, ultimoY = 0;
 let historial = [];
 let sprayInterval = null;
 let editandoIdx = null;
+
+// Estado del fondo
+let fondoImagen = null;
+let fondoImagenURL = "";
+let fondoColor = "#ffffff";
+let fondoOpacidad = 100;
 
 // =========================================
 // CARGAR / GUARDAR OBRAS
@@ -37,7 +50,7 @@ function guardarObras() {
 }
 
 // =========================================
-// GALERÍA (Lienzos colgados)
+// GALERÍA
 // =========================================
 function renderGaleria() {
   const cont = document.getElementById("galeriaArte");
@@ -52,7 +65,7 @@ function renderGaleria() {
   vacia.style.display = "none";
 
   cont.innerHTML = obras.map((o, i) => `
-    <div class="obra-card" data-index="${i}" style="animation-delay: ${i * 0.12}s">
+    <div class="obra-card" data-index="${i}" style="animation-delay: ${i * 0.08}s">
       <div class="obra-marco">
         <img src="${o.imagen}" alt="${o.titulo || 'Obra'}" />
       </div>
@@ -61,9 +74,9 @@ function renderGaleria() {
         <small>${new Date(o.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</small>
       </div>
       <div class="obra-acciones">
-        <button class="btn-obra" data-action="descargar" data-index="${i}" title="Descargar">⬇️</button>
-        <button class="btn-obra" data-action="editar" data-index="${i}" title="Editar">✏️</button>
-        <button class="btn-obra" data-action="borrar" data-index="${i}" title="Borrar">🗑️</button>
+        <button class="btn-obra" data-action="descargar" data-index="${i}" title="Descargar">⬇</button>
+        <button class="btn-obra" data-action="editar" data-index="${i}" title="Editar">✎</button>
+        <button class="btn-obra" data-action="borrar" data-index="${i}" title="Borrar">✕</button>
       </div>
     </div>
   `).join("");
@@ -85,11 +98,6 @@ function renderGaleria() {
       if (action === "borrar") borrarObra(idx);
     });
   });
-    // Ángulo aleatorio sutil para cada lienzo
-  cont.querySelectorAll(".obra-card").forEach(card => {
-    const angulo = (Math.random() * 2 - 1).toFixed(2);
-    card.style.transform = `rotate(${angulo}deg)`;
-  });
 }
 
 function verObra(idx) {
@@ -100,10 +108,10 @@ function verObra(idx) {
   modal.innerHTML = `
     <div class="modal-content" style="max-width:900px;">
       <button class="modal-close">✕</button>
-      <h2 style="text-align:center;color:var(--rosa);margin-bottom:15px;">${o.titulo || "Sin título"}</h2>
-      <img src="${o.imagen}" style="width:100%;border-radius:16px;display:block;" />
-      <p style="text-align:center;margin-top:15px;color:var(--texto-suave);font-size:.9rem;">
-        Creado el ${new Date(o.fecha).toLocaleDateString("es-ES", { day:"numeric", month:"long", year:"numeric" })}
+      <h2 style="text-align:center;color:#1a1a1a;margin-bottom:20px;font-weight:400;font-style:italic;font-family:'Playfair Display',serif;">${o.titulo || "Sin título"}</h2>
+      <img src="${o.imagen}" style="width:100%;display:block;" />
+      <p style="text-align:center;margin-top:20px;color:#999;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;">
+        ${new Date(o.fecha).toLocaleDateString("es-ES", { day:"numeric", month:"long", year:"numeric" })}
       </p>
     </div>
   `;
@@ -119,7 +127,7 @@ function descargarObra(idx) {
   if (!o) return;
   const a = document.createElement("a");
   a.href = o.imagen;
-  a.download = `dibujo-${(o.titulo || "obra").replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.png`;
+  a.download = `${(o.titulo || "obra").replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.png`;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -145,12 +153,27 @@ function abrirEstudio(idx = null) {
   canvas = document.getElementById("lienzo");
   ctx = canvas.getContext("2d", { willReadFrequently: true });
   conectarEventosCanvas();
-  limpiarLienzo();
+
+  // Reset fondo
+  fondoImagen = null;
+  fondoImagenURL = "";
+  fondoColor = "#ffffff";
+  fondoOpacidad = 100;
+  document.getElementById("fondoColor").value = "#ffffff";
+  document.getElementById("fondoOpacidad").value = 100;
+  document.getElementById("fondoOpacidadValor").textContent = 100;
+
+  // Fondo blanco inicial
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   if (idx !== null) {
     titulo.value = obras[idx].titulo || "";
     const img = new Image();
-    img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+    };
     img.src = obras[idx].imagen;
   } else {
     titulo.value = "";
@@ -163,11 +186,6 @@ function cerrarEstudio() {
     if (!confirm("¿Salir sin guardar? Los cambios no guardados se perderán.")) return;
   }
   document.getElementById("estudioOverlay").classList.remove("activo");
-}
-
-function limpiarLienzo() {
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function guardarHistorial() {
@@ -216,7 +234,7 @@ function empezarDibujo(e) {
   ctx.shadowBlur = 0;
 
   if (herramienta === "borrador") {
-    ctx.strokeStyle = "#ffffff";
+    ctx.strokeStyle = fondoImagen ? "#ffffff" : fondoColor;
     ctx.lineWidth = grosor * 2;
   } else if (herramienta === "pincel") {
     ctx.lineWidth = grosor;
@@ -274,6 +292,12 @@ function terminarDibujo() {
 }
 
 function conectarEventosCanvas() {
+  // Remover listeners previos clonando el nodo
+  const nuevo = canvas.cloneNode(true);
+  canvas.parentNode.replaceChild(nuevo, canvas);
+  canvas = nuevo;
+  ctx = canvas.getContext("2d", { willReadFrequently: true });
+
   canvas.addEventListener("mousedown", empezarDibujo);
   canvas.addEventListener("mousemove", dibujar);
   canvas.addEventListener("mouseup", terminarDibujo);
@@ -282,6 +306,102 @@ function conectarEventosCanvas() {
   canvas.addEventListener("touchstart", empezarDibujo, { passive: false });
   canvas.addEventListener("touchmove", dibujar, { passive: false });
   canvas.addEventListener("touchend", terminarDibujo);
+}
+
+// =========================================
+// FONDO
+// =========================================
+function dibujarFondoEnCtx(targetCtx) {
+  targetCtx.save();
+  targetCtx.globalAlpha = 1;
+  targetCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (fondoImagen && fondoImagen.complete) {
+    targetCtx.globalAlpha = fondoOpacidad / 100;
+    const escala = Math.max(
+      canvas.width / fondoImagen.width,
+      canvas.height / fondoImagen.height
+    );
+    const w = fondoImagen.width * escala;
+    const h = fondoImagen.height * escala;
+    const x = (canvas.width - w) / 2;
+    const y = (canvas.height - h) / 2;
+    targetCtx.drawImage(fondoImagen, x, y, w, h);
+    targetCtx.globalAlpha = 1;
+  } else {
+    targetCtx.fillStyle = fondoColor;
+    targetCtx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  targetCtx.restore();
+}
+
+function aplicarFondoCompleto() {
+  if (!canvas || !ctx) return;
+
+  // 1. Guardar contenido actual del dibujo (capas superiores)
+  const contenido = document.createElement("canvas");
+  contenido.width = canvas.width;
+  contenido.height = canvas.height;
+  const cctx = contenido.getContext("2d");
+  cctx.drawImage(canvas, 0, 0);
+
+  // 2. Redibujar fondo
+  dibujarFondoEnCtx(ctx);
+
+  // 3. Volver a poner el contenido encima
+  ctx.drawImage(contenido, 0, 0);
+
+  guardarHistorial();
+}
+
+// =========================================
+// SUBIR IMAGEN (ImgBB + fallback Cloudinary)
+// =========================================
+async function subirImagenAImgBB(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+  const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+    method: "POST",
+    body: formData
+  });
+  if (!res.ok) throw new Error("ImgBB falló");
+  const data = await res.json();
+  if (!data.success) throw new Error("ImgBB respondió con error");
+  return data.data.url;
+}
+
+async function subirImagenACloudinary(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+    { method: "POST", body: formData }
+  );
+  if (!res.ok) throw new Error("Cloudinary falló");
+  const data = await res.json();
+  return data.secure_url;
+}
+
+async function subirImagenFondo(file) {
+  try {
+    return await subirImagenAImgBB(file);
+  } catch (e) {
+    console.warn("ImgBB falló, usando Cloudinary...", e);
+    return await subirImagenACloudinary(file);
+  }
+}
+
+function cargarImagenFondoDesdeURL(url) {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    fondoImagen = img;
+    fondoImagenURL = url;
+    aplicarFondoCompleto();
+  };
+  img.onerror = () => alert("No se pudo cargar la imagen de fondo. Verifica la URL.");
+  img.src = url;
 }
 
 // =========================================
@@ -320,20 +440,23 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnNuevaObra").addEventListener("click", () => abrirEstudio(null));
   document.getElementById("cerrarEstudio").addEventListener("click", cerrarEstudio);
 
-  document.querySelectorAll(".tool-btn").forEach(btn => {
+  // Herramientas
+  document.querySelectorAll(".tool-btn[data-tool]").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".tool-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tool-btn[data-tool]").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       herramienta = btn.dataset.tool;
     });
   });
 
+  // Grosor
   const grosorInput = document.getElementById("grosor");
   grosorInput.addEventListener("input", (e) => {
     grosor = parseInt(e.target.value, 10);
     document.getElementById("grosorValor").textContent = grosor;
   });
 
+  // Colores
   document.querySelectorAll(".color-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("active"));
@@ -347,10 +470,66 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("active"));
   });
 
+  // FONDO - Color
+  document.getElementById("fondoColor").addEventListener("input", (e) => {
+    fondoColor = e.target.value;
+    fondoImagen = null;
+    fondoImagenURL = "";
+    aplicarFondoCompleto();
+  });
+
+  // FONDO - Subir imagen
+  const btnSubirFondo = document.getElementById("btnSubirFondo");
+  const inputFondo = document.getElementById("inputFondo");
+  btnSubirFondo.addEventListener("click", () => inputFondo.click());
+  inputFondo.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    btnSubirFondo.textContent = "⏳";
+    btnSubirFondo.disabled = true;
+    try {
+      const url = await subirImagenFondo(file);
+      cargarImagenFondoDesdeURL(url);
+    } catch (err) {
+      alert("Error al subir la imagen. Intenta con otra.");
+      console.error(err);
+    } finally {
+      btnSubirFondo.textContent = "🖼️";
+      btnSubirFondo.disabled = false;
+      inputFondo.value = "";
+    }
+  });
+
+  // FONDO - Opacidad
+  document.getElementById("fondoOpacidad").addEventListener("input", (e) => {
+    fondoOpacidad = parseInt(e.target.value, 10);
+    document.getElementById("fondoOpacidadValor").textContent = fondoOpacidad;
+    aplicarFondoCompleto();
+  });
+
+  // FONDO - Quitar
+  document.getElementById("btnQuitarFondo").addEventListener("click", () => {
+    fondoImagen = null;
+    fondoImagenURL = "";
+    fondoColor = "#ffffff";
+    fondoOpacidad = 100;
+    document.getElementById("fondoColor").value = "#ffffff";
+    document.getElementById("fondoOpacidad").value = 100;
+    document.getElementById("fondoOpacidadValor").textContent = 100;
+    if (ctx && canvas) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    guardarHistorial();
+  });
+
+  // Acciones
   document.getElementById("btnDeshacer").addEventListener("click", deshacer);
   document.getElementById("btnLimpiar").addEventListener("click", () => {
     if (confirm("¿Limpiar todo el lienzo?")) {
-      limpiarLienzo();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      dibujarFondoEnCtx(ctx);
       guardarHistorial();
     }
   });
