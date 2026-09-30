@@ -1,22 +1,25 @@
 /* =========================================
    TALLER DE ARTE
-   - Dibujo en canvas con varios pinceles
-   - Fondo: color / opacidad / imagen
+   - Canvas apilados: fondo + dibujo
+   - Fondo: color / opacidad / imagen (subida)
    - Guardado en localStorage
-   - Descarga como PNG
+   - Descarga como PNG fusionado
    - Galería minimalista moderna
    ========================================= */
 
 const STORAGE_OBRAS = "obras_arte";
 let obras = [];
 
-// Configuración de subida de imágenes
+// Config subida (igual que tu galería)
 const IMGBB_API_KEY = "e612807706852fdf6efbcaab6e66de43";
 const CLOUDINARY_CLOUD_NAME = "sjlitdwr";
 const CLOUDINARY_UPLOAD_PRESET = "PaginaNovia";
 
-// Estado del dibujo
+// Canvas
+let canvasFondo, ctxFondo;
 let canvas, ctx;
+
+// Estado dibujo
 let dibujando = false;
 let herramienta = "pincel";
 let color = "#1a1a1a";
@@ -26,7 +29,7 @@ let historial = [];
 let sprayInterval = null;
 let editandoIdx = null;
 
-// Estado del fondo
+// Estado fondo
 let fondoImagen = null;
 let fondoImagenURL = "";
 let fondoColor = "#ffffff";
@@ -150,8 +153,12 @@ function abrirEstudio(idx = null) {
   const titulo = document.getElementById("tituloObra");
   historial = [];
 
+  canvasFondo = document.getElementById("lienzoFondo");
+  ctxFondo = canvasFondo.getContext("2d");
+
   canvas = document.getElementById("lienzo");
   ctx = canvas.getContext("2d", { willReadFrequently: true });
+
   conectarEventosCanvas();
 
   // Reset fondo
@@ -163,9 +170,11 @@ function abrirEstudio(idx = null) {
   document.getElementById("fondoOpacidad").value = 100;
   document.getElementById("fondoOpacidadValor").textContent = 100;
 
-  // Fondo blanco inicial
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Pintar fondo inicial
+  dibujarFondo();
+
+  // Limpiar capa de dibujo
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (idx !== null) {
     titulo.value = obras[idx].titulo || "";
@@ -173,12 +182,13 @@ function abrirEstudio(idx = null) {
     img.onload = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
+      guardarHistorial();
     };
     img.src = obras[idx].imagen;
   } else {
     titulo.value = "";
+    guardarHistorial();
   }
-  guardarHistorial();
 }
 
 function cerrarEstudio() {
@@ -188,20 +198,46 @@ function cerrarEstudio() {
   document.getElementById("estudioOverlay").classList.remove("activo");
 }
 
+// =========================================
+// FONDO
+// =========================================
+function dibujarFondo() {
+  if (!ctxFondo || !canvasFondo) return;
+
+  ctxFondo.clearRect(0, 0, canvasFondo.width, canvasFondo.height);
+
+  if (fondoImagen && fondoImagen.complete) {
+    ctxFondo.save();
+    ctxFondo.globalAlpha = fondoOpacidad / 100;
+    const escala = Math.max(
+      canvasFondo.width / fondoImagen.width,
+      canvasFondo.height / fondoImagen.height
+    );
+    const w = fondoImagen.width * escala;
+    const h = fondoImagen.height * escala;
+    const x = (canvasFondo.width - w) / 2;
+    const y = (canvasFondo.height - h) / 2;
+    ctxFondo.drawImage(fondoImagen, x, y, w, h);
+    ctxFondo.restore();
+  } else {
+    ctxFondo.fillStyle = fondoColor;
+    ctxFondo.fillRect(0, 0, canvasFondo.width, canvasFondo.height);
+  }
+}
+
+// =========================================
+// HISTORIAL
+// =========================================
 function guardarHistorial() {
   if (historial.length > 30) historial.shift();
-  historial.push(canvas.toDataURL());
+  historial.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
 }
 
 function deshacer() {
   if (historial.length <= 1) return;
   historial.pop();
-  const img = new Image();
-  img.onload = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
-  };
-  img.src = historial[historial.length - 1];
+  const prev = historial[historial.length - 1];
+  ctx.putImageData(prev, 0, 0);
 }
 
 // =========================================
@@ -234,18 +270,22 @@ function empezarDibujo(e) {
   ctx.shadowBlur = 0;
 
   if (herramienta === "borrador") {
-    ctx.strokeStyle = fondoImagen ? "#ffffff" : fondoColor;
+    ctx.globalCompositeOperation = "destination-out";
     ctx.lineWidth = grosor * 2;
   } else if (herramienta === "pincel") {
+    ctx.globalCompositeOperation = "source-over";
     ctx.lineWidth = grosor;
     ctx.globalAlpha = 0.9;
   } else if (herramienta === "lapiz") {
+    ctx.globalCompositeOperation = "source-over";
     ctx.lineWidth = Math.max(1, grosor / 3);
   } else if (herramienta === "neon") {
+    ctx.globalCompositeOperation = "source-over";
     ctx.lineWidth = grosor;
     ctx.shadowColor = color;
     ctx.shadowBlur = 20;
   } else if (herramienta === "spray") {
+    ctx.globalCompositeOperation = "source-over";
     ctx.lineWidth = 1;
     sprayInterval = setInterval(() => {
       for (let i = 0; i < 8; i++) {
@@ -286,18 +326,13 @@ function terminarDibujo() {
   dibujando = false;
   ctx.closePath();
   ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = "source-over";
   ctx.shadowBlur = 0;
   if (sprayInterval) { clearInterval(sprayInterval); sprayInterval = null; }
   guardarHistorial();
 }
 
 function conectarEventosCanvas() {
-  // Remover listeners previos clonando el nodo
-  const nuevo = canvas.cloneNode(true);
-  canvas.parentNode.replaceChild(nuevo, canvas);
-  canvas = nuevo;
-  ctx = canvas.getContext("2d", { willReadFrequently: true });
-
   canvas.addEventListener("mousedown", empezarDibujo);
   canvas.addEventListener("mousemove", dibujar);
   canvas.addEventListener("mouseup", terminarDibujo);
@@ -309,86 +344,51 @@ function conectarEventosCanvas() {
 }
 
 // =========================================
-// FONDO
+// FUSIONAR FONDO + DIBUJO
 // =========================================
-function dibujarFondoEnCtx(targetCtx) {
-  targetCtx.save();
-  targetCtx.globalAlpha = 1;
-  targetCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-  if (fondoImagen && fondoImagen.complete) {
-    targetCtx.globalAlpha = fondoOpacidad / 100;
-    const escala = Math.max(
-      canvas.width / fondoImagen.width,
-      canvas.height / fondoImagen.height
-    );
-    const w = fondoImagen.width * escala;
-    const h = fondoImagen.height * escala;
-    const x = (canvas.width - w) / 2;
-    const y = (canvas.height - h) / 2;
-    targetCtx.drawImage(fondoImagen, x, y, w, h);
-    targetCtx.globalAlpha = 1;
-  } else {
-    targetCtx.fillStyle = fondoColor;
-    targetCtx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-  targetCtx.restore();
-}
-
-function aplicarFondoCompleto() {
-  if (!canvas || !ctx) return;
-
-  // 1. Guardar contenido actual del dibujo (capas superiores)
-  const contenido = document.createElement("canvas");
-  contenido.width = canvas.width;
-  contenido.height = canvas.height;
-  const cctx = contenido.getContext("2d");
-  cctx.drawImage(canvas, 0, 0);
-
-  // 2. Redibujar fondo
-  dibujarFondoEnCtx(ctx);
-
-  // 3. Volver a poner el contenido encima
-  ctx.drawImage(contenido, 0, 0);
-
-  guardarHistorial();
+function fusionarCapas() {
+  const temp = document.createElement("canvas");
+  temp.width = canvas.width;
+  temp.height = canvas.height;
+  const tctx = temp.getContext("2d");
+  tctx.drawImage(canvasFondo, 0, 0);
+  tctx.drawImage(canvas, 0, 0);
+  return temp;
 }
 
 // =========================================
-// SUBIR IMAGEN (ImgBB + fallback Cloudinary)
+// SUBIR IMAGEN DE FONDO
 // =========================================
-async function subirImagenAImgBB(file) {
+async function subirImagenAImgBB(archivo) {
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("image", archivo);
   const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-    method: "POST",
-    body: formData
+    method: "POST", body: formData
   });
-  if (!res.ok) throw new Error("ImgBB falló");
+  if (!res.ok) throw new Error("Error subiendo a ImgBB");
   const data = await res.json();
-  if (!data.success) throw new Error("ImgBB respondió con error");
+  if (!data.success) throw new Error(data.error?.message || "Error de ImgBB");
   return data.data.url;
 }
 
-async function subirImagenACloudinary(file) {
+async function subirImagenACloudinary(archivo) {
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", archivo);
   formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-  const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-    { method: "POST", body: formData }
-  );
-  if (!res.ok) throw new Error("Cloudinary falló");
+  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+  const res = await fetch(url, { method: "POST", body: formData });
+  if (!res.ok) throw new Error("Error subiendo a Cloudinary");
   const data = await res.json();
   return data.secure_url;
 }
 
-async function subirImagenFondo(file) {
+async function subirImagenFondo(archivo) {
+  // Intentar primero ImgBB, si falla usar Cloudinary
   try {
-    return await subirImagenAImgBB(file);
+    return await subirImagenAImgBB(archivo);
   } catch (e) {
     console.warn("ImgBB falló, usando Cloudinary...", e);
-    return await subirImagenACloudinary(file);
+    return await subirImagenACloudinary(archivo);
   }
 }
 
@@ -398,9 +398,9 @@ function cargarImagenFondoDesdeURL(url) {
   img.onload = () => {
     fondoImagen = img;
     fondoImagenURL = url;
-    aplicarFondoCompleto();
+    dibujarFondo();
   };
-  img.onerror = () => alert("No se pudo cargar la imagen de fondo. Verifica la URL.");
+  img.onerror = () => alert("No se pudo cargar la imagen de fondo. Intenta con otra.");
   img.src = url;
 }
 
@@ -409,7 +409,8 @@ function cargarImagenFondoDesdeURL(url) {
 // =========================================
 function guardarObra() {
   const titulo = document.getElementById("tituloObra").value.trim();
-  const imagen = canvas.toDataURL("image/png");
+  const fusionado = fusionarCapas();
+  const imagen = fusionado.toDataURL("image/png");
 
   if (editandoIdx !== null) {
     obras[editandoIdx].titulo = titulo || "Sin título";
@@ -450,8 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Grosor
-  const grosorInput = document.getElementById("grosor");
-  grosorInput.addEventListener("input", (e) => {
+  document.getElementById("grosor").addEventListener("input", (e) => {
     grosor = parseInt(e.target.value, 10);
     document.getElementById("grosorValor").textContent = grosor;
   });
@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fondoColor = e.target.value;
     fondoImagen = null;
     fondoImagenURL = "";
-    aplicarFondoCompleto();
+    dibujarFondo();
   });
 
   // FONDO - Subir imagen
@@ -483,15 +483,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputFondo = document.getElementById("inputFondo");
   btnSubirFondo.addEventListener("click", () => inputFondo.click());
   inputFondo.addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const archivo = e.target.files[0];
+    if (!archivo) return;
+
+    // Validaciones
+    if (!archivo.type.startsWith("image/")) {
+      alert("Solo se permiten imágenes 💜");
+      return;
+    }
+    if (archivo.size > 32 * 1024 * 1024) {
+      alert("La imagen es muy grande (máx 32 MB) 💜");
+      return;
+    }
+
     btnSubirFondo.textContent = "⏳";
     btnSubirFondo.disabled = true;
+
     try {
-      const url = await subirImagenFondo(file);
+      const url = await subirImagenFondo(archivo);
       cargarImagenFondoDesdeURL(url);
     } catch (err) {
-      alert("Error al subir la imagen. Intenta con otra.");
+      alert("Error al subir la imagen: " + err.message);
       console.error(err);
     } finally {
       btnSubirFondo.textContent = "🖼️";
@@ -504,7 +516,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("fondoOpacidad").addEventListener("input", (e) => {
     fondoOpacidad = parseInt(e.target.value, 10);
     document.getElementById("fondoOpacidadValor").textContent = fondoOpacidad;
-    aplicarFondoCompleto();
+    dibujarFondo();
   });
 
   // FONDO - Quitar
@@ -516,20 +528,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("fondoColor").value = "#ffffff";
     document.getElementById("fondoOpacidad").value = 100;
     document.getElementById("fondoOpacidadValor").textContent = 100;
-    if (ctx && canvas) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-    guardarHistorial();
+    dibujarFondo();
   });
 
   // Acciones
   document.getElementById("btnDeshacer").addEventListener("click", deshacer);
   document.getElementById("btnLimpiar").addEventListener("click", () => {
-    if (confirm("¿Limpiar todo el lienzo?")) {
+    if (confirm("¿Limpiar todo el dibujo? (El fondo se mantiene)")) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      dibujarFondoEnCtx(ctx);
       guardarHistorial();
     }
   });
@@ -537,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const a = document.createElement("a");
     const titulo = document.getElementById("tituloObra").value.trim() || "mi-dibujo";
     a.download = `${titulo.replace(/\s+/g, "-").toLowerCase()}.png`;
-    a.href = canvas.toDataURL("image/png");
+    a.href = fusionarCapas().toDataURL("image/png");
     a.click();
   });
   document.getElementById("btnGuardar").addEventListener("click", guardarObra);
