@@ -1,9 +1,10 @@
 /* ============================================
    Service Worker - Cache offline + excepciones
+   v11: network-first para HTML/CSS/JS
    ============================================ */
 
 // ⚠️ IMPORTANTE: Cada vez que edites este archivo, subí el número de versión
-const CACHE = "novia-v10";
+const CACHE = "novia-v11";
 
 const ASSETS = [
   "./",
@@ -13,6 +14,7 @@ const ASSETS = [
   "./css/style.css",
   "./css/animations.css",
   "./css/responsive.css",
+  "./css/arte.css",
   "./js/script.js",
   "./js/contador.js",
   "./js/confeti.js",
@@ -22,13 +24,15 @@ const ASSETS = [
   "./js/video-musica.js",
   "./js/pwa.js",
   "./js/diario.js",
+  "./js/arte.js",
   "./pages/historia.html",
   "./pages/recuerdos.html",
   "./pages/cartas.html",
   "./pages/razones.html",
   "./pages/juego.html",
   "./pages/cuponera.html",
-  "./pages/diario.html"
+  "./pages/diario.html",
+  "./pages/arte.html"
 ];
 
 // ========== INSTALACIÓN ==========
@@ -75,9 +79,8 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // 🛡️ EXCEPCIÓN 2: NO interceptar NADA que no sea de nuestro sitio
+  // 🛡️ EXCEPCIÓN 2: No interceptar requests externos (ImgBB, Cloudinary, JSONBin, etc.)
   const esDeNuestroSitio = url.startsWith(self.location.origin);
-
   if (!esDeNuestroSitio) {
     return;
   }
@@ -87,10 +90,15 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // ========== Network-first para HTML, cache-first para el resto ==========
-  const esHTML = e.request.headers.get("accept")?.includes("text/html");
+  const path = new URL(url).pathname;
 
-  if (esHTML) {
+  // ========== HTML, CSS y JS → NETWORK FIRST ==========
+  // (así siempre se ve la última versión, pero si no hay red, usa caché)
+  const esHTML = e.request.headers.get("accept")?.includes("text/html");
+  const esCSS = path.endsWith(".css");
+  const esJS = path.endsWith(".js");
+
+  if (esHTML || esCSS || esJS) {
     e.respondWith(
       fetch(e.request)
         .then((res) => {
@@ -105,7 +113,7 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // Para JS, CSS, imágenes → cache-first
+  // ========== Imágenes, fuentes, etc. → CACHE FIRST ==========
   e.respondWith(
     caches.match(e.request).then((cached) => {
       if (cached) return cached;
@@ -134,6 +142,7 @@ self.addEventListener("message", (e) => {
     });
   }
 });
+
 // ========== PUSH NOTIFICATIONS ==========
 self.addEventListener("push", (event) => {
   console.log("📬 Push recibido");
@@ -158,14 +167,9 @@ self.addEventListener("push", (event) => {
     icon: "/assets/images/icons/icon-192.png",
     badge: "/assets/images/icons/icon-192.png",
     vibrate: [200, 100, 200],
-    data: {
-      url: data.url
-    },
+    data: { url: data.url },
     actions: [
-      {
-        action: "abrir",
-        title: "Abrir diario"
-      }
+      { action: "abrir", title: "Abrir diario" }
     ]
   };
 
@@ -182,13 +186,11 @@ self.addEventListener("notificationclick", (event) => {
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-      // Si ya hay una pestaña abierta, enfocarla
       for (const client of clientList) {
         if (client.url.includes("/pages/diario.html") && "focus" in client) {
           return client.focus();
         }
       }
-      // Si no, abrir una nueva
       if (clients.openWindow) {
         return clients.openWindow(url);
       }
