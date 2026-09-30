@@ -1,5 +1,6 @@
 /* =========================================
-   TALLER DE ARTE - Estilo Museo de Arte
+   TALLER DE ARTE - Estilo Minimalista Moderno
+   Galería de arte contemporáneo
    ========================================= */
 
 .galeria-arte-section {
@@ -14,269 +15,166 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 15px;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
+  padding: 0 10px;
 }
 .galeria-arte-header .section-title {
   margin: 0;
-  color: #f5e6d3;
-  text-shadow: 0 2px 10px rgba(0,0,0,.5);
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  color: #1a1a1a;
 }
 
 /* =========================================
-   SALA DEL MUSEO (PARED OSCURA)
+   PARED DE GALERÍA MODERNA
+   Fondo claro, limpio, minimalista
    ========================================= */
 .galeria-arte {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 80px 45px;
-  padding: 70px 40px 90px;
+  gap: 60px 40px;
+  padding: 60px 40px;
   position: relative;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(255,220,150,.25), transparent 60%),
-    radial-gradient(ellipse at 20% 40%, rgba(255,200,120,.12), transparent 50%),
-    radial-gradient(ellipse at 80% 60%, rgba(255,200,120,.12), transparent 50%),
-    linear-gradient(180deg, #2a1f1a 0%, #3d2b22 40%, #241811 100%);
-  border-radius: 24px;
-  box-shadow:
-    inset 0 0 100px rgba(0,0,0,.8),
-    inset 0 0 30px rgba(0,0,0,.6),
-    0 20px 60px rgba(0,0,0,.4);
-  overflow: hidden;
+  background: #f7f5f2;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
 
-/* Focos de luz cenital en la pared */
+/* Puntos sutiles tipo "papel de pared" moderno */
 .galeria-arte::before {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 24px;
-  background-image:
-    radial-gradient(ellipse 140px 220px at 15% 20%, rgba(255,220,160,.18), transparent 70%),
-    radial-gradient(ellipse 140px 220px at 45% 20%, rgba(255,220,160,.18), transparent 70%),
-    radial-gradient(ellipse 140px 220px at 75% 20%, rgba(255,220,160,.18), transparent 70%),
-    radial-gradient(ellipse 140px 220px at 25% 70%, rgba(255,220,160,.15), transparent 70%),
-    radial-gradient(ellipse 140px 220px at 65% 70%, rgba(255,220,160,.15), transparent 70%);
+  border-radius: 8px;
+  background-image: radial-gradient(circle, rgba(0,0,0,.06) 1px, transparent 1px);
+  background-size: 24px 24px;
   pointer-events: none;
-  animation: luzParpadeo 6s ease-in-out infinite;
-}
-
-@keyframes luzParpadeo {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .85; }
-}
-
-/* Textura sutil de pared de museo */
-.galeria-arte::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  background-image:
-    repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.04) 3px 4px),
-    repeating-linear-gradient(90deg, transparent 0 3px, rgba(0,0,0,.04) 3px 4px);
-  pointer-events: none;
-  opacity: .6;
 }
 
 /* =========================================
-   LIENZO COLGADO EN LA PARED
+   LIENZO MODERNO
    ========================================= */
 .obra-card {
   position: relative;
   text-align: center;
-  animation: colgar 1s cubic-bezier(.34,1.56,.64,1) backwards;
-  transition: transform .4s ease;
+  animation: aparecer 0.8s cubic-bezier(.2, .9, .3, 1) backwards;
+  transition: transform .5s cubic-bezier(.2, .9, .3, 1);
   z-index: 1;
-  filter: drop-shadow(0 15px 25px rgba(0,0,0,.6));
+  cursor: pointer;
 }
 
-.obra-card:hover {
-  transform: translateY(-10px) rotate(-1deg) scale(1.02);
-  filter: drop-shadow(0 25px 40px rgba(0,0,0,.75));
-}
-
-/* Animación de "colgarse" con balanceo */
-@keyframes colgar {
+@keyframes aparecer {
   0% {
     opacity: 0;
-    transform: translateY(-80px) rotate(-8deg);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(10px) rotate(3deg);
-  }
-  70% {
-    transform: translateY(-4px) rotate(-1.5deg);
+    transform: translateY(30px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) rotate(0);
+    transform: translateY(0);
   }
 }
 
-/* Cuerda doble */
-.obra-card::before {
-  content: "";
-  position: absolute;
-  top: -48px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90px;
-  height: 48px;
-  background:
-    linear-gradient(135deg, transparent 45%, #8b5a2b 45%, #8b5a2b 55%, transparent 55%),
-    linear-gradient(45deg, transparent 45%, #8b5a2b 45%, #8b5a2b 55%, transparent 55%);
-  clip-path: polygon(0 0, 50% 100%, 100% 0, 96% 0, 50% 92%, 4% 0);
-  z-index: 2;
-  opacity: .9;
-}
-
-/* Clavo dorado en la pared */
-.obra-card::after {
-  content: "";
-  position: absolute;
-  top: -58px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 16px;
-  height: 16px;
-  background: radial-gradient(circle at 30% 30%, #ffd166, #d4a373 50%, #8b5a2b 80%, #4a2810);
-  border-radius: 50%;
-  box-shadow:
-    0 4px 8px rgba(0,0,0,.7),
-    inset 0 -2px 4px rgba(0,0,0,.6),
-    0 0 20px rgba(255,209,102,.5);
-  z-index: 3;
+.obra-card:hover {
+  transform: translateY(-8px);
 }
 
 /* =========================================
-   MARCO DEL LIENZO (más grueso y visible)
+   MARCO MINIMALISTA
+   Sombra suave, sin decoración
    ========================================= */
 .obra-marco {
-  background:
-    linear-gradient(135deg, #d4a373 0%, #b8860b 20%, #8b5a2b 40%, #6b3f1d 60%, #8b5a2b 80%, #d4a373 100%);
-  padding: 18px;
+  background: #fff;
+  padding: 16px;
   border-radius: 4px;
   position: relative;
   box-shadow:
-    inset 0 0 0 3px #4a2810,
-    inset 0 0 0 6px #d4a373,
-    inset 0 0 0 8px #6b3f1d,
-    inset 0 0 0 10px rgba(212,163,115,.4),
-    0 8px 20px rgba(0,0,0,.6),
-    0 0 40px rgba(255,209,102,.15);
+    0 2px 8px rgba(0,0,0,.06),
+    0 8px 24px rgba(0,0,0,.08),
+    0 20px 48px rgba(0,0,0,.06);
+  transition: box-shadow .5s ease;
+  overflow: hidden;
 }
 
-/* Esquinas decorativas del marco */
+.obra-card:hover .obra-marco {
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.08),
+    0 16px 40px rgba(0,0,0,.12),
+    0 32px 80px rgba(0,0,0,.08);
+}
+
+/* Línea sutil dentro del marco (estilo galería) */
 .obra-marco::before {
   content: "";
   position: absolute;
-  inset: 4px;
-  border: 2px solid rgba(255,209,102,.3);
+  inset: 8px;
+  border: 1px solid rgba(0,0,0,.06);
   border-radius: 2px;
   pointer-events: none;
-  box-shadow: inset 0 0 15px rgba(255,209,102,.2);
+  z-index: 2;
 }
 
-.obra-marco::after {
-  content: "✦";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 200px;
-  color: rgba(255,209,102,.03);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Lienzo blanco dentro del marco */
+/* Lienzo dentro del marco */
 .obra-marco img {
   display: block;
   width: 100%;
-  height: 220px;
+  height: 240px;
   object-fit: cover;
-  background: #fff;
-  border-radius: 2px;
+  background: #fafafa;
   cursor: pointer;
-  transition: transform .4s ease;
+  transition: transform .8s cubic-bezier(.2, .9, .3, 1);
   position: relative;
   z-index: 1;
-  box-shadow:
-    inset 0 0 30px rgba(0,0,0,.1),
-    0 0 0 2px #fff;
 }
 
 .obra-card:hover .obra-marco img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 /* =========================================
-   PLACA DORADA CON EL TÍTULO
+   PLACA MINIMALISTA
+   Solo texto, sin decoración
    ========================================= */
 .obra-info {
   margin-top: 20px;
-  padding: 10px 18px;
-  background:
-    linear-gradient(180deg, #f5e6d3 0%, #d4a373 50%, #b8860b 100%);
-  border: 2px solid #6b3f1d;
-  border-radius: 4px;
-  box-shadow:
-    0 4px 12px rgba(0,0,0,.7),
-    inset 0 1px 2px rgba(255,255,255,.5),
-    inset 0 -2px 4px rgba(0,0,0,.3);
-  position: relative;
-  max-width: 240px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 0 4px;
+  text-align: center;
 }
-
-.obra-info::before,
-.obra-info::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 6px;
-  height: 6px;
-  background: radial-gradient(circle, #4a2810, #d4a373);
-  border-radius: 50%;
-  transform: translateY(-50%);
-  box-shadow: 0 1px 2px rgba(0,0,0,.6);
-}
-.obra-info::before { left: 6px; }
-.obra-info::after { right: 6px; }
 
 .obra-info h3 {
   font-family: 'Playfair Display', serif;
   font-size: 1rem;
-  color: #3d1f0a;
-  margin-bottom: 3px;
+  color: #1a1a1a;
+  margin-bottom: 4px;
   font-style: italic;
-  font-weight: 700;
-  text-shadow: 0 1px 0 rgba(255,255,255,.4);
-  letter-spacing: .5px;
+  font-weight: 400;
+  letter-spacing: .3px;
+  transition: color .3s ease;
+}
+
+.obra-card:hover .obra-info h3 {
+  color: #d4a373;
 }
 
 .obra-info small {
-  color: #5a3a1f;
+  color: #999;
   font-size: .7rem;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  font-weight: 600;
-  opacity: .85;
+  font-weight: 400;
 }
 
 /* =========================================
-   BOTONES FLOTANTES CON ANIMACIÓN
+   ACCIONES MODERNAS
+   Botones flotantes suaves
    ========================================= */
 .obra-acciones {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 8px;
+  margin-top: 16px;
   opacity: 0;
-  transform: translateY(12px);
-  transition: all .35s cubic-bezier(.34,1.56,.64,1);
+  transform: translateY(8px);
+  transition: all .4s cubic-bezier(.2, .9, .3, 1);
 }
 
 .obra-card:hover .obra-acciones {
@@ -285,60 +183,61 @@
 }
 
 .btn-obra {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  border: 2px solid #d4a373;
-  background: linear-gradient(180deg, #fff8ec, #f5e6d3);
+  border: none;
+  background: #fff;
   cursor: pointer;
-  font-size: 1rem;
-  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  font-size: .9rem;
+  transition: all .3s cubic-bezier(.2, .9, .3, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow:
-    0 4px 10px rgba(0,0,0,.5),
-    inset 0 1px 2px rgba(255,255,255,.8);
-  color: #3d1f0a;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  color: #333;
 }
 
 .btn-obra:hover {
-  background: linear-gradient(180deg, #ffd166, #d4a373);
-  border-color: #8b5a2b;
-  transform: scale(1.2) rotate(-8deg);
-  box-shadow:
-    0 6px 15px rgba(255,209,102,.6),
-    inset 0 1px 2px rgba(255,255,255,.8);
+  background: #1a1a1a;
+  color: #fff;
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.15);
 }
 
 /* =========================================
-   GALERÍA VACÍA (museo sin obras)
+   GALERÍA VACÍA
    ========================================= */
 .galeria-vacia {
   text-align: center;
-  color: #f5e6d3;
+  color: #999;
   padding: 100px 30px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-style: italic;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(255,220,150,.2), transparent 60%),
-    linear-gradient(180deg, #2a1f1a 0%, #3d2b22 50%, #241811 100%);
-  border-radius: 24px;
-  box-shadow:
-    inset 0 0 100px rgba(0,0,0,.8),
-    0 20px 60px rgba(0,0,0,.4);
+  font-weight: 300;
   letter-spacing: .5px;
-  text-shadow: 0 2px 10px rgba(0,0,0,.6);
+  background: #f7f5f2;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  position: relative;
+}
+
+.galeria-vacia::before {
+  content: "🎨";
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 20px;
+  opacity: .4;
 }
 
 /* =========================================
-   ESTUDIO (sin cambios)
+   ESTUDIO (mantengo tu diseño original)
    ========================================= */
 .estudio-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(61,43,50,.85);
-  backdrop-filter: blur(6px);
+  background: rgba(20,20,20,.9);
+  backdrop-filter: blur(10px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -349,12 +248,12 @@
 .estudio-overlay.activo { display: flex; }
 
 .estudio {
-  background: var(--crema);
-  border-radius: var(--radius);
+  background: #fff;
+  border-radius: 16px;
   width: 100%;
   max-width: 1000px;
-  padding: 20px;
-  box-shadow: 0 30px 80px rgba(0,0,0,.4);
+  padding: 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
   animation: fadeInUp .4s ease;
   max-height: 95vh;
   overflow-y: auto;
@@ -364,42 +263,57 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 #tituloObra {
   flex: 1;
-  padding: 12px 18px;
-  border: 2px solid var(--rosa-suave);
-  border-radius: 50px;
+  padding: 12px 20px;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 10px;
   font-family: 'Playfair Display', serif;
   font-size: 1.1rem;
+  font-style: italic;
   outline: none;
+  background: #fafafa;
+  transition: all .3s ease;
+  color: #1a1a1a;
+}
+#tituloObra:focus {
+  border-color: #d4a373;
   background: #fff;
 }
-#tituloObra:focus { border-color: var(--rosa); }
+#tituloObra::placeholder {
+  color: #bbb;
+  font-style: italic;
+}
+
 .estudio-cerrar {
   width: 44px;
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: var(--rosa);
+  background: #1a1a1a;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: transform .2s;
+  transition: all .3s ease;
 }
-.estudio-cerrar:hover { transform: rotate(90deg); }
+.estudio-cerrar:hover {
+  background: #d4a373;
+  transform: rotate(90deg);
+}
 
+/* Toolbar minimalista */
 .estudio-toolbar {
   display: flex;
-  gap: 20px;
+  gap: 24px;
   flex-wrap: wrap;
   align-items: center;
-  background: #fff;
-  padding: 12px 18px;
-  border-radius: 16px;
-  box-shadow: var(--sombra);
-  margin-bottom: 15px;
+  background: #fafafa;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #f0f0f0;
 }
 .tool-group {
   display: flex;
@@ -407,84 +321,93 @@
   gap: 8px;
 }
 .tool-label {
-  font-size: .8rem;
-  color: var(--texto-suave);
-  font-weight: 600;
+  font-size: .75rem;
+  color: #999;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .tool-btn {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  border: 2px solid transparent;
-  background: var(--rosa-claro);
-  font-size: 1.1rem;
+  border-radius: 10px;
+  border: 1.5px solid transparent;
+  background: #fff;
+  font-size: 1.05rem;
   cursor: pointer;
-  transition: all .2s ease;
+  transition: all .25s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
-.tool-btn:hover { transform: translateY(-2px); }
+.tool-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+}
 .tool-btn.active {
-  background: var(--rosa);
-  border-color: var(--dorado);
-  box-shadow: 0 4px 12px rgba(242,140,166,.5);
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
 }
 
 #grosor {
   width: 120px;
-  accent-color: var(--rosa);
+  accent-color: #d4a373;
 }
 #grosorValor {
-  font-size: .85rem;
-  color: var(--rosa);
-  font-weight: 700;
-  min-width: 22px;
+  font-size: .8rem;
+  color: #d4a373;
+  font-weight: 600;
+  min-width: 24px;
   text-align: center;
 }
 
 .colores { flex-wrap: wrap; }
 .color-btn {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 3px solid #fff;
+  border: 2px solid #fff;
   background: var(--c);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
-  transition: transform .2s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,.15);
+  transition: all .25s ease;
   padding: 0;
 }
-.color-btn:hover { transform: scale(1.15); }
+.color-btn:hover {
+  transform: scale(1.15);
+}
 .color-btn.active {
-  border-color: var(--dorado);
+  border-color: #1a1a1a;
   transform: scale(1.2);
-  box-shadow: 0 0 0 3px var(--rosa-suave);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px #1a1a1a;
 }
 #colorPicker {
-  width: 36px;
-  height: 36px;
-  border: none;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #fff;
   border-radius: 50%;
   cursor: pointer;
   background: none;
   padding: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 
 .estudio-canvas-wrapper {
-  background: #fff;
-  border-radius: 16px;
-  padding: 10px;
-  box-shadow: var(--sombra);
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid #f0f0f0;
   display: flex;
   justify-content: center;
   overflow: hidden;
 }
 #lienzo {
-  border-radius: 10px;
+  border-radius: 8px;
   background: #fff;
   cursor: crosshair;
   touch-action: none;
   max-width: 100%;
   height: auto;
-  box-shadow: inset 0 0 0 1px rgba(242,140,166,.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
 
 .estudio-footer {
@@ -492,16 +415,17 @@
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 15px;
+  margin-top: 18px;
 }
 
-/* Modal ver obra con marco dorado */
+/* =========================================
+   MODAL VER OBRA
+   ========================================= */
 .modal-carta .modal-content img {
   box-shadow:
-    0 0 0 8px #c9a06a,
-    0 0 0 10px #8b5a2b,
-    0 0 0 12px #d4a373,
-    0 25px 60px rgba(0,0,0,.5);
+    0 4px 16px rgba(0,0,0,.1),
+    0 24px 60px rgba(0,0,0,.2);
+  border-radius: 8px;
 }
 
 /* =========================================
@@ -510,18 +434,18 @@
 @media (max-width: 768px) {
   .galeria-arte {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 70px 25px;
-    padding: 60px 20px 70px;
+    gap: 50px 25px;
+    padding: 40px 20px;
   }
-  .obra-marco { padding: 14px; }
-  .obra-marco img { height: 180px; }
+  .obra-marco { padding: 12px; }
+  .obra-marco img { height: 200px; }
   .obra-info h3 { font-size: .9rem; }
   .obra-acciones { opacity: 1; transform: none; }
 
-  .estudio { padding: 15px; }
-  .estudio-toolbar { gap: 10px; padding: 10px; }
+  .estudio { padding: 18px; }
+  .estudio-toolbar { gap: 14px; padding: 12px; }
   .tool-btn { width: 36px; height: 36px; font-size: 1rem; }
-  .color-btn { width: 28px; height: 28px; }
+  .color-btn { width: 26px; height: 26px; }
   #grosor { width: 80px; }
   .estudio-footer .btn { flex: 1; min-width: 120px; padding: 12px 16px; font-size: .85rem; }
   .galeria-arte-header { flex-direction: column; align-items: stretch; }
@@ -531,10 +455,8 @@
 @media (max-width: 480px) {
   .galeria-arte {
     grid-template-columns: 1fr;
-    gap: 80px 20px;
-    padding: 60px 15px 70px;
+    gap: 50px 20px;
+    padding: 40px 15px;
   }
-  .obra-marco img { height: 220px; }
-  .obra-card::before { width: 70px; height: 40px; top: -40px; }
-  .obra-card::after { top: -48px; }
+  .obra-marco img { height: 240px; }
 }
