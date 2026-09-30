@@ -38,8 +38,8 @@
     <div class="galeria-arte-header">
       <h2 class="section-title">Mis Obras</h2>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn btn-outline" id="btnRecargar">🔄 Recargar</button>
-        <button class="btn btn-primary" id="btnNuevaObra">+ Crear nuevo dibujo</button>
+        <button type="button" class="btn btn-outline" id="btnRecargar">🔄 Recargar</button>
+        <button type="button" class="btn btn-primary" id="btnNuevaObra">+ Crear nuevo dibujo</button>
       </div>
     </div>
     <div class="galeria-arte" id="galeriaArte"></div>
@@ -54,17 +54,17 @@
     <div class="estudio">
       <div class="estudio-header">
         <input type="text" id="tituloObra" placeholder="Título de tu obra..." maxlength="40" />
-        <button class="estudio-cerrar" id="cerrarEstudio" title="Cerrar">✕</button>
+        <button type="button" class="estudio-cerrar" id="cerrarEstudio" title="Cerrar">✕</button>
       </div>
 
       <div class="estudio-toolbar">
         <div class="tool-group">
           <span class="tool-label">Pincel</span>
-          <button class="tool-btn active" data-tool="pincel" title="Pincel">🖌️</button>
-          <button class="tool-btn" data-tool="lapiz" title="Lápiz">✏️</button>
-          <button class="tool-btn" data-tool="neon" title="Neón">✨</button>
-          <button class="tool-btn" data-tool="spray" title="Spray">💨</button>
-          <button class="tool-btn" data-tool="borrador" title="Borrador">🧽</button>
+          <button type="button" class="tool-btn active" data-tool="pincel" title="Pincel">🖌️</button>
+          <button type="button" class="tool-btn" data-tool="lapiz" title="Lápiz">✏️</button>
+          <button type="button" class="tool-btn" data-tool="neon" title="Neón">✨</button>
+          <button type="button" class="tool-btn" data-tool="spray" title="Spray">💨</button>
+          <button type="button" class="tool-btn" data-tool="borrador" title="Borrador">🧽</button>
         </div>
 
         <div class="tool-group">
@@ -75,26 +75,26 @@
 
         <div class="tool-group colores">
           <span class="tool-label">Color</span>
-          <button class="color-btn active" data-color="#1a1a1a" style="--c:#1a1a1a"></button>
-          <button class="color-btn" data-color="#e63946" style="--c:#e63946"></button>
-          <button class="color-btn" data-color="#f4a261" style="--c:#f4a261"></button>
-          <button class="color-btn" data-color="#2a9d8f" style="--c:#2a9d8f"></button>
-          <button class="color-btn" data-color="#457b9d" style="--c:#457b9d"></button>
-          <button class="color-btn" data-color="#9d4edd" style="--c:#9d4edd"></button>
-          <button class="color-btn" data-color="#f28ca6" style="--c:#f28ca6"></button>
-          <button class="color-btn" data-color="#d4a373" style="--c:#d4a373"></button>
+          <button type="button" class="color-btn active" data-color="#1a1a1a" style="--c:#1a1a1a"></button>
+          <button type="button" class="color-btn" data-color="#e63946" style="--c:#e63946"></button>
+          <button type="button" class="color-btn" data-color="#f4a261" style="--c:#f4a261"></button>
+          <button type="button" class="color-btn" data-color="#2a9d8f" style="--c:#2a9d8f"></button>
+          <button type="button" class="color-btn" data-color="#457b9d" style="--c:#457b9d"></button>
+          <button type="button" class="color-btn" data-color="#9d4edd" style="--c:#9d4edd"></button>
+          <button type="button" class="color-btn" data-color="#f28ca6" style="--c:#f28ca6"></button>
+          <button type="button" class="color-btn" data-color="#d4a373" style="--c:#d4a373"></button>
           <input type="color" id="colorPicker" value="#1a1a1a" title="Color personalizado" />
         </div>
 
         <div class="tool-group fondo-group">
           <span class="tool-label">Fondo</span>
           <input type="color" id="fondoColor" value="#ffffff" title="Color de fondo" />
-          <button class="tool-btn" id="btnSubirFondo" title="Subir imagen de fondo">🖼️</button>
+          <button type="button" class="tool-btn" id="btnSubirFondo" title="Subir imagen de fondo">🖼️</button>
           <input type="file" id="inputFondo" accept="image/*" hidden />
           <span class="tool-label">Opac.</span>
           <input type="range" id="fondoOpacidad" min="0" max="100" value="100" />
           <span id="fondoOpacidadValor">100</span>
-          <button class="tool-btn" id="btnQuitarFondo" title="Quitar fondo">🚫</button>
+          <button type="button" class="tool-btn" id="btnQuitarFondo" title="Quitar fondo">🚫</button>
         </div>
       </div>
 
@@ -106,10 +106,10 @@
       </div>
 
       <div class="estudio-footer">
-        <button class="btn btn-outline" id="btnDeshacer">↶ Deshacer</button>
-        <button class="btn btn-outline" id="btnLimpiar">🗑️ Limpiar</button>
-        <button class="btn btn-outline" id="btnDescargar">⬇️ Descargar PNG</button>
-        <button class="btn btn-primary" id="btnGuardar">💾 Guardar en galería</button>
+        <button type="button" class="btn btn-outline" id="btnDeshacer">↶ Deshacer</button>
+        <button type="button" class="btn btn-outline" id="btnLimpiar">🗑️ Limpiar</button>
+        <button type="button" class="btn btn-outline" id="btnDescargar">⬇️ Descargar PNG</button>
+        <button type="button" class="btn btn-primary" id="btnGuardar">💾 Guardar en galería</button>
       </div>
     </div>
   </div>
@@ -118,6 +118,7 @@
 
   <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
 
+  <script src="../js/confeti.js"></script>
   <script src="../js/arte.js"></script>
 </body>
 </html>

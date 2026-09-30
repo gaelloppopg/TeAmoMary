@@ -1,9 +1,8 @@
 /* ============================================
    Service Worker - Cache offline + excepciones
-   v11: network-first para HTML/CSS/JS
+   v11: network-first para HTML/CSS/JS + arte
    ============================================ */
 
-// ⚠️ IMPORTANTE: Cada vez que edites este archivo, subí el número de versión
 const CACHE = "novia-v11";
 
 const ASSETS = [
@@ -35,16 +34,13 @@ const ASSETS = [
   "./pages/arte.html"
 ];
 
-// ========== INSTALACIÓN ==========
 self.addEventListener("install", (e) => {
   console.log("📦 Service Worker instalando...");
   e.waitUntil(
     caches.open(CACHE).then((c) => {
       return Promise.all(
         ASSETS.map(url =>
-          c.add(url).catch(err => {
-            console.warn("⚠️ No se pudo cachear:", url, err);
-          })
+          c.add(url).catch(err => console.warn("⚠️ No se pudo cachear:", url, err))
         )
       );
     })
@@ -52,52 +48,39 @@ self.addEventListener("install", (e) => {
   self.skipWaiting();
 });
 
-// ========== ACTIVACIÓN ==========
 self.addEventListener("activate", (e) => {
   console.log("✅ Service Worker activando...");
   e.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys
-          .filter((k) => k !== CACHE)
-          .map((k) => {
-            console.log("🗑️ Borrando caché viejo:", k);
-            return caches.delete(k);
-          })
+        keys.filter((k) => k !== CACHE).map((k) => {
+          console.log("🗑️ Borrando caché viejo:", k);
+          return caches.delete(k);
+        })
       )
     )
   );
   self.clients.claim();
 });
 
-// ========== FETCH ==========
 self.addEventListener("fetch", (e) => {
   const url = e.request.url;
 
-  // 🛡️ EXCEPCIÓN 1: No interceptar peticiones de OneSignal
-  if (url.includes("onesignal.com") || url.includes("OneSignalSDK")) {
-    return;
-  }
+  // Excepción OneSignal
+  if (url.includes("onesignal.com") || url.includes("OneSignalSDK")) return;
 
-  // 🛡️ EXCEPCIÓN 2: No interceptar requests externos (ImgBB, Cloudinary, JSONBin, etc.)
-  const esDeNuestroSitio = url.startsWith(self.location.origin);
-  if (!esDeNuestroSitio) {
-    return;
-  }
+  // Solo mismo origen
+  if (!url.startsWith(self.location.origin)) return;
 
-  // 🛡️ Solo interceptar GET
-  if (e.request.method !== "GET") {
-    return;
-  }
+  // Solo GET
+  if (e.request.method !== "GET") return;
 
   const path = new URL(url).pathname;
-
-  // ========== HTML, CSS y JS → NETWORK FIRST ==========
-  // (así siempre se ve la última versión, pero si no hay red, usa caché)
   const esHTML = e.request.headers.get("accept")?.includes("text/html");
   const esCSS = path.endsWith(".css");
   const esJS = path.endsWith(".js");
 
+  // HTML, CSS, JS → NETWORK FIRST
   if (esHTML || esCSS || esJS) {
     e.respondWith(
       fetch(e.request)
@@ -113,11 +96,10 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // ========== Imágenes, fuentes, etc. → CACHE FIRST ==========
+  // Resto → CACHE FIRST
   e.respondWith(
     caches.match(e.request).then((cached) => {
       if (cached) return cached;
-
       return fetch(e.request).then((res) => {
         if (res && res.status === 200 && res.type === "basic") {
           const copy = res.clone();
@@ -129,30 +111,23 @@ self.addEventListener("fetch", (e) => {
   );
 });
 
-// ========== MENSAJES ==========
 self.addEventListener("message", (e) => {
-  if (e.data && e.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
+  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
   if (e.data && e.data.type === "CLEAR_CACHE") {
     caches.keys().then((keys) =>
       Promise.all(keys.map((k) => caches.delete(k)))
-    ).then(() => {
-      console.log("🗑️ Todos los cachés fueron borrados");
-    });
+    ).then(() => console.log("🗑️ Todos los cachés fueron borrados"));
   }
 });
 
-// ========== PUSH NOTIFICATIONS ==========
+// Push notifications (mantener tu configuración)
 self.addEventListener("push", (event) => {
   console.log("📬 Push recibido");
-
   let data = {
     title: "Nuestro Diario 💜",
     body: "Hay algo nuevo en el diario",
     url: "/pages/diario.html"
   };
-
   if (event.data) {
     try {
       const parsed = event.data.json();
@@ -161,39 +136,28 @@ self.addEventListener("push", (event) => {
       data.body = event.data.text();
     }
   }
-
   const options = {
     body: data.body,
     icon: "/assets/images/icons/icon-192.png",
     badge: "/assets/images/icons/icon-192.png",
     vibrate: [200, 100, 200],
     data: { url: data.url },
-    actions: [
-      { action: "abrir", title: "Abrir diario" }
-    ]
+    actions: [{ action: "abrir", title: "Abrir" }]
   };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
-// Cuando el usuario toca la notificación
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-
   const url = event.notification.data?.url || "/pages/diario.html";
-
   event.waitUntil(
-    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
         if (client.url.includes("/pages/diario.html") && "focus" in client) {
           return client.focus();
         }
       }
-      if (clients.openWindow) {
-        return clients.openWindow(url);
-      }
+      if (clients.openWindow) return clients.openWindow(url);
     })
   );
 });
