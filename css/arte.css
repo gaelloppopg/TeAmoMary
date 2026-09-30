@@ -1,9 +1,9 @@
 /* =========================================
-   TALLER DE ARTE - Estilo Galería de Arte
+   TALLER DE ARTE - Estilo Museo de Arte
    ========================================= */
 
 .galeria-arte-section {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 20px 20px 80px;
 }
@@ -16,56 +16,97 @@
   gap: 15px;
   margin-bottom: 40px;
 }
-.galeria-arte-header .section-title { margin: 0; }
+.galeria-arte-header .section-title {
+  margin: 0;
+  color: #f5e6d3;
+  text-shadow: 0 2px 10px rgba(0,0,0,.5);
+}
 
 /* =========================================
-   PARED DE GALERÍA
+   SALA DEL MUSEO (PARED OSCURA)
    ========================================= */
 .galeria-arte {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 50px 35px;
-  padding: 40px 20px 60px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 80px 45px;
+  padding: 70px 40px 90px;
   position: relative;
   background:
-    radial-gradient(circle at 20% 10%, rgba(255,255,255,.4), transparent 40%),
-    radial-gradient(circle at 80% 90%, rgba(255,255,255,.3), transparent 40%),
-    linear-gradient(180deg, #f5e6d3 0%, #ecd8bf 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(255,220,150,.25), transparent 60%),
+    radial-gradient(ellipse at 20% 40%, rgba(255,200,120,.12), transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(255,200,120,.12), transparent 50%),
+    linear-gradient(180deg, #2a1f1a 0%, #3d2b22 40%, #241811 100%);
   border-radius: 24px;
-  box-shadow: inset 0 0 60px rgba(120, 80, 40, .15);
+  box-shadow:
+    inset 0 0 100px rgba(0,0,0,.8),
+    inset 0 0 30px rgba(0,0,0,.6),
+    0 20px 60px rgba(0,0,0,.4);
+  overflow: hidden;
 }
 
-/* Textura sutil de pared */
+/* Focos de luz cenital en la pared */
 .galeria-arte::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 24px;
   background-image:
-    repeating-linear-gradient(0deg, transparent 0 40px, rgba(120,80,40,.03) 40px 41px),
-    repeating-linear-gradient(90deg, transparent 0 40px, rgba(120,80,40,.03) 40px 41px);
+    radial-gradient(ellipse 140px 220px at 15% 20%, rgba(255,220,160,.18), transparent 70%),
+    radial-gradient(ellipse 140px 220px at 45% 20%, rgba(255,220,160,.18), transparent 70%),
+    radial-gradient(ellipse 140px 220px at 75% 20%, rgba(255,220,160,.18), transparent 70%),
+    radial-gradient(ellipse 140px 220px at 25% 70%, rgba(255,220,160,.15), transparent 70%),
+    radial-gradient(ellipse 140px 220px at 65% 70%, rgba(255,220,160,.15), transparent 70%);
   pointer-events: none;
+  animation: luzParpadeo 6s ease-in-out infinite;
+}
+
+@keyframes luzParpadeo {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .85; }
+}
+
+/* Textura sutil de pared de museo */
+.galeria-arte::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.04) 3px 4px),
+    repeating-linear-gradient(90deg, transparent 0 3px, rgba(0,0,0,.04) 3px 4px);
+  pointer-events: none;
+  opacity: .6;
 }
 
 /* =========================================
-   LIENZO COLGADO
+   LIENZO COLGADO EN LA PARED
    ========================================= */
 .obra-card {
   position: relative;
   text-align: center;
-  animation: colgar 0.8s cubic-bezier(.34,1.56,.64,1) backwards;
+  animation: colgar 1s cubic-bezier(.34,1.56,.64,1) backwards;
   transition: transform .4s ease;
   z-index: 1;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,.6));
 }
 
-/* Animación de "colgarse" en la pared */
+.obra-card:hover {
+  transform: translateY(-10px) rotate(-1deg) scale(1.02);
+  filter: drop-shadow(0 25px 40px rgba(0,0,0,.75));
+}
+
+/* Animación de "colgarse" con balanceo */
 @keyframes colgar {
   0% {
     opacity: 0;
-    transform: translateY(-40px) rotate(-3deg);
+    transform: translateY(-80px) rotate(-8deg);
   }
-  60% {
-    transform: translateY(4px) rotate(1deg);
+  50% {
+    opacity: 1;
+    transform: translateY(10px) rotate(3deg);
+  }
+  70% {
+    transform: translateY(-4px) rotate(-1.5deg);
   }
   100% {
     opacity: 1;
@@ -73,192 +114,225 @@
   }
 }
 
-/* Cuerda y clavo */
+/* Cuerda doble */
 .obra-card::before {
   content: "";
   position: absolute;
-  top: -32px;
+  top: -48px;
   left: 50%;
   transform: translateX(-50%);
-  width: 2px;
-  height: 32px;
-  background: linear-gradient(180deg, #8b5a2b, #6b3f1d);
+  width: 90px;
+  height: 48px;
+  background:
+    linear-gradient(135deg, transparent 45%, #8b5a2b 45%, #8b5a2b 55%, transparent 55%),
+    linear-gradient(45deg, transparent 45%, #8b5a2b 45%, #8b5a2b 55%, transparent 55%);
+  clip-path: polygon(0 0, 50% 100%, 100% 0, 96% 0, 50% 92%, 4% 0);
   z-index: 2;
+  opacity: .9;
 }
 
-/* Clavo en la pared */
+/* Clavo dorado en la pared */
 .obra-card::after {
   content: "";
   position: absolute;
-  top: -40px;
+  top: -58px;
   left: 50%;
   transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  background: radial-gradient(circle at 30% 30%, #d4a373, #8b5a2b 70%, #4a2810);
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle at 30% 30%, #ffd166, #d4a373 50%, #8b5a2b 80%, #4a2810);
   border-radius: 50%;
-  box-shadow: 0 3px 6px rgba(0,0,0,.4), inset 0 -2px 3px rgba(0,0,0,.5);
+  box-shadow:
+    0 4px 8px rgba(0,0,0,.7),
+    inset 0 -2px 4px rgba(0,0,0,.6),
+    0 0 20px rgba(255,209,102,.5);
   z-index: 3;
 }
 
-/* Sombra proyectada en la pared */
-.obra-card {
-  filter: drop-shadow(0 10px 15px rgba(80, 40, 10, .25));
-}
-
-.obra-card:hover {
-  transform: translateY(-6px) rotate(-1deg);
-  filter: drop-shadow(0 18px 25px rgba(80, 40, 10, .35));
-}
-
 /* =========================================
-   MARCO DEL LIENZO
+   MARCO DEL LIENZO (más grueso y visible)
    ========================================= */
 .obra-marco {
   background:
-    linear-gradient(135deg, #c9a06a 0%, #a87e4a 25%, #8b5a2b 50%, #a87e4a 75%, #c9a06a 100%);
-  padding: 14px;
+    linear-gradient(135deg, #d4a373 0%, #b8860b 20%, #8b5a2b 40%, #6b3f1d 60%, #8b5a2b 80%, #d4a373 100%);
+  padding: 18px;
   border-radius: 4px;
   position: relative;
   box-shadow:
-    inset 0 0 0 2px #6b3f1d,
-    inset 0 0 0 3px #d4a373,
-    inset 0 0 0 8px rgba(107, 63, 29, .3),
-    0 4px 10px rgba(0,0,0,.3);
+    inset 0 0 0 3px #4a2810,
+    inset 0 0 0 6px #d4a373,
+    inset 0 0 0 8px #6b3f1d,
+    inset 0 0 0 10px rgba(212,163,115,.4),
+    0 8px 20px rgba(0,0,0,.6),
+    0 0 40px rgba(255,209,102,.15);
 }
 
-/* Esquinas del marco */
-.obra-marco::before,
-.obra-marco::after {
+/* Esquinas decorativas del marco */
+.obra-marco::before {
   content: "";
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle at 30% 30%, #e6c98f, #8b5a2b);
-  border-radius: 50%;
-  box-shadow: 0 1px 2px rgba(0,0,0,.5);
+  inset: 4px;
+  border: 2px solid rgba(255,209,102,.3);
+  border-radius: 2px;
+  pointer-events: none;
+  box-shadow: inset 0 0 15px rgba(255,209,102,.2);
 }
-.obra-marco::before { top: 5px; left: 5px; }
-.obra-marco::after { bottom: 5px; right: 5px; }
+
+.obra-marco::after {
+  content: "✦";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 200px;
+  color: rgba(255,209,102,.03);
+  pointer-events: none;
+  z-index: 0;
+}
 
 /* Lienzo blanco dentro del marco */
 .obra-marco img {
   display: block;
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
   background: #fff;
   border-radius: 2px;
   cursor: pointer;
-  transition: transform .3s ease;
+  transition: transform .4s ease;
+  position: relative;
+  z-index: 1;
   box-shadow:
-    inset 0 0 20px rgba(0,0,0,.15),
-    0 0 0 3px #fff,
-    0 0 0 4px rgba(107, 63, 29, .4);
-  padding: 4px;
+    inset 0 0 30px rgba(0,0,0,.1),
+    0 0 0 2px #fff;
 }
 
 .obra-card:hover .obra-marco img {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 /* =========================================
-   ETIQUETA / PLACA CON EL TÍTULO
+   PLACA DORADA CON EL TÍTULO
    ========================================= */
 .obra-info {
-  margin-top: 15px;
-  padding: 8px 14px;
-  background: linear-gradient(180deg, #fefcf7, #f5ead5);
-  border: 1px solid #d4a373;
-  border-radius: 6px;
+  margin-top: 20px;
+  padding: 10px 18px;
+  background:
+    linear-gradient(180deg, #f5e6d3 0%, #d4a373 50%, #b8860b 100%);
+  border: 2px solid #6b3f1d;
+  border-radius: 4px;
   box-shadow:
-    0 2px 4px rgba(0,0,0,.15),
-    inset 0 1px 0 rgba(255,255,255,.9);
+    0 4px 12px rgba(0,0,0,.7),
+    inset 0 1px 2px rgba(255,255,255,.5),
+    inset 0 -2px 4px rgba(0,0,0,.3);
   position: relative;
-  max-width: 220px;
+  max-width: 240px;
   margin-left: auto;
   margin-right: auto;
 }
 
-.obra-info::before {
-  content: "✦";
+.obra-info::before,
+.obra-info::after {
+  content: "";
   position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #d4a373;
-  font-size: .8rem;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #4a2810, #d4a373);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 1px 2px rgba(0,0,0,.6);
 }
+.obra-info::before { left: 6px; }
+.obra-info::after { right: 6px; }
 
 .obra-info h3 {
   font-family: 'Playfair Display', serif;
-  font-size: .95rem;
-  color: #5a3a1f;
-  margin-bottom: 2px;
+  font-size: 1rem;
+  color: #3d1f0a;
+  margin-bottom: 3px;
   font-style: italic;
-  font-weight: 600;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255,255,255,.4);
+  letter-spacing: .5px;
 }
 
 .obra-info small {
-  color: #8b6b4a;
+  color: #5a3a1f;
   font-size: .7rem;
-  letter-spacing: .5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  font-weight: 600;
+  opacity: .85;
 }
 
 /* =========================================
-   ACCIONES (botones circulares flotantes)
+   BOTONES FLOTANTES CON ANIMACIÓN
    ========================================= */
 .obra-acciones {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 10px;
+  margin-top: 18px;
   opacity: 0;
-  transform: translateY(8px);
-  transition: all .3s ease;
+  transform: translateY(12px);
+  transition: all .35s cubic-bezier(.34,1.56,.64,1);
 }
+
 .obra-card:hover .obra-acciones {
   opacity: 1;
   transform: translateY(0);
 }
 
 .btn-obra {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--rosa-suave);
-  background: #fff;
+  border: 2px solid #d4a373;
+  background: linear-gradient(180deg, #fff8ec, #f5e6d3);
   cursor: pointer;
-  font-size: .95rem;
-  transition: all .25s ease;
+  font-size: 1rem;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 8px rgba(0,0,0,.15);
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.5),
+    inset 0 1px 2px rgba(255,255,255,.8);
+  color: #3d1f0a;
 }
+
 .btn-obra:hover {
-  background: var(--rosa-claro);
-  border-color: var(--rosa);
-  transform: scale(1.15) rotate(-8deg);
+  background: linear-gradient(180deg, #ffd166, #d4a373);
+  border-color: #8b5a2b;
+  transform: scale(1.2) rotate(-8deg);
+  box-shadow:
+    0 6px 15px rgba(255,209,102,.6),
+    inset 0 1px 2px rgba(255,255,255,.8);
 }
 
 /* =========================================
-   GALERÍA VACÍA
+   GALERÍA VACÍA (museo sin obras)
    ========================================= */
 .galeria-vacia {
   text-align: center;
-  color: #8b6b4a;
-  padding: 80px 20px;
-  font-size: 1.1rem;
+  color: #f5e6d3;
+  padding: 100px 30px;
+  font-size: 1.2rem;
   font-style: italic;
-  background: linear-gradient(180deg, #f5e6d3, #ecd8bf);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,220,150,.2), transparent 60%),
+    linear-gradient(180deg, #2a1f1a 0%, #3d2b22 50%, #241811 100%);
   border-radius: 24px;
-  box-shadow: inset 0 0 60px rgba(120, 80, 40, .15);
+  box-shadow:
+    inset 0 0 100px rgba(0,0,0,.8),
+    0 20px 60px rgba(0,0,0,.4);
+  letter-spacing: .5px;
+  text-shadow: 0 2px 10px rgba(0,0,0,.6);
 }
 
 /* =========================================
-   ESTUDIO (sin cambios grandes)
+   ESTUDIO (sin cambios)
    ========================================= */
 .estudio-overlay {
   position: fixed;
@@ -421,14 +495,13 @@
   margin-top: 15px;
 }
 
-/* =========================================
-   MODAL VER OBRA (más elegante)
-   ========================================= */
+/* Modal ver obra con marco dorado */
 .modal-carta .modal-content img {
   box-shadow:
     0 0 0 8px #c9a06a,
     0 0 0 10px #8b5a2b,
-    0 20px 50px rgba(0,0,0,.4);
+    0 0 0 12px #d4a373,
+    0 25px 60px rgba(0,0,0,.5);
 }
 
 /* =========================================
@@ -436,12 +509,13 @@
    ========================================= */
 @media (max-width: 768px) {
   .galeria-arte {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 45px 20px;
-    padding: 30px 15px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 70px 25px;
+    padding: 60px 20px 70px;
   }
-  .obra-marco img { height: 160px; }
-  .obra-info h3 { font-size: .85rem; }
+  .obra-marco { padding: 14px; }
+  .obra-marco img { height: 180px; }
+  .obra-info h3 { font-size: .9rem; }
   .obra-acciones { opacity: 1; transform: none; }
 
   .estudio { padding: 15px; }
@@ -457,7 +531,10 @@
 @media (max-width: 480px) {
   .galeria-arte {
     grid-template-columns: 1fr;
-    gap: 55px 20px;
+    gap: 80px 20px;
+    padding: 60px 15px 70px;
   }
-  .obra-marco img { height: 200px; }
+  .obra-marco img { height: 220px; }
+  .obra-card::before { width: 70px; height: 40px; top: -40px; }
+  .obra-card::after { top: -48px; }
 }

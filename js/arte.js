@@ -85,6 +85,11 @@ function renderGaleria() {
       if (action === "borrar") borrarObra(idx);
     });
   });
+    // Ángulo aleatorio sutil para cada lienzo
+  cont.querySelectorAll(".obra-card").forEach(card => {
+    const angulo = (Math.random() * 2 - 1).toFixed(2);
+    card.style.transform = `rotate(${angulo}deg)`;
+  });
 }
 
 function verObra(idx) {
