@@ -555,7 +555,6 @@
     iniciarAutoSync();
 
     // Botones principales
-    document.getElementById("btnRecargar")?.addEventListener("click", cargarObras);
     document.getElementById("btnNuevaObra")?.addEventListener("click", () => abrirEstudio(null));
     document.getElementById("cerrarEstudio")?.addEventListener("click", cerrarEstudio);
 
